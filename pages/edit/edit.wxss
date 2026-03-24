@@ -177,6 +177,23 @@
   border: none;
   border-radius: 24rpx;
   padding: 12rpx 24rpx;
+  flex-shrink: 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.header-btns {
+  display: flex;
+  gap: 12rpx;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 /* Banner & Avatar */
@@ -227,6 +244,16 @@
   padding: 0 24rpx;
   font-size: 28rpx;
   box-sizing: border-box;
+}
+
+.input-with-btn {
+  display: flex;
+  gap: 12rpx;
+  align-items: center;
+}
+
+.input-with-btn .input {
+  flex: 1;
 }
 
 .textarea {

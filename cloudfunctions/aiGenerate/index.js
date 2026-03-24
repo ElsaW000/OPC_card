@@ -241,6 +241,44 @@ async function fetchGitHubProjects(username) {
   })
 }
 
+// 获取单个项目的 README
+async function fetchProjectReadme(owner, repo) {
+  const https = require('https')
+  
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: 'api.github.com',
+      path: `/repos/${owner}/${repo}`,
+      method: 'GET',
+      headers: {
+        'User-Agent': 'OPC-Card-MiniApp'
+      }
+    }
+    
+    const req = https.request(options, (res) => {
+      let data = ''
+      res.on('data', chunk => data += chunk)
+      res.on('end', () => {
+        try {
+          const repo = JSON.parse(data)
+          resolve({
+            name: repo.name,
+            description: repo.description || '',
+            topics: repo.topics ? repo.topics.slice(0, 5) : [],
+            url: repo.html_url,
+            stars: repo.stargazers_count
+          })
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+    
+    req.on('error', reject)
+    req.end()
+  })
+}
+
 // 优化文案（使用 AI）
 async function optimizeWithAI(text) {
   const prompt = `请优化以下自我介绍，使其更简洁、更有吸引力：
@@ -298,6 +336,11 @@ exports.main = async (event, context) => {
         result = {
           projects: await fetchGitHubProjects(data.username || '')
         }
+        break
+        
+      case 'fetchProjectReadme':
+        // 获取单个项目信息并完善
+        result = await fetchProjectReadme(data.owner || '', data.repo || '')
         break
         
       default:

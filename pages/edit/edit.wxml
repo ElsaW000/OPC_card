@@ -305,7 +305,10 @@
         </view>
         <view class="form-item">
           <text class="label">GitHub</text>
-          <input class="input" value="{{item.github}}" data-index="{{index}}" data-field="github" bindinput="onProjectChange" placeholder="GitHub 链接（可选）" />
+          <view class="input-with-btn">
+            <input class="input" value="{{item.github}}" data-index="{{index}}" data-field="github" bindinput="onProjectChange" placeholder="GitHub 链接" />
+            <button class="ai-btn-small" data-index="{{index}}" bindtap="fetchProjectReadme">🤖 AI 完善</button>
+          </view>
         </view>
         <view class="form-item">
           <text class="label">标签</text>

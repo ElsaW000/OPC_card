@@ -462,6 +462,61 @@ Page({
     })
   },
 
+  // AI 读取单个项目的 README 并完善信息
+  fetchProjectReadme(e) {
+    const index = e.currentTarget.dataset.index
+    const project = this.data.projects[index]
+    
+    if (!project.github) {
+      wx.showToast({ title: '请先填写 GitHub 链接', icon: 'none' })
+      return
+    }
+    
+    // 提取 GitHub repo
+    const match = project.github.match(/github\.com\/([^\/]+)\/([^\/]+)/)
+    if (!match) {
+      wx.showToast({ title: 'GitHub 链接格式不对', icon: 'none' })
+      return
+    }
+    
+    const owner = match[1]
+    const repo = match[2]
+    
+    wx.showLoading({ title: 'AI 读取中...' })
+    
+    wx.cloud.callFunction({
+      name: 'aiGenerate',
+      data: { 
+        type: 'fetchProjectReadme',
+        data: { owner, repo }
+      },
+      success: (res) => {
+        wx.hideLoading()
+        if (res.result && res.result.success && res.result.result) {
+          const info = res.result.result
+          
+          // 更新该项目的信息
+          const projects = this.data.projects
+          projects[index] = {
+            ...projects[index],
+            title: info.name || projects[index].title,
+            description: info.description || projects[index].description,
+            tags: info.topics ? info.topics.join(', ') : projects[index].tags
+          }
+          
+          this.setData({ projects })
+          wx.showToast({ title: '已完善项目信息', icon: 'success' })
+        } else {
+          wx.showToast({ title: '读取失败', icon: 'none' })
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        wx.showToast({ title: '读取失败', icon: 'none' })
+      }
+    })
+  },
+
   // 保存到云端
   saveCard() {
     wx.showLoading({ title: '保存中...' });
