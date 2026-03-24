@@ -1,4 +1,4 @@
-<!--home.wxml - 工作台 -->
+<!--home.wxml - Workbench -->
 <view class="container">
   <!-- Header -->
   <view class="header">
@@ -6,7 +6,7 @@
     <text class="header-subtitle">管理你的 OPC 品牌与人脉网络</text>
   </view>
 
-  <!-- 数据看板 - 蓝色访客卡 + 绿色交换卡 -->
+  <!-- Stats Row -->
   <view class="stats-row">
     <view class="stat-card card-blue">
       <view class="stat-header">
@@ -52,15 +52,15 @@
     </view>
   </view>
 
-  <!-- 待办提醒 -->
+  <!-- Todo Card -->
   <view class="todo-card">
     <view class="todo-icon-box">ℹ️</view>
     <view class="todo-content">
       <view class="todo-header">
-        <text class="todo-title">待办提醒: 完善作品集</text>
+        <text class="todo-title">待办提醒：完善作品集</text>
         <text class="todo-action">立即去完善 ›</text>
       </view>
-      <text class="todo-body">你还有 2 个项目链接未添加, 完善后的名片交换率通常会提升 30% 以上。</text>
+      <text class="todo-body">你还有 2 个项目链接未添加，完善后的名片交换率通常会提升 30% 以上。</text>
       <view class="todo-progress">
         <view class="progress-bar orange">
           <view class="progress-fill" style="width: 60%"></view>
@@ -70,7 +70,7 @@
     </view>
   </view>
 
-  <!-- 2x2 功能入口宫格 -->
+  <!-- 2x2 Grid -->
   <view class="grid-section">
     <view class="grid-card">
       <view class="grid-2x2">
@@ -94,13 +94,13 @@
     </view>
   </view>
 
-  <!-- 最近访客 -->
+  <!-- Recent Visitors -->
   <view class="visitors-section">
     <view class="section-header">
       <text class="section-title">最近访客</text>
       <text class="view-all">查看更多 ›</text>
     </view>
-    
+
     <view class="visitor-card">
       <image class="visitor-avatar" src="https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200" mode="aspectFill"></image>
       <view class="visitor-info">
