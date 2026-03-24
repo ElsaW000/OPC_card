@@ -62,6 +62,38 @@
   color: #fff;
 }
 
+/* AI 按钮 */
+.ai-buttons {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 12rpx;
+}
+
+.ai-btn {
+  font-size: 22rpx;
+  color: #2563eb;
+  background-color: #eff6ff;
+  border: none;
+  border-radius: 8rpx;
+  padding: 8rpx 16rpx;
+}
+
+/* AI 推荐标签 */
+.ai-suggested-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.ai-suggested-tags .tag {
+  padding: 8rpx 20rpx;
+  font-size: 24rpx;
+  background-color: #fef3c7;
+  color: #92400e;
+  border-radius: 9999rpx;
+  border: 1rpx solid #fcd34d;
+}
+
 /* 自定义卡片 */
 .tip-text {
   font-size: 24rpx;

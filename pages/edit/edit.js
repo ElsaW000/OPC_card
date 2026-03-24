@@ -73,7 +73,10 @@ Page({
     email: '',
     
     // 产品/项目
-    projects: []
+    projects: [],
+    
+    // AI 推荐标签
+    suggestedTags: []
   },
 
   onLoad() {
@@ -209,6 +212,111 @@ Page({
     const customCards = this.data.customCards;
     customCards[index][field] = e.detail.value;
     this.setData({ customCards });
+  },
+
+  // AI 生成一句话介绍
+  generateIntro(e) {
+    wx.showLoading({ title: 'AI 生成中...' })
+    
+    wx.cloud.callFunction({
+      name: 'aiGenerate',
+      data: { 
+        type: 'intro',
+        data: { keywords: this.data.role + ' ' + this.data.location }
+      },
+      success: (res) => {
+        wx.hideLoading()
+        if (res.result && res.result.success) {
+          this.setData({
+            bio: res.result.result
+          })
+          wx.showToast({ title: '生成成功', icon: 'success' })
+        } else {
+          wx.showToast({ title: '生成失败', icon: 'none' })
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        wx.showToast({ title: '生成失败', icon: 'none' })
+      }
+    })
+  },
+
+  // AI 优化介绍文案
+  optimizeBio(e) {
+    if (!this.data.bio) {
+      wx.showToast({ title: '请先填写简介', icon: 'none' })
+      return
+    }
+    
+    wx.showLoading({ title: 'AI 优化中...' })
+    
+    wx.cloud.callFunction({
+      name: 'aiGenerate',
+      data: { 
+        type: 'optimize',
+        data: { bio: this.data.bio }
+      },
+      success: (res) => {
+        wx.hideLoading()
+        if (res.result && res.result.success) {
+          wx.showModal({
+            title: 'AI 优化结果',
+            content: res.result.result,
+            showCancel: true,
+            confirmText: '使用',
+            success: (modalRes) => {
+              if (modalRes.confirm) {
+                this.setData({
+                  bio: res.result.result.replace('优化后的自我介绍：', '')
+                })
+              }
+            }
+          })
+        } else {
+          wx.showToast({ title: '优化失败', icon: 'none' })
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        wx.showToast({ title: '优化失败', icon: 'none' })
+      }
+    })
+  },
+
+  // AI 推荐标签
+  generateTags(e) {
+    wx.showLoading({ title: 'AI 推荐中...' })
+    
+    wx.cloud.callFunction({
+      name: 'aiGenerate',
+      data: { 
+        type: 'tags',
+        data: { identity: this.data.role }
+      },
+      success: (res) => {
+        wx.hideLoading()
+        if (res.result && res.result.success) {
+          this.setData({
+            suggestedTags: res.result.result
+          })
+          wx.showToast({ title: '推荐成功', icon: 'success' })
+        } else {
+          wx.showToast({ title: '推荐失败', icon: 'none' })
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        wx.showToast({ title: '推荐失败', icon: 'none' })
+      }
+    })
+  },
+
+  // 添加 AI 推荐的标签
+  addTag(e) {
+    const tag = e.currentTarget.dataset.tag
+    // TODO: 将标签添加到对应字段
+    wx.showToast({ title: '已添加: ' + tag, icon: 'none' })
   },
 
   // 保存到云端

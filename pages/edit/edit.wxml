@@ -75,6 +75,21 @@
     <view class="form-item">
       <text class="label">简介</text>
       <textarea class="textarea" value="{{bio}}" data-field="bio" bindinput="onInputChange" placeholder="请输入个人简介" />
+      <view class="ai-buttons">
+        <button class="ai-btn" bindtap="generateIntro" data-field="bio">AI 生成介绍</button>
+        <button class="ai-btn" bindtap="optimizeBio" data-field="bio">AI 优化</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- AI 标签推荐 -->
+  <view class="form-section">
+    <view class="section-header">
+      <text class="section-title">AI 标签推荐</text>
+      <button class="ai-btn" bindtap="generateTags">一键生成</button>
+    </view>
+    <view class="ai-suggested-tags" wx:if="{{suggestedTags.length > 0}}">
+      <text class="tag" wx:for="{{suggestedTags}}" wx:key="*this" bindtap="addTag" data-tag="{{item}}">{{item}}</text>
     </view>
   </view>
 
