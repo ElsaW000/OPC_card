@@ -407,6 +407,61 @@ Page({
     wx.showToast({ title: '已添加: ' + tag, icon: 'none' })
   },
 
+  // AI 读取 GitHub 项目
+  fetchGitHubProjects() {
+    if (!this.data.githubUrl) {
+      wx.showToast({ title: '请先填写 GitHub 地址', icon: 'none' })
+      return
+    }
+    
+    // 提取 GitHub 用户名
+    const match = this.data.githubUrl.match(/github\.com\/([^\/]+)/)
+    if (!match) {
+      wx.showToast({ title: 'GitHub 地址格式不对', icon: 'none' })
+      return
+    }
+    
+    const username = match[1]
+    wx.showLoading({ title: 'AI 读取中...' })
+    
+    wx.cloud.callFunction({
+      name: 'aiGenerate',
+      data: { 
+        type: 'fetchGitHub',
+        data: { username: username }
+      },
+      success: (res) => {
+        wx.hideLoading()
+        if (res.result && res.result.success && res.result.result.projects) {
+          const projects = res.result.result.projects
+          
+          // 将获取的项目添加到产品列表
+          const newProjects = projects.map((p, index) => ({
+            id: Date.now().toString() + index,
+            title: p.name,
+            description: p.description || '',
+            thumbnail: '',
+            link: p.url,
+            github: p.url,
+            tags: p.topics || []
+          }))
+          
+          this.setData({
+            projects: [...this.data.projects, ...newProjects]
+          })
+          
+          wx.showToast({ title: `已添加 ${projects.length} 个项目`, icon: 'success' })
+        } else {
+          wx.showToast({ title: '读取失败', icon: 'none' })
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        wx.showToast({ title: '读取失败', icon: 'none' })
+      }
+    })
+  },
+
   // 保存到云端
   saveCard() {
     wx.showLoading({ title: '保存中...' });

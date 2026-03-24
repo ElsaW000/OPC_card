@@ -198,6 +198,49 @@ function extractWithRules(text) {
   return result
 }
 
+// 获取 GitHub 用户项目
+async function fetchGitHubProjects(username) {
+  const https = require('https')
+  
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: 'api.github.com',
+      path: `/users/${username}/repos?sort=updated&per_page=10`,
+      method: 'GET',
+      headers: {
+        'User-Agent': 'OPC-Card-MiniApp'
+      }
+    }
+    
+    const req = https.request(options, (res) => {
+      let data = ''
+      res.on('data', chunk => data += chunk)
+      res.on('end', () => {
+        try {
+          const repos = JSON.parse(data)
+          const projects = repos.slice(0, 5).map(repo => ({
+            name: repo.name,
+            description: repo.description || '',
+            url: repo.html_url,
+            topics: repo.topics ? repo.topics.slice(0, 3) : [],
+            stars: repo.stargazers_count
+          }))
+          
+          // 按星标排序
+          projects.sort((a, b) => b.stars - a.stars)
+          
+          resolve(projects)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+    
+    req.on('error', reject)
+    req.end()
+  })
+}
+
 // 优化文案（使用 AI）
 async function optimizeWithAI(text) {
   const prompt = `请优化以下自我介绍，使其更简洁、更有吸引力：
@@ -247,6 +290,13 @@ exports.main = async (event, context) => {
             locationCity ? `，位于${locationCity}` : '',
             techStack ? `，擅长${techStack}` : ''
           ].join('')
+        }
+        break
+        
+      case 'fetchGitHub':
+        // 获取 GitHub 用户项目
+        result = {
+          projects: await fetchGitHubProjects(data.username || '')
         }
         break
         
