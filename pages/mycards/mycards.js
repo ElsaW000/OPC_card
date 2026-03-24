@@ -1,10 +1,9 @@
-// mycards.js - 名片管理
+// mycards.js - 名片夹管理
 
 const app = getApp()
 
 Page({
   data: {
-    currentIndex: 0,
     cards: []
   },
 
@@ -23,82 +22,60 @@ Page({
       name: 'getCards',
       success: (res) => {
         wx.hideLoading()
-        if (res.result && res.result.success && res.result.data.length > 0) {
-          this.setData({ cards: res.result.data })
-        } else {
-          this.setData({ cards: this.getMockCards() })
+        if (res.result && res.result.success) {
+          const cards = res.result.data || []
+          
+          // 添加类型图标和颜色
+          const cardsWithStyle = cards.map(card => ({
+            ...card,
+            typeIcon: this.getTypeIcon(card.type),
+            colorClass: this.getColorClass(card.type)
+          }))
+          
+          this.setData({ cards: cardsWithStyle })
         }
       },
-      fail: () => {
+      fail: (err) => {
         wx.hideLoading()
-        this.setData({ cards: this.getMockCards() })
+        console.error('加载失败', err)
       }
     })
   },
 
-  getMockCards() {
-    return [
-      {
-        id: '1',
-        type: 'tech',
-        title: '技术开发名片',
-        name: '陈小独立',
-        nameEn: 'Independent Chen',
-        role: 'Full-stack Developer',
-        company: 'CodeFlow AI Studio',
-        locationCountry: '中国',
-        locationCity: '深圳',
-        avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
-        bannerUrl: 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800',
-        isDefault: true,
-        typeIcon: '📱'
-      },
-      {
-        id: '2',
-        type: 'biz',
-        title: '商务合作名片',
-        name: 'Independent Chen',
-        role: 'Founder & CEO',
-        company: 'One Person Company Ltd.',
-        locationCountry: '中国',
-        locationCity: '深圳',
-        avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
-        bannerUrl: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800',
-        isDefault: false,
-        typeIcon: '💼'
-      },
-      {
-        id: '3',
-        type: 'social',
-        title: '个人社交名片',
-        name: '阿力',
-        role: '摄影爱好者 / 徒步玩家',
-        locationCountry: '中国',
-        locationCity: '深圳',
-        avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
-        bannerUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800',
-        isDefault: false,
-        typeIcon: '👥'
-      }
-    ]
+  getTypeIcon(type) {
+    const icons = {
+      tech: '📱',
+      biz: '💼',
+      social: '👥',
+      custom: '⭐'
+    }
+    return icons[type] || '⭐'
   },
 
-  // 切换名片
-  switchCard(e) {
-    const index = e.currentTarget.dataset.index
-    this.setData({ currentIndex: index })
+  getColorClass(type) {
+    const colors = {
+      tech: 'bg-blue',
+      biz: 'bg-slate',
+      social: 'bg-green',
+      custom: 'bg-purple'
+    }
+    return colors[type] || 'bg-blue'
   },
 
   // 编辑名片
   editCard(e) {
     const id = e.currentTarget.dataset.id
-    wx.navigateTo({ url: '/pages/edit/edit?id=' + id })
+    wx.navigateTo({
+      url: `/pages/edit/edit?id=${id}`
+    })
   },
 
   // 设为默认
   setDefault(e) {
     const id = e.currentTarget.dataset.id
+    
     wx.showLoading({ title: '设置中...' })
+    
     wx.cloud.callFunction({
       name: 'setDefaultCard',
       data: { cardId: id },
@@ -109,30 +86,32 @@ Page({
           this.loadCards()
         }
       },
-      fail: () => {
+      fail: (err) => {
         wx.hideLoading()
+        wx.showToast({ title: '设置失败', icon: 'none' })
       }
     })
   },
 
   // 分享名片
   shareCard(e) {
-    wx.showShareMenu({ withShareTicket: true })
+    const id = e.currentTarget.dataset.id
+    wx.showShareMenu({
+      withShareTicket: true
+    })
   },
 
   // 删除名片
   deleteCard(e) {
     const id = e.currentTarget.dataset.id
-    if (this.data.cards.length <= 1) {
-      wx.showToast({ title: '至少保留一张', icon: 'none' })
-      return
-    }
+    
     wx.showModal({
       title: '确认删除',
-      content: '删除后无法恢复',
+      content: '确定要删除这张名片吗？',
       success: (res) => {
         if (res.confirm) {
           wx.showLoading({ title: '删除中...' })
+          
           wx.cloud.callFunction({
             name: 'deleteCard',
             data: { cardId: id },
@@ -143,8 +122,9 @@ Page({
                 this.loadCards()
               }
             },
-            fail: () => {
+            fail: (err) => {
               wx.hideLoading()
+              wx.showToast({ title: '删除失败', icon: 'none' })
             }
           })
         }
@@ -152,8 +132,10 @@ Page({
     })
   },
 
-  // 添加名片
+  // 添加新名片
   addCard() {
-    wx.navigateTo({ url: '/pages/edit/edit' })
+    wx.navigateTo({
+      url: '/pages/edit/edit'
+    })
   }
 })

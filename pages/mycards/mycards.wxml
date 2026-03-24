@@ -1,93 +1,58 @@
-<!--mycards.wxml - 名片管理 -->
+<!--mycards.wxml - 名片夹管理 -->
 <view class="container">
-  <!-- 顶部标题 -->
   <view class="header">
-    <text class="header-title">我的名片</text>
-    <text class="header-subtitle">MULTI-IDENTITY MANAGEMENT</text>
+    <view class="header-title">我的名片</view>
+    <view class="header-subtitle">Multi-Identity Management</view>
   </view>
 
-  <!-- 名片切换指示器 -->
-  <view class="card-tabs">
-    <scroll-view scroll-x="true" class="tabs-scroll">
-      <view class="tabs-list">
-        <block wx:for="{{cards}}" wx:key="id">
-          <view 
-            class="tab-item {{currentIndex === index ? 'active' : ''}}" 
-            bindtap="switchCard" 
-            data-index="{{index}}"
-          >
-            <text class="tab-num">{{index + 1}}</text>
-          </view>
-        </block>
-        <view class="tab-item add" bindtap="addCard">
-          <text class="tab-num">+</text>
+  <view class="card-list">
+    <block wx:for="{{cards}}" wx:key="id">
+      <view class="card-item" bindtap="editCard" data-id="{{item.id}}">
+        <view class="card-bg {{item.colorClass || 'bg-blue'}}">
+          <image class="card-bg-img" src="{{item.bannerUrl}}" mode="aspectFill" />
         </view>
-      </view>
-    </scroll-view>
-  </view>
-
-  <!-- 当前名片预览 -->
-  <view class="card-preview" wx:if="{{cards.length > 0}}">
-    <view class="preview-card">
-      <view class="preview-bg">
-        <image src="{{cards[currentIndex].bannerUrl}}" mode="aspectFill"></image>
-      </view>
-      <view class="preview-content">
-        <view class="preview-header">
-          <view class="preview-type">
-            <text>{{cards[currentIndex].typeIcon}}</text>
-            <text class="type-name">{{cards[currentIndex].title}}</text>
+        
+        <view class="card-content">
+          <view class="card-header">
+            <view class="card-type">
+              <text class="type-icon">{{item.typeIcon}}</text>
+              <text class="type-text">{{item.title}}</text>
+            </view>
+            <view class="card-default" wx:if="{{item.isDefault}}">
+              <text class="default-tag">默认</text>
+            </view>
           </view>
-          <view class="preview-default" wx:if="{{cards[currentIndex].isDefault}}">
-            <text>默认</text>
+          
+          <view class="card-body">
+            <view class="card-avatar">
+              <image src="{{item.avatarUrl}}" mode="aspectFill" />
+            </view>
+            <view class="card-info">
+              <text class="card-name">{{item.name}}</text>
+              <text class="card-role">{{item.role}}</text>
+              <text class="card-location" wx:if="{{item.locationCountry || item.locationCity}}">{{item.locationCountry}}{{item.locationCity}}</text>
+            </view>
           </view>
         </view>
-        <view class="preview-body">
-          <view class="preview-info">
-            <text class="preview-name">{{cards[currentIndex].name}}</text>
-            <text class="preview-role">{{cards[currentIndex].role}}</text>
-            <text class="preview-company" wx:if="{{cards[currentIndex].company}}">{{cards[currentIndex].company}}</text>
+        
+        <view class="card-actions">
+          <view class="action-btn" catchtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.isDefault}}">
+            <text>设为默认</text>
           </view>
-          <view class="preview-avatar">
-            <image src="{{cards[currentIndex].avatarUrl}}" mode="aspectFill"></image>
+          <view class="action-btn share" catchtap="shareCard" data-id="{{item.id}}">
+            <text>分享</text>
+          </view>
+          <view class="action-btn delete" catchtap="deleteCard" data-id="{{item.id}}" wx:if="{{cards.length > 1}}">
+            <text>删除</text>
           </view>
         </view>
       </view>
-    </view>
-
-    <!-- 底部操作 -->
-    <view class="preview-actions">
-      <view class="action-primary" bindtap="editCard" data-id="{{cards[currentIndex].id}}">
-        <text>编辑名片</text>
-      </view>
-      <view class="action-icon-btn" bindtap="shareCard" data-id="{{cards[currentIndex].id}}">
-        <text>📤</text>
-      </view>
-      <view class="action-icon-btn" bindtap="setDefault" data-id="{{cards[currentIndex].id}}" wx:if="{{!cards[currentIndex].isDefault}}">
-        <text>⭐</text>
-      </view>
-    </view>
-  </view>
-
-  <!-- 名片列表（可删除） -->
-  <view class="card-list-section">
-    <text class="section-title">所有名片</text>
-    <view class="card-list">
-      <block wx:for="{{cards}}" wx:key="id">
-        <view class="list-item" bindtap="switchCard" data-index="{{index}}">
-          <view class="list-info">
-            <text class="list-name">{{item.name}}</text>
-            <text class="list-role">{{item.role}}</text>
-          </view>
-          <view class="list-badge" wx:if="{{item.isDefault}}">默认</view>
-          <view class="list-delete" catchtap="deleteCard" data-id="{{item.id}}" wx:if="{{cards.length > 1}}">🗑</view>
-        </view>
-      </block>
-    </view>
+    </block>
   </view>
 
   <!-- 添加按钮 -->
   <view class="add-card-btn" bindtap="addCard">
-    <text>+ 创建新身份</text>
+    <text class="add-icon">+</text>
+    <text class="add-text">添加新名片</text>
   </view>
 </view>

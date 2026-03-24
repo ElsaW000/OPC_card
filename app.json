@@ -1,53 +1,45 @@
 {
   "pages": [
-    "pages/home/home",
+    "pages/index/index",
     "pages/mycards/mycards",
     "pages/contacts/contacts",
-    "pages/contactdetail/contactdetail",
-    "pages/management/management",
     "pages/visitor/visitor",
-    "pages/exchange/exchange",
-    "pages/exchangeconfirm/exchangeconfirm",
     "pages/analytics/analytics",
     "pages/edit/edit",
     "pages/webview/webview"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "OPC名片",
-    "navigationBarTextStyle": "black",
-    "backgroundColor": "#f8fafc"
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
-    "custom": true,
-    "color": "#9CA3AF",
-    "selectedColor": "#2563EB",
-    "backgroundColor": "#FFFFFF",
+    "color": "#9ca3af",
+    "selectedColor": "#111",
+    "backgroundColor": "#fff",
     "borderStyle": "white",
     "list": [
       {
-        "pagePath": "pages/home/home",
-        "text": "工作台"
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/mycards/mycards",
+        "text": "名片夹"
       },
       {
         "pagePath": "pages/contacts/contacts",
         "text": "联系人"
       },
       {
-        "pagePath": "pages/exchange/exchange",
-        "text": "交换名片"
+        "pagePath": "pages/visitor/visitor",
+        "text": "访客"
       },
       {
-        "pagePath": "pages/mycards/mycards",
-        "text": "我的名片"
-      },
-      {
-        "pagePath": "pages/management/management",
-        "text": "管理"
+        "pagePath": "pages/analytics/analytics",
+        "text": "数据"
       }
     ]
-  },
-  "style": "v2",
-  "sitemapLocation": "sitemap.json"
+  }
 }

@@ -1,4 +1,4 @@
-<!--index.wxml - 优化版 -->
+<!--index.wxml - 按照 Figma 设计重构 -->
 <view class="container">
   <!-- Banner -->
   <view class="banner">
@@ -14,12 +14,12 @@
       </view>
       <view class="social-buttons">
         <button class="social-btn github" bindtap="openLink" data-link="{{githubUrl}}">
-          <text class="iconfont icon-github">GH</text>
+          <text class="iconfont icon-github"></text>
         </button>
         <button class="social-btn twitter" bindtap="openLink" data-link="{{twitterUrl}}">
-          <text class="iconfont icon-twitter">𝕏</text>
+          <text class="iconfont icon-twitter"></text>
         </button>
-        <button class="follow-btn" bindtap="saveContact">关注</button>
+        <button class="follow-btn" bindtap="saveContact">保存</button>
       </view>
     </view>
 
@@ -35,35 +35,87 @@
       </view>
       
       <view class="quick-contact">
-        <view class="contact-btn phone" bindtap="callPhone" wx:if="{{phone}}">
-          <text class="contact-icon">📱</text>
-          <text class="contact-text">{{phone}}</text>
+        <view class="contact-btn phone" bindtap="callPhone">
+          <text class="contact-icon">📞</text>
+          <text class="contact-text">{{phone || '添加电话'}}</text>
         </view>
         <view class="contact-btn wechat" bindtap="copyWechat" wx:if="{{wechat}}">
           <text class="contact-icon">💬</text>
           <text class="contact-text">{{wechat}}</text>
         </view>
-        <view class="contact-btn email" bindtap="copyEmail" data-text="{{email}}" wx:if="{{email}}">
+        <view class="contact-btn email" bindtap="copyEmail" data-text="{{email}}">
           <text class="contact-icon">✉️</text>
-          <text class="contact-text">{{email}}</text>
+          <text class="contact-text">{{email || '添加邮箱'}}</text>
         </view>
       </view>
       
       <text class="bio">{{bio}}</text>
     </view>
 
-    <!-- 快捷统计数据 -->
+    <!-- 程序员专属信息 -->
+    <view class="template-info" wx:if="{{currentTemplate === 'developer'}}">
+      <view class="info-item">
+        <text class="info-label">工作年限</text>
+        <text class="info-value">{{years}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">技术栈</text>
+        <text class="info-value">{{techStack}}</text>
+      </view>
+    </view>
+
+    <!-- 设计师专属信息 -->
+    <view class="template-info" wx:if="{{currentTemplate === 'designer'}}">
+      <view class="info-item">
+        <text class="info-label">作品集</text>
+        <text class="info-value link" bindtap="openLink" data-link="{{portfolio}}">查看作品</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">擅长风格</text>
+        <text class="info-value">{{styles}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">从业年限</text>
+        <text class="info-value">{{experience}}</text>
+      </view>
+    </view>
+
+    <!-- 老板专属信息 -->
+    <view class="template-info" wx:if="{{currentTemplate === 'boss'}}">
+      <view class="info-item">
+        <text class="info-label">公司</text>
+        <text class="info-value">{{company}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">业务</text>
+        <text class="info-value">{{business}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">合作方式</text>
+        <text class="info-value">{{cooperation}}</text>
+      </view>
+    </view>
+
+    <!-- 自定义卡片 -->
+    <view class="custom-cards" wx:if="{{customCards.length > 0}}">
+      <view class="custom-card" wx:for="{{customCards}}" wx:key="id">
+        <text class="custom-card-title">{{item.title}}</text>
+        <text class="custom-card-content">{{item.content}}</text>
+      </view>
+    </view>
+
+    <!-- 数据卡片 -->
     <view class="stats-grid">
       <view class="stat-card">
-        <text class="stat-value">{{years || '8+'}}</text>
+        <text class="stat-value">{{years}}</text>
         <text class="stat-label">开发年限</text>
       </view>
       <view class="stat-card">
-        <text class="stat-value">{{products || '12'}}</text>
+        <text class="stat-value">{{products}}</text>
         <text class="stat-label">上线产品</text>
       </view>
       <view class="stat-card">
-        <text class="stat-value">{{users || '25k'}}</text>
+        <text class="stat-value">{{users}}</text>
         <text class="stat-label">全球用户</text>
       </view>
     </view>
@@ -78,7 +130,6 @@
     <view class="project-list">
       <view class="project-card" wx:for="{{projects}}" wx:key="id" bindtap="openLink" data-link="{{item.link}}">
         <image class="project-thumb" src="{{item.thumbnail}}" mode="aspectFill" />
-        <view class="project-overlay"></view>
         <view class="project-info">
           <view class="project-tags">
             <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
@@ -86,8 +137,8 @@
           <text class="project-title">{{item.title}}</text>
           <text class="project-desc">{{item.description}}</text>
           <view class="project-links">
-            <text class="link-item" wx:if="{{item.link}}">🌐 在线地址</text>
-            <text class="link-item" wx:if="{{item.github}}">🐙 GitHub</text>
+            <text class="link-item" wx:if="{{item.link}}">在线地址</text>
+            <text class="link-item" wx:if="{{item.github}}">GitHub</text>
           </view>
         </view>
       </view>
@@ -104,15 +155,11 @@
       <view class="video-list">
         <view class="video-card" wx:for="{{videos}}" wx:key="id" bindtap="openLink" data-link="{{item.link}}">
           <image class="video-thumb" src="{{item.thumbnail}}" mode="aspectFill" />
-          <view class="video-overlay"></view>
-          <view class="play-btn">
-            <text class="play-icon">▶</text>
-          </view>
-          <view class="video-duration-tag">{{item.duration}}</view>
           <view class="video-info">
             <text class="video-title">{{item.title}}</text>
             <view class="video-meta">
-              <text class="video-views">👁 {{item.views}} views</text>
+              <text class="video-views">{{item.views}} views</text>
+              <text class="video-duration">{{item.duration}}</text>
             </view>
           </view>
         </view>
@@ -131,7 +178,6 @@
           <text class="contact-row-label">微信 (WeChat)</text>
           <text class="contact-row-value">{{wechat}}</text>
         </view>
-        <text class="copy-hint">复制</text>
       </view>
       <view class="contact-item-row" bindtap="copyEmail" data-text="{{email}}" wx:if="{{email}}">
         <text class="contact-row-icon">✉️</text>
@@ -139,7 +185,6 @@
           <text class="contact-row-label">邮箱 (Email)</text>
           <text class="contact-row-value">{{email}}</text>
         </view>
-        <text class="copy-hint">复制</text>
       </view>
     </view>
   </view>
@@ -148,24 +193,5 @@
   <view class="action-bar">
     <button class="action-btn primary" bindtap="editCard">编辑名片</button>
     <button class="action-btn secondary" bindtap="shareCard">分享名片</button>
-  </view>
-
-  <!-- 浮动操作按钮 -->
-  <view class="fab-container">
-    <view class="fab-main" bindtap="exchangeCard">
-      <text class="fab-icon">🔄</text>
-      <text class="fab-text">交换名片</text>
-    </view>
-    <view class="fab-small" bindtap="saveContact">
-      <text class="fab-icon-small">👤</text>
-    </view>
-    <view class="fab-small" bindtap="showQRCode">
-      <text class="fab-icon-small">📱</text>
-    </view>
-  </view>
-
-  <!-- 分享按钮 -->
-  <view class="share-btn" bindtap="shareCard">
-    <text>📤</text>
   </view>
 </view>
