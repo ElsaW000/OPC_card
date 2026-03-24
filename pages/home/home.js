@@ -58,6 +58,9 @@ Page({
           const profile = res.result.defaultCard
           this.setData({ profile })
         }
+      },
+      fail: () => {
+        // 使用默认数据
       }
     })
   },
