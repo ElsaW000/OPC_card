@@ -2,22 +2,32 @@
 Component({
   data: {
     selected: 0,
+    contactCount: 3,
     list: [
       { pagePath: 'pages/home/home', text: '工作台' },
-      { pagePath: 'pages/mycards/mycards', text: '名片' },
       { pagePath: 'pages/contacts/contacts', text: '联系人' },
+      { pagePath: 'pages/exchange/exchange', text: '交换名片' },
+      { pagePath: 'pages/mycards/mycards', text: '我的名片' },
       { pagePath: 'pages/management/management', text: '管理' }
     ]
   },
 
   attached() {
-    // 获取当前页面路径来设置选中状态
     const pages = getCurrentPages()
     const currentPage = pages[pages.length - 1]
     const currentPath = currentPage.route
-    const index = this.data.list.findIndex(item => item.pagePath === currentPath)
-    if (index !== -1) {
-      this.setData({ selected: index })
+    
+    // 根据页面路径设置选中状态
+    const indexMap = {
+      'pages/home/home': 0,
+      'pages/contacts/contacts': 1,
+      'pages/exchange/exchange': 2,
+      'pages/mycards/mycards': 3,
+      'pages/management/management': 4
+    }
+    
+    if (indexMap[currentPath] !== undefined) {
+      this.setData({ selected: indexMap[currentPath] })
     }
   },
 

@@ -1,104 +1,93 @@
-<!--mycards.wxml - 优化版 -->
+<!--mycards.wxml - 名片管理 -->
 <view class="container">
-  <!-- Header -->
+  <!-- 顶部标题 -->
   <view class="header">
-    <view class="header-content">
-      <text class="header-title">我的名片</text>
-      <text class="header-subtitle">MULTI-IDENTITY MANAGEMENT</text>
+    <text class="header-title">我的名片</text>
+    <text class="header-subtitle">MULTI-IDENTITY MANAGEMENT</text>
+  </view>
+
+  <!-- 名片切换指示器 -->
+  <view class="card-tabs">
+    <scroll-view scroll-x="true" class="tabs-scroll">
+      <view class="tabs-list">
+        <block wx:for="{{cards}}" wx:key="id">
+          <view 
+            class="tab-item {{currentIndex === index ? 'active' : ''}}" 
+            bindtap="switchCard" 
+            data-index="{{index}}"
+          >
+            <text class="tab-num">{{index + 1}}</text>
+          </view>
+        </block>
+        <view class="tab-item add" bindtap="addCard">
+          <text class="tab-num">+</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 当前名片预览 -->
+  <view class="card-preview" wx:if="{{cards.length > 0}}">
+    <view class="preview-card">
+      <view class="preview-bg">
+        <image src="{{cards[currentIndex].bannerUrl}}" mode="aspectFill"></image>
+      </view>
+      <view class="preview-content">
+        <view class="preview-header">
+          <view class="preview-type">
+            <text>{{cards[currentIndex].typeIcon}}</text>
+            <text class="type-name">{{cards[currentIndex].title}}</text>
+          </view>
+          <view class="preview-default" wx:if="{{cards[currentIndex].isDefault}}">
+            <text>默认</text>
+          </view>
+        </view>
+        <view class="preview-body">
+          <view class="preview-info">
+            <text class="preview-name">{{cards[currentIndex].name}}</text>
+            <text class="preview-role">{{cards[currentIndex].role}}</text>
+            <text class="preview-company" wx:if="{{cards[currentIndex].company}}">{{cards[currentIndex].company}}</text>
+          </view>
+          <view class="preview-avatar">
+            <image src="{{cards[currentIndex].avatarUrl}}" mode="aspectFill"></image>
+          </view>
+        </view>
+      </view>
     </view>
-    <view class="add-btn" bindtap="addCard">
-      <text class="add-icon">+</text>
+
+    <!-- 底部操作 -->
+    <view class="preview-actions">
+      <view class="action-primary" bindtap="editCard" data-id="{{cards[currentIndex].id}}">
+        <text>编辑名片</text>
+      </view>
+      <view class="action-icon-btn" bindtap="shareCard" data-id="{{cards[currentIndex].id}}">
+        <text>📤</text>
+      </view>
+      <view class="action-icon-btn" bindtap="setDefault" data-id="{{cards[currentIndex].id}}" wx:if="{{!cards[currentIndex].isDefault}}">
+        <text>⭐</text>
+      </view>
     </view>
   </view>
 
-  <!-- Cards List -->
-  <scroll-view class="cards-scroll" scroll-y="true">
-    <view class="cards-list">
+  <!-- 名片列表（可删除） -->
+  <view class="card-list-section">
+    <text class="section-title">所有名片</text>
+    <view class="card-list">
       <block wx:for="{{cards}}" wx:key="id">
-        <view class="card-item" bindtap="editCard" data-id="{{item.id}}">
-          <!-- ID Card -->
-          <view class="id-card {{item.colorClass}}">
-            <image class="card-bg" src="{{item.bgImage}}" mode="aspectFill" />
-            <view class="card-overlay"></view>
-            
-            <view class="card-content">
-              <view class="card-header">
-                <view class="card-type">
-                  <view class="type-icon-box">
-                    <text class="type-icon">{{item.typeIcon}}</text>
-                  </view>
-                  <text class="type-label">{{item.title}}</text>
-                </view>
-                <view class="default-badge" wx:if="{{item.isDefault}}">
-                  <text class="star">⭐</text>
-                  <text class="default-text">默认</text>
-                </view>
-              </view>
-
-              <view class="card-footer">
-                <view class="card-info">
-                  <text class="card-name">{{item.name}}</text>
-                  <text class="card-role">{{item.role}}</text>
-                  <view class="card-company" wx:if="{{item.company}}">
-                    <text class="company-icon">🏢</text>
-                    <text class="company-text">{{item.company}}</text>
-                  </view>
-                </view>
-                <view class="card-avatar-box">
-                  <image class="card-avatar" src="{{item.avatar}}" mode="aspectFill" />
-                </view>
-              </view>
-            </view>
-
-            <!-- Chip decoration -->
-            <view class="chip-decoration"></view>
+        <view class="list-item" bindtap="switchCard" data-index="{{index}}">
+          <view class="list-info">
+            <text class="list-name">{{item.name}}</text>
+            <text class="list-role">{{item.role}}</text>
           </view>
-
-          <!-- Quick Actions -->
-          <view class="card-actions">
-            <view class="actions-left">
-              <view class="action-btn {{item.isDefault ? 'active' : ''}}" bindtap="setDefault" data-id="{{item.id}}">
-                <text class="action-icon">{{item.isDefault ? '✓' : '○'}}</text>
-                <text class="action-text {{item.isDefault ? 'active' : ''}}">{{item.isDefault ? '当前默认' : '设为默认'}}</text>
-              </view>
-              <view class="action-btn" bindtap="editCard" data-id="{{item.id}}">
-                <text class="action-icon">✏️</text>
-                <text class="action-text">编辑</text>
-              </view>
-            </view>
-            <view class="actions-right">
-              <view class="icon-btn" bindtap="shareCard" data-id="{{item.id}}">
-                <text>📤</text>
-              </view>
-              <view class="icon-btn delete" bindtap="deleteCard" data-id="{{item.id}}" wx:if="{{cards.length > 1}}">
-                <text>🗑️</text>
-              </view>
-            </view>
-          </view>
+          <view class="list-badge" wx:if="{{item.isDefault}}">默认</view>
+          <view class="list-delete" catchtap="deleteCard" data-id="{{item.id}}" wx:if="{{cards.length > 1}}">🗑</view>
         </view>
       </block>
-
-      <!-- Add Card Placeholder -->
-      <view class="add-card-placeholder" bindtap="addCard">
-        <view class="placeholder-icon-box">
-          <text class="placeholder-icon">+</text>
-        </view>
-        <text class="placeholder-text">创建新身份</text>
-      </view>
     </view>
+  </view>
 
-    <!-- Info Tips -->
-    <view class="tips-box">
-      <view class="tips-header">
-        <text class="tips-icon">⭐</text>
-        <text class="tips-title">多重身份建议</text>
-      </view>
-      <text class="tips-content">
-        你可以根据不同的社交场景切换不同的名片。例如：在开发者大会使用"技术名片"，在商务酒会使用"商务名片"，在驴友聚会使用"社交名片"。默认名片将作为你二维码分享时的首选展示页面。
-      </text>
-    </view>
-  </scroll-view>
-
-  <!-- Bottom Nav Placeholder -->
-  <view class="bottom-nav-spacer"></view>
+  <!-- 添加按钮 -->
+  <view class="add-card-btn" bindtap="addCard">
+    <text>+ 创建新身份</text>
+  </view>
 </view>
