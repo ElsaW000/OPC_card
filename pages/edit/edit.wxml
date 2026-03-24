@@ -175,11 +175,6 @@
       <text class="label">Twitter</text>
       <input class="input" value="{{twitterUrl}}" data-field="twitterUrl" bindinput="onInputChange" placeholder="https://twitter.com/username" />
     </view>
-    
-    <!-- AI 读取 GitHub 自动生成项目 -->
-    <view class="ai-github-section" wx:if="{{githubUrl}}">
-      <button class="ai-btn" bindtap="fetchGitHubProjects">🤖 AI 一键读取我的 GitHub 项目</button>
-    </view>
   </view>
 
   <!-- 数据统计 -->
@@ -288,7 +283,10 @@
   <view class="form-section">
     <view class="section-header">
       <text class="section-title">产品/项目</text>
-      <button class="add-btn" bindtap="addProject">添加产品</button>
+      <view class="header-btns">
+        <button class="ai-btn-small" bindtap="fetchGitHubProjects">🤖 从 GitHub 读取</button>
+        <button class="add-btn" bindtap="addProject">添加产品</button>
+      </view>
     </view>
     
     <view class="project-item" wx:for="{{projects}}" wx:key="id">
