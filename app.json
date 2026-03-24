@@ -31,12 +31,16 @@
         "text": "工作台"
       },
       {
-        "pagePath": "pages/mycards/mycards",
-        "text": "名片"
-      },
-      {
         "pagePath": "pages/contacts/contacts",
         "text": "联系人"
+      },
+      {
+        "pagePath": "pages/exchange/exchange",
+        "text": "交换名片"
+      },
+      {
+        "pagePath": "pages/mycards/mycards",
+        "text": "我的名片"
       },
       {
         "pagePath": "pages/management/management",
