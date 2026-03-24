@@ -283,10 +283,7 @@
   <view class="form-section">
     <view class="section-header">
       <text class="section-title">产品/项目</text>
-      <view class="header-btns">
-        <button class="ai-btn-small" bindtap="fetchGitHubProjects">🤖 从 GitHub 读取</button>
-        <button class="add-btn" bindtap="addProject">添加产品</button>
-      </view>
+      <button class="add-btn" bindtap="addProject">+ 添加产品</button>
     </view>
     
     <view class="project-item" wx:for="{{projects}}" wx:key="id">

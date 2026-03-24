@@ -180,22 +180,6 @@
   flex-shrink: 0;
 }
 
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24rpx;
-  flex-wrap: wrap;
-  gap: 12rpx;
-}
-
-.header-btns {
-  display: flex;
-  gap: 12rpx;
-  align-items: center;
-  flex-shrink: 0;
-}
-
 /* Banner & Avatar */
 .banner-upload, .avatar-upload {
   display: flex;
