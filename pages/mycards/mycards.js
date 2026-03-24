@@ -4,7 +4,6 @@ const app = getApp()
 
 Page({
   data: {
-    currentIndex: 0,
     cards: []
   },
 
@@ -18,7 +17,7 @@ Page({
 
   loadCards() {
     wx.showLoading({ title: '加载中...' })
-    
+
     wx.cloud.callFunction({
       name: 'getCards',
       success: (res) => {
@@ -42,7 +41,7 @@ Page({
         id: '1',
         type: 'tech',
         title: '技术开发名片',
-        name: '陈小独立',
+        name: '陈独立',
         nameEn: 'Independent Chen',
         role: 'Full-stack Developer',
         company: 'CodeFlow AI Studio',
@@ -51,7 +50,8 @@ Page({
         avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
         bannerUrl: 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800',
         isDefault: true,
-        typeIcon: '📱'
+        typeIcon: '\uD83D\uDCC1',
+        gradient: '#3b82f6, #1d4ed8'
       },
       {
         id: '2',
@@ -65,7 +65,8 @@ Page({
         avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
         bannerUrl: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800',
         isDefault: false,
-        typeIcon: '💼'
+        typeIcon: '\uD83D\uDCBC',
+        gradient: '#475569, #1e293b'
       },
       {
         id: '3',
@@ -78,24 +79,17 @@ Page({
         avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
         bannerUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800',
         isDefault: false,
-        typeIcon: '👥'
+        typeIcon: '\uD83D\uDC65',
+        gradient: '#10b981, #059669'
       }
     ]
   },
 
-  // 切换名片
-  switchCard(e) {
-    const index = e.currentTarget.dataset.index
-    this.setData({ currentIndex: index })
-  },
-
-  // 编辑名片
   editCard(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({ url: '/pages/edit/edit?id=' + id })
   },
 
-  // 设为默认
   setDefault(e) {
     const id = e.currentTarget.dataset.id
     wx.showLoading({ title: '设置中...' })
@@ -115,12 +109,10 @@ Page({
     })
   },
 
-  // 分享名片
   shareCard(e) {
     wx.showShareMenu({ withShareTicket: true })
   },
 
-  // 删除名片
   deleteCard(e) {
     const id = e.currentTarget.dataset.id
     if (this.data.cards.length <= 1) {
@@ -152,7 +144,6 @@ Page({
     })
   },
 
-  // 添加名片
   addCard() {
     wx.navigateTo({ url: '/pages/edit/edit' })
   }

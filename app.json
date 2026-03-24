@@ -7,16 +7,18 @@
     "pages/visitor/visitor",
     "pages/analytics/analytics",
     "pages/edit/edit",
+    "pages/exchangeconfirm/exchangeconfirm",
     "pages/webview/webview"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "OPC名片",
+    "navigationBarTitleText": "OPC",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#f8f9fa"
   },
   "tabBar": {
+    "custom": true,
     "color": "#999999",
     "selectedColor": "#2F65EE",
     "backgroundColor": "rgba(255, 255, 255, 0.95)",
@@ -24,19 +26,19 @@
     "list": [
       {
         "pagePath": "pages/home/home",
-        "text": "工作台"
-      },
-      {
-        "pagePath": "pages/mycards/mycards",
-        "text": "名片"
+        "text": "GongZuoTai"
       },
       {
         "pagePath": "pages/contacts/contacts",
-        "text": "联系人"
+        "text": "LianXiRen"
+      },
+      {
+        "pagePath": "pages/mycards/mycards",
+        "text": "WoDeMingPian"
       },
       {
         "pagePath": "pages/management/management",
-        "text": "管理"
+        "text": "GuanLi"
       }
     ]
   },

@@ -32,7 +32,7 @@ app.json (全局配置)
     "list": [
       {
         "pagePath": "pages/home/home",
-        "text": "首页",
+        "text": "我的名片",
         "iconPath": "assets/icons/home.png",
         "selectedIconPath": "assets/icons/home-active.png"
       },
