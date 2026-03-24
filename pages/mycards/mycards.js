@@ -1,9 +1,10 @@
-// mycards.js - 名片夹管理
+// mycards.js - 名片管理
 
 const app = getApp()
 
 Page({
   data: {
+    currentIndex: 0,
     cards: []
   },
 
@@ -23,24 +24,13 @@ Page({
       success: (res) => {
         wx.hideLoading()
         if (res.result && res.result.success && res.result.data.length > 0) {
-          const cards = res.result.data
-          
-          // 添加类型图标和颜色
-          const cardsWithStyle = cards.map(card => ({
-            ...card,
-            typeIcon: this.getTypeIcon(card.type),
-            colorClass: this.getColorClass(card.type)
-          }))
-          
-          this.setData({ cards: cardsWithStyle })
+          this.setData({ cards: res.result.data })
         } else {
-          // 使用 Mock Data
           this.setData({ cards: this.getMockCards() })
         }
       },
-      fail: (err) => {
+      fail: () => {
         wx.hideLoading()
-        // 使用 Mock Data
         this.setData({ cards: this.getMockCards() })
       }
     })
@@ -61,7 +51,6 @@ Page({
         avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
         bannerUrl: 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800',
         isDefault: true,
-        colorClass: 'bg-blue',
         typeIcon: '📱'
       },
       {
@@ -76,7 +65,6 @@ Page({
         avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
         bannerUrl: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800',
         isDefault: false,
-        colorClass: 'bg-slate',
         typeIcon: '💼'
       },
       {
@@ -90,46 +78,27 @@ Page({
         avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
         bannerUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800',
         isDefault: false,
-        colorClass: 'bg-green',
         typeIcon: '👥'
       }
     ]
   },
 
-  getTypeIcon(type) {
-    const icons = {
-      tech: '📱',
-      biz: '💼',
-      social: '👥',
-      custom: '⭐'
-    }
-    return icons[type] || '⭐'
-  },
-
-  getColorClass(type) {
-    const colors = {
-      tech: 'bg-blue',
-      biz: 'bg-slate',
-      social: 'bg-green',
-      custom: 'bg-purple'
-    }
-    return colors[type] || 'bg-blue'
+  // 切换名片
+  switchCard(e) {
+    const index = e.currentTarget.dataset.index
+    this.setData({ currentIndex: index })
   },
 
   // 编辑名片
   editCard(e) {
     const id = e.currentTarget.dataset.id
-    wx.navigateTo({
-      url: `/pages/edit/edit?id=${id}`
-    })
+    wx.navigateTo({ url: '/pages/edit/edit?id=' + id })
   },
 
   // 设为默认
   setDefault(e) {
     const id = e.currentTarget.dataset.id
-    
     wx.showLoading({ title: '设置中...' })
-    
     wx.cloud.callFunction({
       name: 'setDefaultCard',
       data: { cardId: id },
@@ -140,40 +109,30 @@ Page({
           this.loadCards()
         }
       },
-      fail: (err) => {
+      fail: () => {
         wx.hideLoading()
-        wx.showToast({ title: '设置失败', icon: 'none' })
       }
     })
   },
 
   // 分享名片
   shareCard(e) {
-    const id = e.currentTarget.dataset.id
-    wx.showShareMenu({
-      withShareTicket: true
-    })
-  },
-
-  // 交换名片
-  exchangeCard(e) {
-    const id = e.currentTarget.dataset.id
-    wx.navigateTo({
-      url: '/pages/exchangeconfirm/exchangeconfirm?id=' + id
-    })
+    wx.showShareMenu({ withShareTicket: true })
   },
 
   // 删除名片
   deleteCard(e) {
     const id = e.currentTarget.dataset.id
-    
+    if (this.data.cards.length <= 1) {
+      wx.showToast({ title: '至少保留一张', icon: 'none' })
+      return
+    }
     wx.showModal({
       title: '确认删除',
-      content: '确定要删除这张名片吗？',
+      content: '删除后无法恢复',
       success: (res) => {
         if (res.confirm) {
           wx.showLoading({ title: '删除中...' })
-          
           wx.cloud.callFunction({
             name: 'deleteCard',
             data: { cardId: id },
@@ -184,9 +143,8 @@ Page({
                 this.loadCards()
               }
             },
-            fail: (err) => {
+            fail: () => {
               wx.hideLoading()
-              wx.showToast({ title: '删除失败', icon: 'none' })
             }
           })
         }
@@ -194,10 +152,8 @@ Page({
     })
   },
 
-  // 添加新名片
+  // 添加名片
   addCard() {
-    wx.navigateTo({
-      url: '/pages/edit/edit'
-    })
+    wx.navigateTo({ url: '/pages/edit/edit' })
   }
 })
