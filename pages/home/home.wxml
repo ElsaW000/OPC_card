@@ -6,7 +6,7 @@
     <text class="header-subtitle">管理你的 OPC 品牌与人脉网络</text>
   </view>
 
-  <!-- 数据看板 - 蓝色访客卡 + 绿色交换卡 -->
+  <!-- 数据看板 -->
   <view class="stats-row">
     <view class="stat-card card-blue">
       <view class="stat-header">

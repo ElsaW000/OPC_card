@@ -3,7 +3,6 @@
     "pages/home/home",
     "pages/mycards/mycards",
     "pages/contacts/contacts",
-    "pages/management/management",
     "pages/visitor/visitor",
     "pages/analytics/analytics",
     "pages/edit/edit",
@@ -11,20 +10,19 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTitleText": "OPC名片",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#f8f9fa"
+    "backgroundColor": "#f8fafc"
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#2F65EE",
-    "backgroundColor": "rgba(255, 255, 255, 0.95)",
-    "borderStyle": "white",
+    "color": "#9ca3af",
+    "selectedColor": "#2563eb",
+    "backgroundColor": "#ffffff",
     "list": [
       {
         "pagePath": "pages/home/home",
-        "text": "工作台"
+        "text": "首页"
       },
       {
         "pagePath": "pages/mycards/mycards",
@@ -35,8 +33,12 @@
         "text": "联系人"
       },
       {
-        "pagePath": "pages/management/management",
-        "text": "管理"
+        "pagePath": "pages/visitor/visitor",
+        "text": "访客"
+      },
+      {
+        "pagePath": "pages/analytics/analytics",
+        "text": "数据"
       }
     ]
   },

@@ -1,38 +1,14 @@
 <!--custom-tab-bar.wxml -->
 <view class="tab-bar">
-  <!-- 左侧：工作台 -->
-  <view class="tab-item left" bindtap="switchTab" data-path="pages/home/home" data-index="0">
-    <view class="tab-icon">📊</view>
-    <text class="tab-text">工作台</text>
-  </view>
-  
-  <!-- 左侧：联系人 -->
-  <view class="tab-item left" bindtap="switchTab" data-path="pages/contacts/contacts" data-index="1">
-    <view class="tab-icon-wrap">
-      <text class="tab-icon">👥</text>
-      <view class="badge" wx:if="{{contactCount > 0}}">{{contactCount > 99 ? '99+' : contactCount}}</view>
-    </view>
-    <text class="tab-text">联系人</text>
-  </view>
-  
-  <!-- 中间：交换名片（突出按钮） -->
-  <view class="tab-center">
-    <view class="exchange-btn" bindtap="switchTab" data-path="pages/exchange/exchange" data-index="2">
-      <text class="exchange-icon">🔄</text>
-      <text class="exchange-text">交换</text>
-    </view>
-  </view>
-  
-  <!-- 右侧：我的名片 -->
-  <view class="tab-item right {{selected === 3 ? 'active' : ''}}" bindtap="switchTab" data-path="pages/mycards/mycards" data-index="3">
-    <view class="tab-icon">📇</view>
-    <text class="tab-text">我的名片</text>
-    <view class="active-line"></view>
-  </view>
-  
-  <!-- 右侧：管理 -->
-  <view class="tab-item right" bindtap="switchTab" data-path="pages/management/management" data-index="4">
-    <view class="tab-icon">⚙️</view>
-    <text class="tab-text">管理</text>
+  <view 
+    wx:for="{{list}}" 
+    wx:key="index" 
+    class="tab-item {{selected === index ? 'active' : ''}}" 
+    bindtap="switchTab" 
+    data-path="{{item.pagePath}}" 
+    data-index="{{index}}"
+  >
+    <text class="tab-icon">{{item.icon}}</text>
+    <text class="tab-text">{{item.text}}</text>
   </view>
 </view>

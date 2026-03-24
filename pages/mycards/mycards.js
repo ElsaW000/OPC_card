@@ -17,21 +17,20 @@ Page({
   },
 
   loadCards() {
-    wx.showLoading({ title: '加载中...' })
+    // 直接使用 mock 数据，确保预览正常显示
+    const mockCards = this.getMockCards()
+    this.setData({ 
+      cards: mockCards,
+      currentIndex: 0 
+    })
     
+    // 同时尝试从云端加载
     wx.cloud.callFunction({
       name: 'getCards',
       success: (res) => {
-        wx.hideLoading()
         if (res.result && res.result.success && res.result.data.length > 0) {
           this.setData({ cards: res.result.data })
-        } else {
-          this.setData({ cards: this.getMockCards() })
         }
-      },
-      fail: () => {
-        wx.hideLoading()
-        this.setData({ cards: this.getMockCards() })
       }
     })
   },
@@ -83,44 +82,30 @@ Page({
     ]
   },
 
-  // 切换名片
   switchCard(e) {
     const index = e.currentTarget.dataset.index
     this.setData({ currentIndex: index })
   },
 
-  // 编辑名片
   editCard(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({ url: '/pages/edit/edit?id=' + id })
   },
 
-  // 设为默认
   setDefault(e) {
     const id = e.currentTarget.dataset.id
-    wx.showLoading({ title: '设置中...' })
-    wx.cloud.callFunction({
-      name: 'setDefaultCard',
-      data: { cardId: id },
-      success: (res) => {
-        wx.hideLoading()
-        if (res.result && res.result.success) {
-          wx.showToast({ title: '已设为默认', icon: 'success' })
-          this.loadCards()
-        }
-      },
-      fail: () => {
-        wx.hideLoading()
-      }
-    })
+    const cards = this.data.cards.map(card => ({
+      ...card,
+      isDefault: card.id === id
+    }))
+    this.setData({ cards })
+    wx.showToast({ title: '已设为默认', icon: 'success' })
   },
 
-  // 分享名片
   shareCard(e) {
     wx.showShareMenu({ withShareTicket: true })
   },
 
-  // 删除名片
   deleteCard(e) {
     const id = e.currentTarget.dataset.id
     if (this.data.cards.length <= 1) {
@@ -132,27 +117,14 @@ Page({
       content: '删除后无法恢复',
       success: (res) => {
         if (res.confirm) {
-          wx.showLoading({ title: '删除中...' })
-          wx.cloud.callFunction({
-            name: 'deleteCard',
-            data: { cardId: id },
-            success: (res) => {
-              wx.hideLoading()
-              if (res.result && res.result.success) {
-                wx.showToast({ title: '已删除', icon: 'success' })
-                this.loadCards()
-              }
-            },
-            fail: () => {
-              wx.hideLoading()
-            }
-          })
+          const cards = this.data.cards.filter(card => card.id !== id)
+          this.setData({ cards })
+          wx.showToast({ title: '已删除', icon: 'success' })
         }
       }
     })
   },
 
-  // 添加名片
   addCard() {
     wx.navigateTo({ url: '/pages/edit/edit' })
   }
