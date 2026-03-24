@@ -1,0 +1,58 @@
+<!--mycards.wxml - 名片夹管理 -->
+<view class="container">
+  <view class="header">
+    <view class="header-title">我的名片</view>
+    <view class="header-subtitle">Multi-Identity Management</view>
+  </view>
+
+  <view class="card-list">
+    <block wx:for="{{cards}}" wx:key="id">
+      <view class="card-item" bindtap="editCard" data-id="{{item.id}}">
+        <view class="card-bg {{item.colorClass || 'bg-blue'}}">
+          <image class="card-bg-img" src="{{item.bannerUrl}}" mode="aspectFill" />
+        </view>
+        
+        <view class="card-content">
+          <view class="card-header">
+            <view class="card-type">
+              <text class="type-icon">{{item.typeIcon}}</text>
+              <text class="type-text">{{item.title}}</text>
+            </view>
+            <view class="card-default" wx:if="{{item.isDefault}}">
+              <text class="default-tag">默认</text>
+            </view>
+          </view>
+          
+          <view class="card-body">
+            <view class="card-avatar">
+              <image src="{{item.avatarUrl}}" mode="aspectFill" />
+            </view>
+            <view class="card-info">
+              <text class="card-name">{{item.name}}</text>
+              <text class="card-role">{{item.role}}</text>
+              <text class="card-location" wx:if="{{item.locationCountry || item.locationCity}}">{{item.locationCountry}}{{item.locationCity}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="card-actions">
+          <view class="action-btn" catchtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.isDefault}}">
+            <text>设为默认</text>
+          </view>
+          <view class="action-btn share" catchtap="shareCard" data-id="{{item.id}}">
+            <text>分享</text>
+          </view>
+          <view class="action-btn delete" catchtap="deleteCard" data-id="{{item.id}}" wx:if="{{cards.length > 1}}">
+            <text>删除</text>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 添加按钮 -->
+  <view class="add-card-btn" bindtap="addCard">
+    <text class="add-icon">+</text>
+    <text class="add-text">添加新名片</text>
+  </view>
+</view>

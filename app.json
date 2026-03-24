@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/mycards/mycards",
     "pages/edit/edit",
     "pages/webview/webview"
   ],
