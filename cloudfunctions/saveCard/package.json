@@ -1,0 +1,9 @@
+{
+  "name": "saveCard",
+  "version": "1.0.0",
+  "description": "保存名片数据",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

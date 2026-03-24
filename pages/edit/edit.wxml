@@ -1,0 +1,134 @@
+<!--edit.wxml - 按照 Figma 设计重构 -->
+<view class="edit-container">
+  <!-- Banner 设置 -->
+  <view class="form-section">
+    <text class="section-title">Banner 图片</text>
+    <view class="banner-upload">
+      <image class="banner-preview" src="{{bannerUrl}}" mode="aspectFill" />
+      <button class="upload-btn" bindtap="chooseBanner">更换 Banner</button>
+    </view>
+  </view>
+
+  <!-- 头像设置 -->
+  <view class="form-section">
+    <text class="section-title">头像</text>
+    <view class="avatar-upload">
+      <image class="avatar-preview" src="{{avatarUrl}}" mode="aspectFill" />
+      <button class="upload-btn" bindtap="chooseAvatar">更换头像</button>
+    </view>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="form-section">
+    <text class="section-title">基本信息</text>
+    
+    <view class="form-item">
+      <text class="label">姓名</text>
+      <input class="input" value="{{name}}" data-field="name" bindinput="onInputChange" placeholder="请输入姓名" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">职位</text>
+      <input class="input" value="{{role}}" data-field="role" bindinput="onInputChange" placeholder="请输入职位" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">地点</text>
+      <input class="input" value="{{location}}" data-field="location" bindinput="onInputChange" placeholder="请输入地点" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">简介</text>
+      <textarea class="textarea" value="{{bio}}" data-field="bio" bindinput="onInputChange" placeholder="请输入个人简介" />
+    </view>
+  </view>
+
+  <!-- 社交链接 -->
+  <view class="form-section">
+    <text class="section-title">社交链接</text>
+    
+    <view class="form-item">
+      <text class="label">GitHub</text>
+      <input class="input" value="{{githubUrl}}" data-field="githubUrl" bindinput="onInputChange" placeholder="https://github.com/username" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">Twitter</text>
+      <input class="input" value="{{twitterUrl}}" data-field="twitterUrl" bindinput="onInputChange" placeholder="https://twitter.com/username" />
+    </view>
+  </view>
+
+  <!-- 数据统计 -->
+  <view class="form-section">
+    <text class="section-title">数据统计</text>
+    
+    <view class="form-item">
+      <text class="label">开发年限</text>
+      <input class="input" value="{{years}}" data-field="years" bindinput="onInputChange" placeholder="如：8+" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">上线产品</text>
+      <input class="input" value="{{products}}" data-field="products" bindinput="onInputChange" placeholder="如：12" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">全球用户</text>
+      <input class="input" value="{{users}}" data-field="users" bindinput="onInputChange" placeholder="如：25k" />
+    </view>
+  </view>
+
+  <!-- 联系方式 -->
+  <view class="form-section">
+    <text class="section-title">联系方式</text>
+    
+    <view class="form-item">
+      <text class="label">电话</text>
+      <input class="input" value="{{phone}}" data-field="phone" bindinput="onInputChange" placeholder="请输入电话" type="number" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">邮箱</text>
+      <input class="input" value="{{email}}" data-field="email" bindinput="onInputChange" placeholder="请输入邮箱" />
+    </view>
+  </view>
+  
+  <!-- 产品/项目 -->
+  <view class="form-section">
+    <view class="section-header">
+      <text class="section-title">产品/项目</text>
+      <button class="add-btn" bindtap="addProject">添加产品</button>
+    </view>
+    
+    <view class="project-item" wx:for="{{projects}}" wx:key="id">
+      <view class="project-form">
+        <view class="form-item">
+          <text class="label">标题</text>
+          <input class="input" value="{{item.title}}" data-index="{{index}}" data-field="title" bindinput="onProjectChange" placeholder="产品名称" />
+        </view>
+        <view class="form-item">
+          <text class="label">描述</text>
+          <textarea class="textarea" value="{{item.description}}" data-index="{{index}}" data-field="description" bindinput="onProjectChange" placeholder="产品描述" />
+        </view>
+        <view class="form-item">
+          <text class="label">链接</text>
+          <input class="input" value="{{item.link}}" data-index="{{index}}" data-field="link" bindinput="onProjectChange" placeholder="在线地址" />
+        </view>
+        <view class="form-item">
+          <text class="label">GitHub</text>
+          <input class="input" value="{{item.github}}" data-index="{{index}}" data-field="github" bindinput="onProjectChange" placeholder="GitHub 链接（可选）" />
+        </view>
+        <view class="form-item">
+          <text class="label">标签</text>
+          <input class="input" value="{{item.tags}}" data-index="{{index}}" data-field="tags" bindinput="onProjectChange" placeholder="用逗号分隔，如：AI, React, SaaS" />
+        </view>
+      </view>
+      <button class="remove-btn" data-index="{{index}}" bindtap="removeProject">删除</button>
+    </view>
+  </view>
+  
+  <!-- 保存按钮 -->
+  <view class="action-section">
+    <button class="save-btn" bindtap="saveCard">保存名片</button>
+  </view>
+</view>

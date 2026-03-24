@@ -1,0 +1,105 @@
+<!--index.wxml - 按照 Figma 设计重构 -->
+<view class="container">
+  <!-- Banner -->
+  <view class="banner">
+    <image class="banner-img" src="{{bannerUrl}}" mode="aspectFill" />
+    <view class="banner-overlay"></view>
+  </view>
+
+  <!-- 个人信息区域 -->
+  <view class="profile-section">
+    <view class="profile-header">
+      <!-- 头像 -->
+      <view class="avatar-wrapper">
+        <image class="avatar" src="{{avatarUrl}}" mode="aspectFill" />
+      </view>
+
+      <!-- 社交按钮 -->
+      <view class="social-buttons">
+        <button class="social-btn github" bindtap="openLink" data-link="{{githubUrl}}">
+          <text class="iconfont icon-github"></text>
+        </button>
+        <button class="social-btn twitter" bindtap="openLink" data-link="{{twitterUrl}}">
+          <text class="iconfont icon-twitter"></text>
+        </button>
+        <button class="follow-btn">关注</button>
+      </view>
+    </view>
+
+    <!-- 姓名职位 -->
+    <view class="profile-info">
+      <view class="name-row">
+        <text class="name">{{name}}</text>
+      </view>
+      <view class="role-location">
+        <text class="role">{{role}}</text>
+        <text class="separator">|</text>
+        <text class="location">{{location}}</text>
+      </view>
+      <text class="bio">{{bio}}</text>
+    </view>
+
+    <!-- 数据卡片 -->
+    <view class="stats-grid">
+      <view class="stat-card">
+        <text class="stat-value">{{years}}</text>
+        <text class="stat-label">开发年限</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-value">{{products}}</text>
+        <text class="stat-label">上线产品</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-value">{{users}}</text>
+        <text class="stat-label">全球用户</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 产品作品集 -->
+  <view class="portfolio-section">
+    <view class="section-header">
+      <text class="section-title">产品作品集</text>
+      <text class="view-all">View All</text>
+    </view>
+
+    <view class="project-list">
+      <view class="project-card" wx:for="{{projects}}" wx:key="id" bindtap="openLink" data-link="{{item.link}}">
+        <image class="project-thumb" src="{{item.thumbnail}}" mode="aspectFill" />
+        <view class="project-info">
+          <view class="project-tags">
+            <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+          </view>
+          <text class="project-title">{{item.title}}</text>
+          <text class="project-desc">{{item.description}}</text>
+          <view class="project-links">
+            <text class="link-item" wx:if="{{item.link}}">在线地址</text>
+            <text class="link-item" wx:if="{{item.github}}">GitHub</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 联系方式 -->
+  <view class="contact-section">
+    <view class="contact-item" bindtap="callPhone">
+      <text class="contact-label">电话</text>
+      <text class="contact-value">{{phone}}</text>
+    </view>
+    <view class="contact-item" bindtap="copyEmail" data-text="{{email}}">
+      <text class="contact-label">邮箱</text>
+      <text class="contact-value">{{email}}</text>
+    </view>
+    <view class="contact-item" bindtap="saveContact">
+      <text class="contact-label">保存</text>
+      <text class="contact-value">联系人</text>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="action-bar">
+    <button class="action-btn primary" bindtap="editCard">编辑名片</button>
+    <button class="action-btn secondary" bindtap="shareCard">分享名片</button>
+  </view>
+</view>
