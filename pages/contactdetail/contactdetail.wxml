@@ -1,0 +1,52 @@
+<!--contactdetail.wxml-->
+<view class="container">
+  <!-- 头部信息 -->
+  <view class="profile-card">
+    <view class="profile-bg">
+      <image src="{{contact.bannerUrl}}" mode="aspectFill"></image>
+    </view>
+    <view class="profile-content">
+      <image class="profile-avatar" src="{{contact.avatarUrl}}" mode="aspectFill"></image>
+      <view class="profile-info">
+        <text class="profile-name">{{contact.name}}</text>
+        <text class="profile-role">{{contact.role}}</text>
+        <text class="profile-location">{{contact.locationCountry}}，{{contact.locationCity}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 个人简介 -->
+  <view class="section" wx:if="{{contact.bio}}">
+    <text class="section-title">个人简介</text>
+    <text class="section-content">{{contact.bio}}</text>
+  </view>
+
+  <!-- 联系方式 -->
+  <view class="section">
+    <text class="section-title">联系方式</text>
+    <view class="contact-list">
+      <view class="contact-item" wx:if="{{contact.phone}}" bindtap="callPhone">
+        <text class="contact-icon">📱</text>
+        <text class="contact-value">{{contact.phone}}</text>
+      </view>
+      <view class="contact-item" wx:if="{{contact.email}}" bindtap="copyEmail">
+        <text class="contact-icon">✉️</text>
+        <text class="contact-value">{{contact.email}}</text>
+      </view>
+      <view class="contact-item" wx:if="{{contact.wechat}}" bindtap="copyWechat">
+        <text class="contact-icon">💬</text>
+        <text class="contact-value">{{contact.wechat}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="actions">
+    <view class="btn-primary" bindtap="sendMessage">
+      <text>发消息</text>
+    </view>
+    <view class="btn-secondary" bindtap="addToContact">
+      <text>保存联系人</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,39 @@
+<!--exchange.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="header-title">交换记录</text>
+  </view>
+
+  <!-- 统计 -->
+  <view class="stats-row">
+    <view class="stat-card">
+      <text class="stat-value">{{stats.total}}</text>
+      <text class="stat-label">累计交换</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{stats.month}}</text>
+      <text class="stat-label">本月新增</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{stats.week}}</text>
+      <text class="stat-label">本周</text>
+    </view>
+  </view>
+
+  <!-- 记录列表 -->
+  <view class="record-list">
+    <block wx:for="{{records}}" wx:key="id">
+      <view class="record-item">
+        <image class="record-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+        <view class="record-info">
+          <text class="record-name">{{item.name}}</text>
+          <text class="record-role">{{item.role}}</text>
+          <text class="record-time">{{item.time}}</text>
+        </view>
+        <view class="record-status {{item.status}}">
+          <text>{{item.status === 'success' ? '已交换' : '待确认'}}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

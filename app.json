@@ -3,8 +3,11 @@
     "pages/home/home",
     "pages/mycards/mycards",
     "pages/contacts/contacts",
+    "pages/contactdetail/contactdetail",
     "pages/management/management",
     "pages/visitor/visitor",
+    "pages/exchange/exchange",
+    "pages/exchangeconfirm/exchangeconfirm",
     "pages/analytics/analytics",
     "pages/edit/edit",
     "pages/webview/webview"
