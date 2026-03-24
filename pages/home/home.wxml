@@ -1,62 +1,100 @@
 <!--home.wxml - 工作台 -->
 <view class="container">
-  <!-- 当前名片展示 -->
-  <view class="current-card">
-    <view class="card-bg">
-      <image src="{{currentCard.bannerUrl}}" mode="aspectFill"></image>
-    </view>
-    <view class="card-content">
-      <view class="card-info">
-        <text class="card-name">{{currentCard.name}}</text>
-        <text class="card-role">{{currentCard.role}}</text>
-        <text class="card-location">{{currentCard.locationCountry}}，{{currentCard.locationCity}}</text>
+  <!-- 顶部标题 -->
+  <view class="header">
+    <text class="header-title">工作台</text>
+    <text class="header-subtitle">WORKBENCH</text>
+  </view>
+
+  <!-- 核心数据指标 -->
+  <view class="stats-row">
+    <view class="stat-card">
+      <view class="stat-header">
+        <text class="stat-label">本周访客</text>
+        <text class="stat-growth">↑ 12%</text>
       </view>
-      <view class="card-avatar">
-        <image src="{{currentCard.avatarUrl}}" mode="aspectFill"></image>
+      <text class="stat-value">1,284</text>
+    </view>
+    <view class="stat-card">
+      <view class="stat-header">
+        <text class="stat-label">交换成功</text>
+        <text class="stat-sub">活跃率 8.5%</text>
+      </view>
+      <text class="stat-value">42</text>
+    </view>
+  </view>
+
+  <!-- 行动提醒 -->
+  <view class="todo-card">
+    <text class="todo-icon">💡</text>
+    <view class="todo-content">
+      <text class="todo-title">完善后交换率提升 30%</text>
+      <text class="todo-desc">补充更多作品集，让更多人认识你</text>
+    </view>
+    <text class="todo-arrow">›</text>
+  </view>
+
+  <!-- 快捷功能入口 -->
+  <view class="quick-section">
+    <text class="section-title">快捷功能</text>
+    <view class="quick-grid">
+      <view class="quick-item" bindtap="goToMyCards">
+        <text class="quick-icon">📇</text>
+        <text class="quick-text">名片管理</text>
+      </view>
+      <view class="quick-item" bindtap="goToVisitor">
+        <text class="quick-icon">👁</text>
+        <text class="quick-text">浏览记录</text>
+      </view>
+      <view class="quick-item" bindtap="goToExchange">
+        <text class="quick-icon">🔄</text>
+        <text class="quick-text">交换记录</text>
+      </view>
+      <view class="quick-item" bindtap="goToAnalytics">
+        <text class="quick-icon">📊</text>
+        <text class="quick-text">数据分析</text>
       </view>
     </view>
   </view>
 
-  <!-- 快捷操作 -->
-  <view class="quick-actions">
-    <view class="action-item" bindtap="goToMyCards">
-      <text class="action-icon">📇</text>
-      <text class="action-text">我的名片</text>
-    </view>
-    <view class="action-item" bindtap="goToContacts">
-      <text class="action-icon">👥</text>
-      <text class="action-text">联系人</text>
-    </view>
-    <view class="action-item" bindtap="goToVisitor">
-      <text class="action-icon">👁</text>
-      <text class="action-text">访客</text>
-    </view>
-    <view class="action-item" bindtap="goToAnalytics">
-      <text class="action-icon">📊</text>
-      <text class="action-text">数据</text>
-    </view>
-  </view>
-
-  <!-- 作品集 -->
-  <view class="section">
+  <!-- 最近访客 -->
+  <view class="visitors-section">
     <view class="section-header">
-      <text class="section-title">作品集</text>
+      <text class="section-title">最近访客</text>
+      <text class="view-all">查看全部 ›</text>
     </view>
-    <view class="project-list">
-      <view class="project-card" wx:for="{{projects}}" wx:key="id" bindtap="onProjectTap" data-link="{{item.link}}">
-        <image class="project-thumb" src="{{item.thumbnail}}" mode="aspectFill"></image>
-        <view class="project-info">
-          <text class="project-title">{{item.title}}</text>
-          <text class="project-desc">{{item.description}}</text>
+    <view class="visitor-list">
+      <block wx:for="{{visitors}}" wx:key="id">
+        <view class="visitor-item">
+          <image class="visitor-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+          <view class="visitor-info">
+            <text class="visitor-name">{{item.name}}</text>
+            <text class="visitor-role">{{item.role}}</text>
+          </view>
+          <text class="visitor-time">{{item.time}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 当前名片预览 -->
+  <view class="card-preview">
+    <view class="preview-header">
+      <text class="preview-title">当前名片</text>
+    </view>
+    <view class="preview-card" bindtap="goToMyCards">
+      <view class="preview-bg">
+        <image src="{{currentCard.bannerUrl}}" mode="aspectFill"></image>
+      </view>
+      <view class="preview-content">
+        <view class="preview-info">
+          <text class="preview-name">{{currentCard.name}}</text>
+          <text class="preview-role">{{currentCard.role}}</text>
+        </view>
+        <view class="preview-avatar">
+          <image src="{{currentCard.avatarUrl}}" mode="aspectFill"></image>
         </view>
       </view>
-    </view>
-  </view>
-
-  <!-- 底部浮动按钮 -->
-  <view class="fab-container">
-    <view class="fab-primary" bindtap="onExchangeTap">
-      <text>交换名片</text>
     </view>
   </view>
 </view>
