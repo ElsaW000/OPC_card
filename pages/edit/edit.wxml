@@ -1,5 +1,19 @@
 <!--edit.wxml - 按照 Figma 设计重构 -->
 <view class="edit-container">
+  <!-- AI 一键生成 -->
+  <view class="form-section ai-section">
+    <text class="section-title">🤖 AI 一键生成名片</text>
+    <text class="ai-tip">输入一段关于你的介绍，AI 自动填入各个字段</text>
+    <textarea 
+      class="ai-input" 
+      value="{{aiInput}}" 
+      data-field="aiInput" 
+      bindinput="onAIInputChange" 
+      placeholder="例如：我是一名独立开发者，8年工作经验，擅长 Python 和 AI，现居深圳，做过多个开源项目..."
+    />
+    <button class="ai-generate-btn" bindtap="generateFromAI">AI 自动填充</button>
+  </view>
+
   <!-- 模板选择 -->
   <view class="form-section">
     <text class="section-title">选择模板</text>

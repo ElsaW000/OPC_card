@@ -32,6 +32,9 @@ Page({
     currentTemplate: 'universal',
     templates: TEMPLATES,
     
+    // AI 输入
+    aiInput: '',
+    
     // 自定义卡片
     customCards: [],
     
@@ -251,6 +254,52 @@ Page({
     const customCards = this.data.customCards;
     customCards[index][field] = e.detail.value;
     this.setData({ customCards });
+  },
+
+  // AI 一键生成（从文字提取字段）
+  generateFromAI() {
+    if (!this.data.aiInput) {
+      wx.showToast({ title: '请先输入一段关于你的介绍', icon: 'none' })
+      return
+    }
+    
+    wx.showLoading({ title: 'AI 识别中...' })
+    
+    wx.cloud.callFunction({
+      name: 'aiGenerate',
+      data: { 
+        type: 'extract',
+        data: { text: this.data.aiInput }
+      },
+      success: (res) => {
+        wx.hideLoading()
+        if (res.result && res.result.success) {
+          const extracted = res.result.result
+          
+          // 自动填入各个字段
+          this.setData({
+            name: extracted.name || this.data.name,
+            role: extracted.role || this.data.role,
+            locationCountry: extracted.locationCountry || this.data.locationCountry,
+            locationCity: extracted.locationCity || this.data.locationCity,
+            bio: extracted.bio || this.data.bio,
+            years: extracted.years || this.data.years,
+            techStack: extracted.techStack || this.data.techStack,
+            projects: extracted.projects || this.data.projects,
+            'customCards[0].title': extracted.tags ? '标签' : '',
+            'customCards[0].content': extracted.tags ? extracted.tags.join(', ') : ''
+          })
+          
+          wx.showToast({ title: 'AI 填充成功', icon: 'success' })
+        } else {
+          wx.showToast({ title: 'AI 识别失败', icon: 'none' })
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        wx.showToast({ title: 'AI 识别失败', icon: 'none' })
+      }
+    })
   },
 
   // AI 生成一句话介绍
