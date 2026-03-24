@@ -154,6 +154,26 @@ Page({
     })
   },
 
+  // 复制微信
+  copyWechat(e) {
+    if (!this.data.wechat) {
+      wx.showToast({
+        title: '未设置微信号',
+        icon: 'none'
+      })
+      return
+    }
+    wx.setClipboardData({
+      data: this.data.wechat,
+      success: () => {
+        wx.showToast({
+          title: '微信已复制',
+          icon: 'success'
+        })
+      }
+    })
+  },
+
   // 保存联系人
   saveContact() {
     wx.addPhoneContact({

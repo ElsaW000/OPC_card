@@ -37,6 +37,27 @@
         <text class="separator">|</text>
         <text class="location">{{location}}</text>
       </view>
+      
+      <!-- 联系方式（姓名下方） -->
+      <view class="quick-contact">
+        <view class="contact-btn phone" bindtap="callPhone">
+          <text class="contact-icon">📞</text>
+          <text class="contact-text">电话</text>
+        </view>
+        <view class="contact-btn wechat" bindtap="copyWechat" wx:if="{{wechat}}">
+          <text class="contact-icon">💬</text>
+          <text class="contact-text">微信</text>
+        </view>
+        <view class="contact-btn email" bindtap="copyEmail" data-text="{{email}}">
+          <text class="contact-icon">✉️</text>
+          <text class="contact-text">邮箱</text>
+        </view>
+        <view class="contact-btn save" bindtap="saveContact">
+          <text class="contact-icon">⭐</text>
+          <text class="contact-text">保存</text>
+        </view>
+      </view>
+      
       <text class="bio">{{bio}}</text>
     </view>
 
@@ -131,22 +152,6 @@
           </view>
         </view>
       </view>
-    </view>
-  </view>
-
-  <!-- 联系方式 -->
-  <view class="contact-section">
-    <view class="contact-item" bindtap="callPhone">
-      <text class="contact-label">电话</text>
-      <text class="contact-value">{{phone}}</text>
-    </view>
-    <view class="contact-item" bindtap="copyEmail" data-text="{{email}}">
-      <text class="contact-label">邮箱</text>
-      <text class="contact-value">{{email}}</text>
-    </view>
-    <view class="contact-item" bindtap="saveContact">
-      <text class="contact-label">保存</text>
-      <text class="contact-value">联系人</text>
     </view>
   </view>
 

@@ -171,6 +171,31 @@
   color: #2563eb;
 }
 
+/* 快捷联系方式 */
+.quick-contact {
+  display: flex;
+  gap: 16rpx;
+  margin: 24rpx 0;
+}
+
+.contact-btn {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 20rpx;
+  background-color: #f3f4f6;
+  border-radius: 9999rpx;
+}
+
+.contact-icon {
+  font-size: 24rpx;
+}
+
+.contact-text {
+  font-size: 24rpx;
+  color: #4b5563;
+}
+
 /* 自定义卡片 */
 .custom-cards {
   display: flex;
