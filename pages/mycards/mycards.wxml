@@ -1,20 +1,24 @@
 <!--mycards.wxml - 名片夹管理 -->
 <view class="container">
+  <!-- 顶部标题 -->
   <view class="header">
-    <view class="header-content">
+    <view class="header-titles">
       <text class="header-title">我的名片</text>
       <text class="header-subtitle">MULTI-IDENTITY MANAGEMENT</text>
     </view>
-    <view class="add-btn" bindtap="addCard">
-      <text class="add-icon">+</text>
-    </view>
   </view>
 
+  <!-- 名片列表 -->
   <view class="cards-list">
     <block wx:for="{{cards}}" wx:key="id">
       <view class="card-item">
         <!-- ID Card -->
         <view class="id-card" bindtap="editCard" data-id="{{item.id}}">
+          <!-- 右侧背景图 -->
+          <view class="card-bg-area">
+            <image class="card-bg-img" src="{{item.bannerUrl}}" mode="aspectFill"></image>
+          </view>
+          
           <!-- 左侧内容 -->
           <view class="card-left">
             <view class="card-type">
@@ -22,7 +26,6 @@
               <text class="type-label">{{item.title}}</text>
             </view>
             <view class="default-badge" wx:if="{{item.isDefault}}">
-              <text class="star-icon">⭐</text>
               <text class="default-text">默认</text>
             </view>
             
@@ -39,29 +42,24 @@
           </view>
         </view>
 
-        <!-- Quick Actions -->
+        <!-- 底部操作栏 -->
         <view class="card-actions">
-          <view class="actions-left">
-            <view class="action-btn" catchtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.isDefault}}">
-              <text class="action-text">设为默认</text>
-            </view>
-            <view class="action-btn" catchtap="editCard" data-id="{{item.id}}">
-              <text class="action-text">编辑</text>
-            </view>
+          <view class="action-primary" catchtap="exchangeCard" data-id="{{item.id}}">
+            <text class="action-primary-text">交换名片</text>
           </view>
-          <view class="actions-right">
-            <view class="icon-btn" catchtap="shareCard" data-id="{{item.id}}">
-              <text class="btn-icon">📤</text>
+          <view class="action-icons">
+            <view class="icon-circle" catchtap="shareCard" data-id="{{item.id}}">
+              <text>📤</text>
             </view>
-            <view class="icon-btn" catchtap="deleteCard" data-id="{{item.id}}" wx:if="{{cards.length > 1}}">
-              <text class="btn-icon">🗑</text>
+            <view class="icon-circle" catchtap="editCard" data-id="{{item.id}}">
+              <text>✎</text>
             </view>
           </view>
         </view>
       </view>
     </block>
 
-    <!-- Add Card Placeholder -->
+    <!-- 添加新名片 -->
     <view class="add-card-placeholder" bindtap="addCard">
       <text class="placeholder-icon">+</text>
       <text class="placeholder-text">创建新身份</text>

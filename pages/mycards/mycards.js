@@ -155,6 +155,14 @@ Page({
     })
   },
 
+  // 交换名片
+  exchangeCard(e) {
+    const id = e.currentTarget.dataset.id
+    wx.navigateTo({
+      url: '/pages/exchangeconfirm/exchangeconfirm?id=' + id
+    })
+  },
+
   // 删除名片
   deleteCard(e) {
     const id = e.currentTarget.dataset.id
