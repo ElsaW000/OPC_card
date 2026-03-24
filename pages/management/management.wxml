@@ -1,0 +1,35 @@
+<!--management.wxml - 管理页面 -->
+<view class="container">
+  <!-- 顶部个人信息 -->
+  <view class="profile-card">
+    <view class="profile-left">
+      <image class="profile-avatar" src="{{profile.avatarUrl}}" mode="aspectFill"></image>
+    </view>
+    <view class="profile-middle">
+      <text class="profile-name">{{profile.name}}</text>
+      <text class="profile-role">{{profile.role}}</text>
+    </view>
+    <view class="profile-right">
+      <text class="arrow-icon">›</text>
+    </view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="menu-card">
+    <block wx:for="{{menuItems}}" wx:key="id">
+      <view class="menu-item" bindtap="onMenuTap" data-path="{{item.path}}">
+        <view class="menu-left">
+          <text class="menu-icon">{{item.icon}}</text>
+          <text class="menu-text">{{item.name}}</text>
+        </view>
+        <text class="arrow-icon">›</text>
+      </view>
+      <view class="menu-divider" wx:if="{{index < menuItems.length - 1}}"></view>
+    </block>
+  </view>
+
+  <!-- 版本信息 -->
+  <view class="version-info">
+    <text>OPC 名片 v1.0.0</text>
+  </view>
+</view>
