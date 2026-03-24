@@ -1,0 +1,63 @@
+<!--pages/home/home.wxml-->
+<view class="container">
+  <!-- Profile Card -->
+  <view class="profile-card">
+    <image class="banner" src="{{profile.bannerUrl}}" mode="aspectFill"></image>
+    <view class="profile-content">
+      <image class="avatar" src="{{profile.avatarUrl}}" mode="aspectFill"></image>
+      <view class="profile-info">
+        <text class="name">{{profile.name}}</text>
+        <text class="role">{{profile.role}}</text>
+        <text class="location">{{profile.locationCountry}}，{{profile.locationCity}}</text>
+        <text class="bio">{{profile.bio}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Portfolio Grid -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">作品集</text>
+    </view>
+    <view class="portfolio-grid">
+      <view class="project-card" wx:for="{{projects}}" wx:key="id" bindtap="onProjectTap" data-link="{{item.link}}">
+        <image class="project-thumbnail" src="{{item.thumbnail}}" mode="aspectFill"></image>
+        <view class="project-info">
+          <text class="project-title">{{item.title}}</text>
+          <text class="project-desc">{{item.description}}</text>
+          <view class="project-tags">
+            <text class="tag" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag">{{tag}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Video Shorts -->
+  <view class="section" wx:if="{{videos.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">视频演示</text>
+    </view>
+    <scroll-view class="video-scroll" scroll-x="true">
+      <view class="video-item" wx:for="{{videos}}" wx:key="id">
+        <image class="video-thumbnail" src="{{item.thumbnail}}" mode="aspectFill"></image>
+        <view class="video-overlay">
+          <text class="video-duration">{{item.duration}}</text>
+        </view>
+        <text class="video-title">{{item.title}}</text>
+        <text class="video-views">{{item.views}} 观看</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- Floating Action Buttons -->
+  <view class="fab-container">
+    <button class="fab-primary" bindtap="onExchangeTap">
+      <text class="fab-text">交换名片</text>
+    </button>
+  </view>
+
+  <view class="fab-share" bindtap="onShareTap">
+    <text class="share-icon">📤</text>
+  </view>
+</view>
