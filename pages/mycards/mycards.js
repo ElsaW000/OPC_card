@@ -37,6 +37,18 @@ Page({
   },
 
   getMockCards() {
+    const colorMap = {
+      'tech': 'gradient-blue',
+      'biz': 'gradient-slate',
+      'social': 'gradient-emerald',
+      'custom': 'gradient-purple'
+    }
+    const iconMap = {
+      'tech': '💻',
+      'biz': '💼',
+      'social': '🏃',
+      'custom': '⭐'
+    }
     return [
       {
         id: '1',
@@ -48,10 +60,11 @@ Page({
         company: 'CodeFlow AI Studio',
         locationCountry: '中国',
         locationCity: '深圳',
-        avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
-        bannerUrl: 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800',
+        avatar: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
+        bgImage: 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800',
         isDefault: true,
-        typeIcon: '📱'
+        typeIcon: iconMap['tech'],
+        colorClass: colorMap['tech']
       },
       {
         id: '2',
@@ -62,10 +75,11 @@ Page({
         company: 'One Person Company Ltd.',
         locationCountry: '中国',
         locationCity: '深圳',
-        avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
-        bannerUrl: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800',
+        avatar: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
+        bgImage: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800',
         isDefault: false,
-        typeIcon: '💼'
+        typeIcon: iconMap['biz'],
+        colorClass: colorMap['biz']
       },
       {
         id: '3',
@@ -75,10 +89,11 @@ Page({
         role: '摄影爱好者 / 徒步玩家',
         locationCountry: '中国',
         locationCity: '深圳',
-        avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
-        bannerUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800',
+        avatar: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
+        bgImage: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800',
         isDefault: false,
-        typeIcon: '👥'
+        typeIcon: iconMap['social'],
+        colorClass: colorMap['social']
       }
     ]
   },

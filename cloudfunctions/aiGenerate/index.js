@@ -7,8 +7,8 @@ const crypto = require('crypto')
 
 cloud.init()
 
-// Minimax API 配置
-const MINIMAX_API_KEY = 'your-minimax-api-key' // 替换为你的 API Key
+// Minimax API 配置 - 从云开发环境变量读取
+const MINIMAX_API_KEY = process.env.MINIMAX_API_KEY || '' // 在云开发环境变量中配置
 const MINIMAX_MODEL = 'abab6.5s-chat'
 
 // 解析 JSON 字符串（处理 markdown 代码块）

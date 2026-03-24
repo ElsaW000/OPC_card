@@ -1,323 +1,379 @@
-<!--edit.wxml - 按照 Figma 设计重构 -->
+<!--edit.wxml - 优化版 -->
 <view class="edit-container">
-  <!-- AI 一键生成 -->
-  <view class="form-section ai-section">
-    <text class="section-title">🤖 AI 一键生成名片</text>
-    <text class="ai-tip">输入一段关于你的介绍，AI 自动填入各个字段</text>
-    <textarea 
-      class="ai-input" 
-      value="{{aiInput}}" 
-      data-field="aiInput" 
-      bindinput="onAIInputChange" 
-      placeholder="例如：我是一名独立开发者，8年工作经验，擅长 Python 和 AI，现居深圳，做过多个开源项目..."
-    />
-    <button class="ai-generate-btn" bindtap="generateFromAI">AI 自动填充</button>
+  <!-- Header -->
+  <view class="edit-header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    <text class="header-title">{{isEdit ? '编辑名片' : '新建名片'}}</text>
+    <view class="header-right" bindtap="saveCard">
+      <text class="save-btn">保存</text>
+    </view>
   </view>
 
-  <!-- 模板选择 -->
-  <view class="form-section">
-    <text class="section-title">选择模板</text>
-    <view class="template-list">
-      <view 
-        class="template-item {{currentTemplate === 'universal' ? 'active' : ''}}" 
-        data-id="universal" 
-        bindtap="selectTemplate"
-      >
-        <text class="template-name">通用</text>
+  <scroll-view class="edit-scroll" scroll-y="true">
+    <!-- AI 一键生成 -->
+    <view class="form-section ai-section">
+      <view class="section-header">
+        <text class="section-title">🤖 AI 一键生成</text>
       </view>
-      <view 
-        class="template-item {{currentTemplate === 'developer' ? 'active' : ''}}" 
-        data-id="developer" 
-        bindtap="selectTemplate"
-      >
-        <text class="template-name">程序员</text>
-      </view>
-      <view 
-        class="template-item {{currentTemplate === 'designer' ? 'active' : ''}}" 
-        data-id="designer" 
-        bindtap="selectTemplate"
-      >
-        <text class="template-name">设计师</text>
-      </view>
-      <view 
-        class="template-item {{currentTemplate === 'boss' ? 'active' : ''}}" 
-        data-id="boss" 
-        bindtap="selectTemplate"
-      >
-        <text class="template-name">老板</text>
-      </view>
+      <text class="ai-tip">输入一段关于你的介绍，AI 自动填入各个字段</text>
+      <textarea 
+        class="ai-input" 
+        value="{{aiInput}}" 
+        data-field="aiInput" 
+        bindinput="onAIInputChange" 
+        placeholder="例如：我是一名独立开发者，8年工作经验，擅长 Python 和 AI，现居深圳，做过多个开源项目..."
+      />
+      <button class="ai-generate-btn" bindtap="generateFromAI">
+        <text class="ai-btn-icon">⚡</text>
+        <text>AI 自动填充</text>
+      </button>
     </view>
-  </view>
 
-  <!-- Banner 设置 -->
-  <view class="form-section">
-    <text class="section-title">Banner 图片</text>
-    <view class="banner-upload">
-      <image class="banner-preview" src="{{bannerUrl}}" mode="aspectFill" />
-      <button class="upload-btn" bindtap="chooseBanner">更换 Banner</button>
-    </view>
-  </view>
-
-  <!-- 头像设置 -->
-  <view class="form-section">
-    <text class="section-title">头像</text>
-    <view class="avatar-upload">
-      <image class="avatar-preview" src="{{avatarUrl}}" mode="aspectFill" />
-      <button class="upload-btn" bindtap="chooseAvatar">更换头像</button>
-    </view>
-  </view>
-
-  <!-- 基本信息（通用字段） -->
-  <view class="form-section">
-    <text class="section-title">基本信息</text>
-    
-    <view class="form-item">
-      <text class="label required">姓名 *</text>
-      <input class="input" value="{{name}}" data-field="name" bindinput="onInputChange" placeholder="请输入姓名" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">英文名</text>
-      <input class="input" value="{{nameEn}}" data-field="nameEn" bindinput="onInputChange" placeholder="如：John Chen" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label required">职位 *</text>
-      <input class="input" value="{{role}}" data-field="role" bindinput="onInputChange" placeholder="请输入职位" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label required">国家 *</text>
-      <input class="input" value="{{locationCountry}}" data-field="locationCountry" bindinput="onInputChange" placeholder="如：中国" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label required">省市 *</text>
-      <input class="input" value="{{locationCity}}" data-field="locationCity" bindinput="onInputChange" placeholder="如：深圳" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">简介</text>
-      <textarea class="textarea" value="{{bio}}" data-field="bio" bindinput="onInputChange" placeholder="请输入个人简介，或使用顶部 AI 一键生成" />
-    </view>
-  </view>
-
-  <!-- 程序员专属字段 -->
-  <view class="form-section" wx:if="{{currentTemplate === 'developer'}}">
-    <text class="section-title">程序员信息</text>
-    
-    <view class="form-item">
-      <text class="label">工作年限</text>
-      <input class="input" value="{{years}}" data-field="years" bindinput="onInputChange" placeholder="如：8+" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">技术栈</text>
-      <input class="input" value="{{techStack}}" data-field="techStack" bindinput="onInputChange" placeholder="如：React, Python, AI" />
-    </view>
-  </view>
-
-  <!-- 设计师专属字段 -->
-  <view class="form-section" wx:if="{{currentTemplate === 'designer'}}">
-    <text class="section-title">设计师信息</text>
-    
-    <view class="form-item">
-      <text class="label">作品集链接</text>
-      <input class="input" value="{{portfolio}}" data-field="portfolio" bindinput="onInputChange" placeholder="请输入作品集链接" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">擅长风格</text>
-      <input class="input" value="{{styles}}" data-field="styles" bindinput="onInputChange" placeholder="如：UI设计、品牌设计" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">从业年限</text>
-      <input class="input" value="{{experience}}" data-field="experience" bindinput="onInputChange" placeholder="如：5年" />
-    </view>
-  </view>
-
-  <!-- 老板专属字段 -->
-  <view class="form-section" wx:if="{{currentTemplate === 'boss'}}">
-    <text class="section-title">企业信息</text>
-    
-    <view class="form-item">
-      <text class="label">公司名称</text>
-      <input class="input" value="{{company}}" data-field="company" bindinput="onInputChange" placeholder="请输入公司名称" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">业务范围</text>
-      <input class="input" value="{{business}}" data-field="business" bindinput="onInputChange" placeholder="请输入业务范围" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">合作方式</text>
-      <input class="input" value="{{cooperation}}" data-field="cooperation" bindinput="onInputChange" placeholder="请输入合作方式" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">微信</text>
-      <input class="input" value="{{wechat}}" data-field="wechat" bindinput="onInputChange" placeholder="请输入微信号" />
-    </view>
-  </view>
-
-  <!-- 社交链接 -->
-  <view class="form-section">
-    <text class="section-title">社交链接</text>
-    
-    <view class="form-item">
-      <text class="label">GitHub</text>
-      <input class="input" value="{{githubUrl}}" data-field="githubUrl" bindinput="onInputChange" placeholder="https://github.com/username" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">Twitter</text>
-      <input class="input" value="{{twitterUrl}}" data-field="twitterUrl" bindinput="onInputChange" placeholder="https://twitter.com/username" />
-    </view>
-  </view>
-
-  <!-- 数据统计 -->
-  <view class="form-section">
-    <text class="section-title">数据统计</text>
-    
-    <view class="form-item">
-      <text class="label">上线产品</text>
-      <input class="input" value="{{products}}" data-field="products" bindinput="onInputChange" placeholder="如：12" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">全球用户</text>
-      <input class="input" value="{{users}}" data-field="users" bindinput="onInputChange" placeholder="如：25k" />
-    </view>
-  </view>
-
-  <!-- 联系方式 -->
-  <view class="form-section">
-    <text class="section-title">联系方式</text>
-    
-    <view class="form-item">
-      <text class="label">电话</text>
-      <input class="input" value="{{phone}}" data-field="phone" bindinput="onInputChange" placeholder="请输入电话" type="number" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">邮箱</text>
-      <input class="input" value="{{email}}" data-field="email" bindinput="onInputChange" placeholder="请输入邮箱" />
-    </view>
-  </view>
-  
-  <!-- 自定义卡片 -->
-  <view class="form-section">
-    <view class="section-header">
-      <text class="section-title">自定义卡片</text>
-      <button class="add-btn" bindtap="addCustomCard">添加卡片</button>
-    </view>
-    <view class="tip-text">如：MBTI、音乐创作、兴趣爱好等</view>
-    
-    <view class="custom-card-item" wx:for="{{customCards}}" wx:key="id">
-      <view class="custom-card-form">
-        <view class="form-item">
-          <text class="label">标题</text>
-          <input class="input" value="{{item.title}}" data-index="{{index}}" data-field="title" bindinput="onCustomCardChange" placeholder="如：MBTI" />
-        </view>
-        <view class="form-item">
-          <text class="label">内容</text>
-          <input class="input" value="{{item.content}}" data-index="{{index}}" data-field="content" bindinput="onCustomCardChange" placeholder="如：INTJ" />
+    <!-- 名片类型 -->
+    <view class="form-section">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot"></view>
+          <text class="section-title">身份设置</text>
         </view>
       </view>
-      <button class="remove-btn" data-index="{{index}}" bindtap="removeCustomCard">删除</button>
-    </view>
-  </view>
-  
-  <!-- 底部联系模块 -->
-  <view class="form-section">
-    <text class="section-title">底部联系模块</text>
-    
-    <view class="form-item">
-      <text class="label">标题</text>
-      <input class="input" value="{{footerTitle}}" data-field="footerTitle" bindinput="onInputChange" placeholder="如：联系我" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">描述</text>
-      <textarea class="textarea" value="{{footerDesc}}" data-field="footerDesc" bindinput="onInputChange" placeholder="如：有合作意向，欢迎通过以下方式联系" />
-    </view>
-  </view>
-  
-  <!-- 视频/短视频 -->
-  <view class="form-section">
-    <view class="section-header">
-      <text class="section-title">产品演示 & 短视频</text>
-      <button class="add-btn" bindtap="addVideo">添加视频</button>
-    </view>
-    
-    <view class="project-item" wx:for="{{videos}}" wx:key="id">
-      <view class="project-form">
-        <view class="form-item">
-          <text class="label">标题</text>
-          <input class="input" value="{{item.title}}" data-index="{{index}}" data-field="title" bindinput="onVideoChange" placeholder="视频标题" />
+      
+      <view class="type-selector">
+        <view 
+          class="type-option {{currentTemplate === 'universal' ? 'active' : ''}}" 
+          data-id="universal" 
+          bindtap="selectTemplate"
+        >
+          <text class="type-icon">👤</text>
+          <text class="type-name">通用</text>
         </view>
-        <view class="form-item">
-          <text class="label">封面图链接</text>
-          <input class="input" value="{{item.thumbnail}}" data-index="{{index}}" data-field="thumbnail" bindinput="onVideoChange" placeholder="封面图 URL" />
+        <view 
+          class="type-option {{currentTemplate === 'developer' ? 'active' : ''}}" 
+          data-id="developer" 
+          bindtap="selectTemplate"
+        >
+          <text class="type-icon">💻</text>
+          <text class="type-name">程序员</text>
         </view>
-        <view class="form-item">
-          <text class="label">视频链接</text>
-          <input class="input" value="{{item.link}}" data-index="{{index}}" data-field="link" bindinput="onVideoChange" placeholder="视频/播放页链接" />
+        <view 
+          class="type-option {{currentTemplate === 'designer' ? 'active' : ''}}" 
+          data-id="designer" 
+          bindtap="selectTemplate"
+        >
+          <text class="type-icon">🎨</text>
+          <text class="type-name">设计师</text>
         </view>
-        <view class="form-item">
-          <text class="label">播放量</text>
-          <input class="input" value="{{item.views}}" data-index="{{index}}" data-field="views" bindinput="onVideoChange" placeholder="如：12k" />
-        </view>
-        <view class="form-item">
-          <text class="label">时长</text>
-          <input class="input" value="{{item.duration}}" data-index="{{index}}" data-field="duration" bindinput="onVideoChange" placeholder="如：01:45" />
+        <view 
+          class="type-option {{currentTemplate === 'boss' ? 'active' : ''}}" 
+          data-id="boss" 
+          bindtap="selectTemplate"
+        >
+          <text class="type-icon">🏢</text>
+          <text class="type-name">老板</text>
         </view>
       </view>
-      <button class="remove-btn" data-index="{{index}}" bindtap="removeVideo">删除</button>
+
+      <view class="form-item">
+        <text class="label">名片分类标题</text>
+        <input class="input" value="{{title}}" data-field="title" bindinput="onInputChange" placeholder="例如：技术大牛、商务老板、户外驴友..." />
+      </view>
     </view>
-  </view>
-  
-  <!-- 产品/项目 -->
-  <view class="form-section">
-    <view class="section-header">
-      <text class="section-title">产品/项目</text>
-      <button class="add-btn" bindtap="addProject">+ 添加产品</button>
-    </view>
-    
-    <view class="project-item" wx:for="{{projects}}" wx:key="id">
-      <view class="project-form">
-        <view class="form-item">
-          <text class="label">标题</text>
-          <input class="input" value="{{item.title}}" data-index="{{index}}" data-field="title" bindinput="onProjectChange" placeholder="产品名称" />
-        </view>
-        <view class="form-item">
-          <text class="label">描述</text>
-          <textarea class="textarea" value="{{item.description}}" data-index="{{index}}" data-field="description" bindinput="onProjectChange" placeholder="产品描述" />
-        </view>
-        <view class="form-item">
-          <text class="label">链接</text>
-          <input class="input" value="{{item.link}}" data-index="{{index}}" data-field="link" bindinput="onProjectChange" placeholder="在线地址" />
-        </view>
-        <view class="form-item">
-          <text class="label">GitHub</text>
-          <view class="input-with-btn">
-            <input class="input" value="{{item.github}}" data-index="{{index}}" data-field="github" bindinput="onProjectChange" placeholder="GitHub 链接" />
-            <button class="ai-btn-small" data-index="{{index}}" bindtap="fetchProjectReadme">🤖 AI 完善</button>
+
+    <!-- 头像设置 -->
+    <view class="form-section avatar-section">
+      <view class="avatar-upload">
+        <view class="avatar-preview-wrapper">
+          <image class="avatar-preview" src="{{avatarUrl}}" mode="aspectFill" />
+          <view class="avatar-edit-btn">
+            <text>📷</text>
           </view>
         </view>
-        <view class="form-item">
-          <text class="label">标签</text>
-          <input class="input" value="{{item.tags}}" data-index="{{index}}" data-field="tags" bindinput="onProjectChange" placeholder="用逗号分隔，如：AI, React, SaaS" />
+        <text class="avatar-tip">点击更换头像</text>
+      </view>
+    </view>
+
+    <!-- Banner 设置 -->
+    <view class="form-section">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot blue"></view>
+          <text class="section-title">Banner 图片</text>
         </view>
       </view>
-      <button class="remove-btn" data-index="{{index}}" bindtap="removeProject">删除</button>
+      <view class="banner-upload">
+        <image class="banner-preview" src="{{bannerUrl}}" mode="aspectFill" />
+        <view class="upload-mask">
+          <text class="upload-icon">🖼️</text>
+          <text class="upload-text">更换 Banner</text>
+        </view>
+      </view>
     </view>
-  </view>
-  
+
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot blue"></view>
+          <text class="section-title">基础资料</text>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">展示姓名 *</text>
+        <input class="input" value="{{name}}" data-field="name" bindinput="onInputChange" placeholder="请输入姓名" />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">英文名</text>
+        <input class="input" value="{{nameEn}}" data-field="nameEn" bindinput="onInputChange" placeholder="如：John Chen" />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">职位 / 角色描述 *</text>
+        <input class="input" value="{{role}}" data-field="role" bindinput="onInputChange" placeholder="请输入职位" />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">所在地区</text>
+        <view class="input-row">
+          <input class="input half" value="{{locationCountry}}" data-field="locationCountry" bindinput="onInputChange" placeholder="国家" />
+          <input class="input half" value="{{locationCity}}" data-field="locationCity" bindinput="onInputChange" placeholder="城市" />
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <view class="label-row">
+          <text class="label">个人简介</text>
+          <view class="ai-opt-btn" bindtap="optimizeWithAI">
+            <text class="ai-opt-icon">⚡</text>
+            <text class="ai-opt-text">AI 辅助</text>
+          </view>
+        </view>
+        <textarea class="textarea" value="{{bio}}" data-field="bio" bindinput="onInputChange" placeholder="请输入个人简介，或使用顶部 AI 一键生成" />
+      </view>
+    </view>
+
+    <!-- 程序员专属字段 -->
+    <view class="form-section" wx:if="{{currentTemplate === 'developer'}}">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot purple"></view>
+          <text class="section-title">程序员信息</text>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">工作年限</text>
+        <input class="input" value="{{years}}" data-field="years" bindinput="onInputChange" placeholder="如：8+" />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">技术栈</text>
+        <input class="input" value="{{techStack}}" data-field="techStack" bindinput="onInputChange" placeholder="如：React, Python, AI" />
+      </view>
+    </view>
+
+    <!-- 设计师专属字段 -->
+    <view class="form-section" wx:if="{{currentTemplate === 'designer'}}">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot pink"></view>
+          <text class="section-title">设计师信息</text>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">作品集链接</text>
+        <input class="input" value="{{portfolio}}" data-field="portfolio" bindinput="onInputChange" placeholder="请输入作品集链接" />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">擅长风格</text>
+        <input class="input" value="{{styles}}" data-field="styles" bindinput="onInputChange" placeholder="如：UI设计、品牌设计" />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">从业年限</text>
+        <input class="input" value="{{experience}}" data-field="experience" bindinput="onInputChange" placeholder="如：5年" />
+      </view>
+    </view>
+
+    <!-- 老板专属字段 -->
+    <view class="form-section" wx:if="{{currentTemplate === 'boss'}}">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot gold"></view>
+          <text class="section-title">企业信息</text>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">公司名称</text>
+        <input class="input" value="{{company}}" data-field="company" bindinput="onInputChange" placeholder="请输入公司名称" />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">业务范围</text>
+        <input class="input" value="{{business}}" data-field="business" bindinput="onInputChange" placeholder="请输入业务范围" />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">合作方式</text>
+        <input class="input" value="{{cooperation}}" data-field="cooperation" bindinput="onInputChange" placeholder="请输入合作方式" />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">微信</text>
+        <input class="input" value="{{wechat}}" data-field="wechat" bindinput="onInputChange" placeholder="请输入微信号" />
+      </view>
+    </view>
+
+    <!-- 社交链接 -->
+    <view class="form-section">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot"></view>
+          <text class="section-title">社交链接</text>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">GitHub</text>
+        <view class="input-with-icon">
+          <text class="input-icon">🐙</text>
+          <input class="input" value="{{githubUrl}}" data-field="githubUrl" bindinput="onInputChange" placeholder="https://github.com/username" />
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">Twitter</text>
+        <view class="input-with-icon">
+          <text class="input-icon">𝕏</text>
+          <input class="input" value="{{twitterUrl}}" data-field="twitterUrl" bindinput="onInputChange" placeholder="https://twitter.com/username" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 数据统计 -->
+    <view class="form-section">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot green"></view>
+          <text class="section-title">数据统计</text>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">上线产品</text>
+        <input class="input" value="{{products}}" data-field="products" bindinput="onInputChange" placeholder="如：12" />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">全球用户</text>
+        <input class="input" value="{{users}}" data-field="users" bindinput="onInputChange" placeholder="如：25k" />
+      </view>
+    </view>
+
+    <!-- 联系方式 -->
+    <view class="form-section">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot green"></view>
+          <text class="section-title">联系方式</text>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">电话</text>
+        <view class="input-with-icon">
+          <text class="input-icon">📱</text>
+          <input class="input" value="{{phone}}" data-field="phone" bindinput="onInputChange" placeholder="请输入电话" type="number" />
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">邮箱</text>
+        <view class="input-with-icon">
+          <text class="input-icon">✉️</text>
+          <input class="input" value="{{email}}" data-field="email" bindinput="onInputChange" placeholder="请输入邮箱" />
+        </view>
+      </view>
+    </view>
+    
+    <!-- 作品集与链接 -->
+    <view class="form-section">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot purple"></view>
+          <text class="section-title">作品集与链接</text>
+        </view>
+        <view class="add-btn" bindtap="addProject">+ 添加</view>
+      </view>
+      
+      <view class="project-list-edit">
+        <view class="project-item-edit" wx:for="{{projects}}" wx:key="id">
+          <view class="project-icon {{item.type === 'link' ? 'indigo' : 'rose'}}">
+            <text wx:if="{{item.type === 'link'}}">🔗</text>
+            <text wx:else>🎬</text>
+          </view>
+          <view class="project-content">
+            <text class="project-title-edit">{{item.title}}</text>
+            <text class="project-value-edit">{{item.link}}</text>
+          </view>
+          <view class="project-actions">
+            <text class="delete-btn" data-index="{{index}}" bindtap="removeProject">🗑️</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 个人标签 -->
+    <view class="form-section">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot blue"></view>
+          <text class="section-title">个人标签</text>
+        </view>
+      </view>
+      
+      <view class="tags-container">
+        <view class="tag-item" wx:for="{{tags}}" wx:key="*this">
+          <text>{{item}}</text>
+          <text class="tag-remove">×</text>
+        </view>
+        <view class="add-tag-btn">
+          <text>+</text>
+          <text>添加</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 高级设置 -->
+    <view class="form-section danger-section" wx:if="{{isEdit}}">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot red"></view>
+          <text class="section-title danger">高级设置</text>
+        </view>
+      </view>
+      
+      <view class="danger-btn" bindtap="deleteCard">
+        <text class="danger-icon">🗑️</text>
+        <text>删除此名片身份</text>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+
   <!-- 保存按钮 -->
   <view class="action-section">
-    <button class="save-btn" bindtap="saveCard">保存名片</button>
+    <button class="save-btn" bindtap="saveCard">
+      <text>💾</text>
+      <text>保存名片</text>
+    </button>
   </view>
 </view>
