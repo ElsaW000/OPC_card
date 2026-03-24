@@ -1,60 +1,65 @@
 /* home.wxss */
 
-page { background-color: #f8f9fa; }
+page { background-color: #f3f4f6; }
 .container { min-height: 100vh; padding-bottom: 200rpx; }
 
-/* Section 1: Header */
+/* Header */
 .header { padding: 48rpx 32rpx 24rpx; background: #fff; }
 .header-title { font-size: 44rpx; font-weight: bold; color: #000; }
 .header-subtitle { font-size: 24rpx; color: #999; margin-top: 8rpx; display: block; }
 
-/* Section 2: Dual Data Cards */
-.stats-row { display: flex; gap: 20rpx; padding: 0 32rpx; }
-.stat-card { flex: 1; border-radius: 28rpx; padding: 24rpx; position: relative; overflow: hidden; }
-.card-blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+/* Stats Row */
+.stats-row { display: flex; gap: 20rpx; padding: 0 32rpx; margin-top: 24rpx; }
+.stat-card { flex: 1; border-radius: 28rpx; padding: 28rpx; position: relative; overflow: hidden; }
+.card-blue { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
 .card-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-.stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16rpx; }
+.stat-header { margin-bottom: 16rpx; }
 .stat-title-row { display: flex; align-items: center; gap: 8rpx; }
 .stat-icon { font-size: 24rpx; }
 .stat-label { font-size: 22rpx; color: rgba(255,255,255,0.9); }
-.stat-growth { font-size: 20rpx; color: rgba(255,255,255,0.8); }
-.stat-main { margin-bottom: 12rpx; }
-.stat-value { font-size: 52rpx; font-weight: bold; color: #fff; }
-.stat-mini { display: flex; align-items: center; gap: 16rpx; font-size: 20rpx; color: rgba(255,255,255,0.7); margin-bottom: 12rpx; }
-.stat-graph { font-size: 20rpx; }
-.stat-chart { height: 40rpx; display: flex; align-items: flex-end; }
-.chart-line { width: 100%; height: 8rpx; background: rgba(255,255,255,0.3); border-radius: 4rpx; position: relative; }
-.chart-line::after { content: ''; position: absolute; left: 20%; bottom: 0; width: 60%; height: 100%; background: #fff; border-radius: 4rpx; }
+.stat-main { margin-bottom: 8rpx; }
+.stat-value { font-size: 48rpx; font-weight: bold; color: #fff; }
+.stat-growth { font-size: 20rpx; color: rgba(255,255,255,0.8); margin-left: 8rpx; }
+.stat-nums { display: flex; align-items: center; gap: 12rpx; font-size: 20rpx; color: rgba(255,255,255,0.7); margin-bottom: 12rpx; }
+.stat-sep { opacity: 0.5; }
+.stat-progress { margin-top: 16rpx; }
+.progress-bar { height: 8rpx; background: rgba(255,255,255,0.2); border-radius: 4rpx; overflow: hidden; }
+.progress-fill { height: 100%; background: #fff; border-radius: 4rpx; }
+.progress-bar.orange .progress-fill { background: linear-gradient(90deg, #fbbf24, #d97706); }
 
-.stat-split { display: flex; justify-content: space-between; align-items: center; }
-.donut-ring { width: 80rpx; height: 80rpx; border: 8rpx solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-.donut-text { font-size: 28rpx; font-weight: bold; color: #fff; }
-.stat-active { font-size: 22rpx; color: rgba(255,255,255,0.8); margin-top: 16rpx; display: block; }
+.stat-split { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8rpx; }
+.stat-left { display: flex; align-items: baseline; }
+.stat-sub { font-size: 24rpx; color: rgba(255,255,255,0.7); margin-left: 8rpx; }
+.donut-ring { width: 72rpx; height: 72rpx; border: 6rpx solid rgba(255,255,255,0.3); border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; }
+.donut-bg { position: absolute; inset: 6rpx; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; }
+.donut-text { position: relative; z-index: 2; font-size: 24rpx; font-weight: bold; color: #fff; }
+.stat-active { font-size: 22rpx; color: rgba(255,255,255,0.8); }
 
-/* Section 3: CTA Card */
-.todo-card { margin: 24rpx 32rpx; background: #fefce8; border-radius: 24rpx; padding: 24rpx; display: flex; align-items: flex-start; }
-.todo-icon-box { width: 48rpx; height: 48rpx; background: #fcd34d; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28rpx; margin-right: 16rpx; flex-shrink: 0; }
+/* Todo Card */
+.todo-card { margin: 24rpx 32rpx; background: #fefce8; border-radius: 24rpx; padding: 24rpx; display: flex; }
+.todo-icon-box { width: 48rpx; height: 48rpx; background: #fef08a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24rpx; margin-right: 16rpx; flex-shrink: 0; }
 .todo-content { flex: 1; }
-.todo-title { font-size: 26rpx; font-weight: bold; color: #92400e; display: block; margin-bottom: 8rpx; }
+.todo-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8rpx; }
+.todo-title { font-size: 26rpx; font-weight: bold; color: #92400e; }
+.todo-action { font-size: 22rpx; color: #2563eb; font-weight: 600; }
 .todo-body { font-size: 22rpx; color: #a16207; line-height: 1.5; display: block; margin-bottom: 12rpx; }
 .todo-progress { display: flex; align-items: center; gap: 12rpx; }
-.progress-bar { flex: 1; height: 8rpx; background: #e5e7eb; border-radius: 4rpx; overflow: hidden; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, #fcd34d, #d97706); border-radius: 4rpx; }
+.todo-progress .progress-bar { flex: 1; height: 6rpx; background: #e5e7eb; }
 .progress-text { font-size: 20rpx; color: #999; }
-.todo-action { font-size: 24rpx; font-weight: bold; color: #2563eb; margin-left: 16rpx; flex-shrink: 0; }
 
-/* Section 4: Quick Actions */
-.quick-section { padding: 0 32rpx; margin-bottom: 24rpx; }
-.quick-grid { display: flex; flex-wrap: wrap; gap: 16rpx; background: #fff; border-radius: 24rpx; padding: 24rpx; box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.06); }
-.quick-item { width: calc(50% - 8rpx); display: flex; flex-direction: column; align-items: center; padding: 20rpx 0; }
-.quick-icon-box { width: 80rpx; height: 80rpx; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40rpx; margin-bottom: 12rpx; }
-.quick-icon-box.purple { background: #f3e8ff; }
-.quick-icon-box.red { background: #fee2e2; }
-.quick-icon-box.green { background: #d1fae5; }
-.quick-icon-box.orange { background: #ffedd5; }
-.quick-text { font-size: 24rpx; color: #333; }
+/* Grid Section */
+.grid-section { padding: 0 32rpx; margin-bottom: 24rpx; }
+.grid-card { background: #fff; border-radius: 24rpx; padding: 32rpx; box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.06); }
+.grid-2x2 { display: flex; flex-wrap: wrap; gap: 24rpx; }
+.grid-item { width: calc(50% - 12rpx); display: flex; flex-direction: column; align-items: center; padding: 24rpx 0; }
+.grid-icon-box { width: 96rpx; height: 96rpx; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 44rpx; margin-bottom: 16rpx; }
+.grid-icon-box.purple { background: linear-gradient(135deg, #f3e8ff, #d8b4fe); }
+.grid-icon-box.pink { background: linear-gradient(135deg, #fce7f3, #f9a8d4); }
+.grid-icon-box.green { background: linear-gradient(135deg, #d1fae5, #6ee7b7); }
+.grid-icon-box.blue { background: linear-gradient(135deg, #dbeafe, #93c5fd); }
+.grid-text { font-size: 24rpx; color: #333; font-weight: 500; }
 
-/* Section 5: Visitors */
+/* Visitors */
 .visitors-section { padding: 0 32rpx; }
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20rpx; }
 .section-title { font-size: 30rpx; font-weight: bold; color: #000; }

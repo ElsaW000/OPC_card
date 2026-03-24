@@ -1,36 +1,36 @@
 <!--home.wxml - 工作台 -->
 <view class="container">
-  <!-- Section 1: Header -->
+  <!-- Header -->
   <view class="header">
     <text class="header-title">工作台</text>
     <text class="header-subtitle">管理你的 OPC 品牌与人脉网络</text>
   </view>
 
-  <!-- Section 2: Dual Data Cards -->
+  <!-- 数据看板 - 蓝色访客卡 + 绿色交换卡 -->
   <view class="stats-row">
-    <!-- Card A: 本周访客 -->
     <view class="stat-card card-blue">
       <view class="stat-header">
         <view class="stat-title-row">
           <text class="stat-icon">👁</text>
           <text class="stat-label">本周访客</text>
         </view>
-        <text class="stat-growth">↑ 12% 比上周</text>
       </view>
       <view class="stat-main">
         <text class="stat-value">1,284</text>
+        <text class="stat-growth">↑ 12% 比上周</text>
       </view>
-      <view class="stat-mini">
+      <view class="stat-nums">
         <text>1,354</text>
-        <text class="stat-graph">📈</text>
+        <text class="stat-sep">/</text>
         <text>2,173</text>
       </view>
-      <view class="stat-chart">
-        <view class="chart-line"></view>
+      <view class="stat-progress">
+        <view class="progress-bar">
+          <view class="progress-fill" style="width: 70%"></view>
+        </view>
       </view>
     </view>
 
-    <!-- Card B: 交换成功 -->
     <view class="stat-card card-green">
       <view class="stat-header">
         <view class="stat-title-row">
@@ -39,8 +39,12 @@
         </view>
       </view>
       <view class="stat-split">
-        <text class="stat-value">42</text>
+        <view class="stat-left">
+          <text class="stat-value">42</text>
+          <text class="stat-sub">次</text>
+        </view>
         <view class="donut-ring">
+          <view class="donut-bg"></view>
           <text class="donut-text">42</text>
         </view>
       </view>
@@ -48,52 +52,55 @@
     </view>
   </view>
 
-  <!-- Section 3: Call-to-Action -->
+  <!-- 待办提醒 -->
   <view class="todo-card">
     <view class="todo-icon-box">ℹ️</view>
     <view class="todo-content">
-      <text class="todo-title">待办提醒: 完善作品集</text>
-      <text class="todo-body">你还有 2 个项目链接未添加，完善后的名片交换率通常会提升 30% 以上。</text>
+      <view class="todo-header">
+        <text class="todo-title">待办提醒: 完善作品集</text>
+        <text class="todo-action">立即去完善 ›</text>
+      </view>
+      <text class="todo-body">你还有 2 个项目链接未添加, 完善后的名片交换率通常会提升 30% 以上。</text>
       <view class="todo-progress">
-        <view class="progress-bar">
+        <view class="progress-bar orange">
           <view class="progress-fill" style="width: 60%"></view>
         </view>
         <text class="progress-text">60% complete</text>
       </view>
     </view>
-    <text class="todo-action">立即去完善 ›</text>
   </view>
 
-  <!-- Section 4: Quick Actions -->
-  <view class="quick-section">
-    <view class="quick-grid">
-      <view class="quick-item" bindtap="goToMyCards">
-        <view class="quick-icon-box purple">👥</view>
-        <text class="quick-text">名片管理</text>
-      </view>
-      <view class="quick-item" bindtap="goToVisitor">
-        <view class="quick-icon-box red">🕐</view>
-        <text class="quick-text">浏览记录</text>
-      </view>
-      <view class="quick-item" bindtap="goToExchange">
-        <view class="quick-icon-box green">🔄</view>
-        <text class="quick-text">交换记录</text>
-      </view>
-      <view class="quick-item" bindtap="goToAnalytics">
-        <view class="quick-icon-box orange">📊</view>
-        <text class="quick-text">数据分析</text>
+  <!-- 2x2 功能入口宫格 -->
+  <view class="grid-section">
+    <view class="grid-card">
+      <view class="grid-2x2">
+        <view class="grid-item" bindtap="goToMyCards">
+          <view class="grid-icon-box purple">👥</view>
+          <text class="grid-text">名片管理</text>
+        </view>
+        <view class="grid-item" bindtap="goToVisitor">
+          <view class="grid-icon-box pink">🕐</view>
+          <text class="grid-text">浏览记录</text>
+        </view>
+        <view class="grid-item" bindtap="goToExchange">
+          <view class="grid-icon-box green">🔄</view>
+          <text class="grid-text">交换记录</text>
+        </view>
+        <view class="grid-item" bindtap="goToAnalytics">
+          <view class="grid-icon-box blue">📊</view>
+          <text class="grid-text">数据分析</text>
+        </view>
       </view>
     </view>
   </view>
 
-  <!-- Section 5: Recent Visitors -->
+  <!-- 最近访客 -->
   <view class="visitors-section">
     <view class="section-header">
       <text class="section-title">最近访客</text>
       <text class="view-all">查看更多 ›</text>
     </view>
     
-    <!-- Visitor 1 -->
     <view class="visitor-card">
       <image class="visitor-avatar" src="https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200" mode="aspectFill"></image>
       <view class="visitor-info">
@@ -102,11 +109,10 @@
       </view>
       <view class="visitor-actions">
         <text class="action-pill">打招呼</text>
-        <text class="action-pill">保存为联系人</text>
+        <text class="action-pill">保存</text>
       </view>
     </view>
 
-    <!-- Visitor 2 -->
     <view class="visitor-card">
       <image class="visitor-avatar" src="https://images.unsplash.com/photo-1664101606938-e664f5852fac?w=200" mode="aspectFill"></image>
       <view class="visitor-info">
@@ -115,7 +121,7 @@
       </view>
       <view class="visitor-actions">
         <text class="action-pill">打招呼</text>
-        <text class="action-pill">保存为联系人</text>
+        <text class="action-pill">保存</text>
       </view>
     </view>
   </view>
