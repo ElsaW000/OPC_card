@@ -1,5 +1,40 @@
 <!--edit.wxml - 按照 Figma 设计重构 -->
 <view class="edit-container">
+  <!-- 模板选择 -->
+  <view class="form-section">
+    <text class="section-title">选择模板</text>
+    <view class="template-list">
+      <view 
+        class="template-item {{currentTemplate === 'universal' ? 'active' : ''}}" 
+        data-id="universal" 
+        bindtap="selectTemplate"
+      >
+        <text class="template-name">通用</text>
+      </view>
+      <view 
+        class="template-item {{currentTemplate === 'developer' ? 'active' : ''}}" 
+        data-id="developer" 
+        bindtap="selectTemplate"
+      >
+        <text class="template-name">程序员</text>
+      </view>
+      <view 
+        class="template-item {{currentTemplate === 'designer' ? 'active' : ''}}" 
+        data-id="designer" 
+        bindtap="selectTemplate"
+      >
+        <text class="template-name">设计师</text>
+      </view>
+      <view 
+        class="template-item {{currentTemplate === 'boss' ? 'active' : ''}}" 
+        data-id="boss" 
+        bindtap="selectTemplate"
+      >
+        <text class="template-name">老板</text>
+      </view>
+    </view>
+  </view>
+
   <!-- Banner 设置 -->
   <view class="form-section">
     <text class="section-title">Banner 图片</text>
@@ -18,7 +53,7 @@
     </view>
   </view>
 
-  <!-- 基本信息 -->
+  <!-- 基本信息（通用字段） -->
   <view class="form-section">
     <text class="section-title">基本信息</text>
     
@@ -43,6 +78,66 @@
     </view>
   </view>
 
+  <!-- 程序员专属字段 -->
+  <view class="form-section" wx:if="{{currentTemplate === 'developer'}}">
+    <text class="section-title">程序员信息</text>
+    
+    <view class="form-item">
+      <text class="label">工作年限</text>
+      <input class="input" value="{{years}}" data-field="years" bindinput="onInputChange" placeholder="如：8+" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">技术栈</text>
+      <input class="input" value="{{techStack}}" data-field="techStack" bindinput="onInputChange" placeholder="如：React, Python, AI" />
+    </view>
+  </view>
+
+  <!-- 设计师专属字段 -->
+  <view class="form-section" wx:if="{{currentTemplate === 'designer'}}">
+    <text class="section-title">设计师信息</text>
+    
+    <view class="form-item">
+      <text class="label">作品集链接</text>
+      <input class="input" value="{{portfolio}}" data-field="portfolio" bindinput="onInputChange" placeholder="请输入作品集链接" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">擅长风格</text>
+      <input class="input" value="{{styles}}" data-field="styles" bindinput="onInputChange" placeholder="如：UI设计、品牌设计" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">从业年限</text>
+      <input class="input" value="{{experience}}" data-field="experience" bindinput="onInputChange" placeholder="如：5年" />
+    </view>
+  </view>
+
+  <!-- 老板专属字段 -->
+  <view class="form-section" wx:if="{{currentTemplate === 'boss'}}">
+    <text class="section-title">企业信息</text>
+    
+    <view class="form-item">
+      <text class="label">公司名称</text>
+      <input class="input" value="{{company}}" data-field="company" bindinput="onInputChange" placeholder="请输入公司名称" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">业务范围</text>
+      <input class="input" value="{{business}}" data-field="business" bindinput="onInputChange" placeholder="请输入业务范围" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">合作方式</text>
+      <input class="input" value="{{cooperation}}" data-field="cooperation" bindinput="onInputChange" placeholder="请输入合作方式" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">微信</text>
+      <input class="input" value="{{wechat}}" data-field="wechat" bindinput="onInputChange" placeholder="请输入微信号" />
+    </view>
+  </view>
+
   <!-- 社交链接 -->
   <view class="form-section">
     <text class="section-title">社交链接</text>
@@ -61,11 +156,6 @@
   <!-- 数据统计 -->
   <view class="form-section">
     <text class="section-title">数据统计</text>
-    
-    <view class="form-item">
-      <text class="label">开发年限</text>
-      <input class="input" value="{{years}}" data-field="years" bindinput="onInputChange" placeholder="如：8+" />
-    </view>
     
     <view class="form-item">
       <text class="label">上线产品</text>
@@ -90,6 +180,29 @@
     <view class="form-item">
       <text class="label">邮箱</text>
       <input class="input" value="{{email}}" data-field="email" bindinput="onInputChange" placeholder="请输入邮箱" />
+    </view>
+  </view>
+  
+  <!-- 自定义卡片 -->
+  <view class="form-section">
+    <view class="section-header">
+      <text class="section-title">自定义卡片</text>
+      <button class="add-btn" bindtap="addCustomCard">添加卡片</button>
+    </view>
+    <view class="tip-text">如：MBTI、音乐创作、兴趣爱好等</view>
+    
+    <view class="custom-card-item" wx:for="{{customCards}}" wx:key="id">
+      <view class="custom-card-form">
+        <view class="form-item">
+          <text class="label">标题</text>
+          <input class="input" value="{{item.title}}" data-index="{{index}}" data-field="title" bindinput="onCustomCardChange" placeholder="如：MBTI" />
+        </view>
+        <view class="form-item">
+          <text class="label">内容</text>
+          <input class="input" value="{{item.content}}" data-index="{{index}}" data-field="content" bindinput="onCustomCardChange" placeholder="如：INTJ" />
+        </view>
+      </view>
+      <button class="remove-btn" data-index="{{index}}" bindtap="removeCustomCard">删除</button>
     </view>
   </view>
   

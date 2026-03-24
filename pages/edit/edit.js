@@ -2,8 +2,39 @@
 
 const app = getApp()
 
+// 模板配置
+const TEMPLATES = {
+  universal: {
+    id: 'universal',
+    name: '通用',
+    fields: ['name', 'role', 'location', 'bio', 'phone', 'email', 'githubUrl', 'twitterUrl']
+  },
+  developer: {
+    id: 'developer',
+    name: '程序员',
+    fields: ['name', 'role', 'location', 'bio', 'years', 'techStack', 'projects', 'githubUrl', 'phone', 'email']
+  },
+  designer: {
+    id: 'designer',
+    name: '设计师',
+    fields: ['name', 'role', 'location', 'bio', 'portfolio', 'styles', 'experience', 'phone', 'email', 'twitterUrl']
+  },
+  boss: {
+    id: 'boss',
+    name: '老板',
+    fields: ['name', 'role', 'company', 'business', 'cooperation', 'bio', 'phone', 'email', 'wechat']
+  }
+}
+
 Page({
   data: {
+    // 模板选择
+    currentTemplate: 'universal',
+    templates: TEMPLATES,
+    
+    // 自定义卡片
+    customCards: [],
+    
     // Banner & 头像
     bannerUrl: 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080',
     avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200',
@@ -14,12 +45,26 @@ Page({
     location: '',
     bio: '',
     
+    // 程序员字段
+    years: '',
+    techStack: '',
+    
+    // 设计师字段
+    portfolio: '',
+    styles: '',
+    experience: '',
+    
+    // 老板字段
+    company: '',
+    business: '',
+    cooperation: '',
+    wechat: '',
+    
     // 社交链接
     githubUrl: '',
     twitterUrl: '',
     
     // 数据统计
-    years: '',
     products: '',
     users: '',
     
@@ -130,6 +175,42 @@ Page({
     this.setData({ projects });
   },
 
+  // 选择模板
+  selectTemplate(e) {
+    const templateId = e.currentTarget.dataset.id;
+    this.setData({
+      currentTemplate: templateId
+    });
+  },
+
+  // 添加自定义卡片
+  addCustomCard() {
+    const customCards = this.data.customCards;
+    customCards.push({
+      id: Date.now().toString(),
+      title: '',
+      content: ''
+    });
+    this.setData({ customCards });
+  },
+
+  // 删除自定义卡片
+  removeCustomCard(e) {
+    const index = e.currentTarget.dataset.index;
+    const customCards = this.data.customCards;
+    customCards.splice(index, 1);
+    this.setData({ customCards });
+  },
+
+  // 自定义卡片输入变化
+  onCustomCardChange(e) {
+    const index = e.currentTarget.dataset.index;
+    const field = e.currentTarget.dataset.field;
+    const customCards = this.data.customCards;
+    customCards[index][field] = e.detail.value;
+    this.setData({ customCards });
+  },
+
   // 保存到云端
   saveCard() {
     wx.showLoading({ title: '保存中...' });
@@ -141,19 +222,48 @@ Page({
     }));
 
     const cardData = {
+      // 模板信息
+      template: this.data.currentTemplate,
+      customCards: this.data.customCards,
+      
+      // Banner & 头像
       bannerUrl: this.data.bannerUrl,
       avatarUrl: this.data.avatarUrl,
+      
+      // 基本信息
       name: this.data.name,
       role: this.data.role,
       location: this.data.location,
       bio: this.data.bio,
+      
+      // 程序员字段
+      years: this.data.years,
+      techStack: this.data.techStack,
+      
+      // 设计师字段
+      portfolio: this.data.portfolio,
+      styles: this.data.styles,
+      experience: this.data.experience,
+      
+      // 老板字段
+      company: this.data.company,
+      business: this.data.business,
+      cooperation: this.data.cooperation,
+      wechat: this.data.wechat,
+      
+      // 社交链接
       githubUrl: this.data.githubUrl,
       twitterUrl: this.data.twitterUrl,
-      years: this.data.years,
+      
+      // 数据统计
       products: this.data.products,
       users: this.data.users,
+      
+      // 联系方式
       phone: this.data.phone,
       email: this.data.email,
+      
+      // 产品/项目
       projects: projects
     };
     

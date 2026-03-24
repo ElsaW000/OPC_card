@@ -4,6 +4,13 @@ const app = getApp()
 
 Page({
   data: {
+    // 模板
+    currentTemplate: 'universal',
+    templateName: '通用',
+    
+    // 自定义卡片
+    customCards: [],
+    
     // Banner
     bannerUrl: 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080',
     
@@ -16,12 +23,26 @@ Page({
     location: '中国，深圳',
     bio: '一名专注于构建 AI 工具与效率应用的独立开发者。我喜欢探索极致的产品体验，并将复杂的逻辑简化为直观的 UI。目前致力于 OPC (一人公司) 的规模化与自动化。',
     
+    // 程序员字段
+    years: '8+',
+    techStack: '',
+    
+    // 设计师字段
+    portfolio: '',
+    styles: '',
+    experience: '',
+    
+    // 老板字段
+    company: '',
+    business: '',
+    cooperation: '',
+    wechat: '',
+    
     // 社交链接
     githubUrl: 'https://github.com/example',
     twitterUrl: 'https://twitter.com/example',
     
     // 数据统计
-    years: '8+',
     products: '12',
     users: '25k',
     
@@ -79,6 +100,18 @@ Page({
         wx.hideLoading();
         if (res.result && res.result.success) {
           const cardData = res.result.data;
+          
+          // 模板名称映射
+          const templateNames = {
+            universal: '通用',
+            developer: '程序员',
+            designer: '设计师',
+            boss: '老板'
+          };
+          
+          // 设置模板名称
+          cardData.templateName = templateNames[cardData.template] || '通用';
+          
           // 存储到全局
           app.globalData.cardData = cardData;
           this.setData(cardData);

@@ -104,8 +104,18 @@
   font-size: 48rpx;
   font-weight: 700;
   color: #111;
-  display: block;
-  margin-bottom: 8rpx;
+  display: inline-block;
+  margin-right: 16rpx;
+}
+
+.template-tag {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  font-size: 22rpx;
+  background-color: #2563eb;
+  color: #fff;
+  border-radius: 9999rpx;
+  vertical-align: middle;
 }
 
 .role-location {
@@ -125,6 +135,69 @@
   font-size: 30rpx;
   color: #4b5563;
   line-height: 1.6;
+}
+
+/* 模板专属信息 */
+.template-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24rpx;
+  padding: 24rpx;
+  background-color: #f9fafb;
+  border-radius: 16rpx;
+  margin-bottom: 32rpx;
+}
+
+.template-info .info-item {
+  flex: 1;
+  min-width: 200rpx;
+}
+
+.template-info .info-label {
+  display: block;
+  font-size: 22rpx;
+  color: #9ca3af;
+  margin-bottom: 4rpx;
+}
+
+.template-info .info-value {
+  display: block;
+  font-size: 28rpx;
+  color: #111;
+  font-weight: 500;
+}
+
+.template-info .info-value.link {
+  color: #2563eb;
+}
+
+/* 自定义卡片 */
+.custom-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-bottom: 32rpx;
+}
+
+.custom-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20rpx 28rpx;
+  background-color: #fef3c7;
+  border-radius: 16rpx;
+  border: 1rpx solid #fcd34d;
+}
+
+.custom-card-title {
+  font-size: 22rpx;
+  color: #92400e;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.custom-card-content {
+  font-size: 28rpx;
+  color: #111;
 }
 
 /* 数据卡片 */
