@@ -43,6 +43,22 @@
   margin-bottom: 32rpx;
 }
 
+.profile-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16rpx;
+}
+
+.save-btn-top {
+  font-size: 24rpx;
+  color: #2563eb;
+  background-color: #eff6ff;
+  border: none;
+  border-radius: 8rpx;
+  padding: 8rpx 20rpx;
+}
+
 .avatar-wrapper {
   width: 192rpx;
   height: 192rpx;
@@ -174,6 +190,7 @@
 /* 快捷联系方式 */
 .quick-contact {
   display: flex;
+  flex-wrap: wrap;
   gap: 16rpx;
   margin: 24rpx 0;
 }
@@ -187,13 +204,29 @@
   border-radius: 9999rpx;
 }
 
+.contact-btn.phone .contact-text {
+  color: #2563eb;
+}
+
+.contact-btn.wechat .contact-text {
+  color: #07c160;
+}
+
+.contact-btn.email .contact-text {
+  color: #4b5563;
+}
+
 .contact-icon {
   font-size: 24rpx;
 }
 
 .contact-text {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #4b5563;
+  max-width: 200rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* 自定义卡片 */
