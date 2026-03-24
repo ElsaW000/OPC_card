@@ -1,10 +1,4 @@
-/* custom-tab-bar.wxss - 线性图标 */
-
-page {
-  --blue: #2563eb;
-  --blue-bg: rgba(37, 99, 235, 0.1);
-  --gray: #9ca3af;
-}
+/* custom-tab-bar.wxss */
 
 .tab-bar {
   position: fixed;
@@ -12,12 +6,10 @@ page {
   left: 0;
   right: 0;
   height: 100rpx;
-  padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: env(safe-area-inset-bottom);
-  background: #fff;
+  background: #ffffff;
   z-index: 999;
   display: flex;
-  box-shadow: 0 -2rpx 16rpx rgba(0, 0, 0, 0.04);
+  border-top: 1rpx solid #e5e7eb;
 }
 
 .tab-item {
@@ -27,164 +19,37 @@ page {
   align-items: center;
   justify-content: center;
   position: relative;
+  background: #fff;
 }
 
-/* 图标容器 */
-.tab-icon-wrap {
-  width: 56rpx;
-  height: 56rpx;
+.tab-item.active {
+  background: #eff6ff;
+}
+
+.tab-icon-box {
+  width: 48rpx;
+  height: 48rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 4rpx;
 }
 
-.tab-item.active .tab-icon-wrap {
-  background: var(--blue-bg);
-  border-radius: 16rpx;
+.icon-text {
+  font-size: 32rpx;
+  color: #9ca3af;
 }
 
-/* ===== 工作台 2x2宫格 ===== */
-.grid-2x2 {
-  width: 32rpx;
-  height: 32rpx;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rpx;
+.tab-item.active .icon-text {
+  color: #2563eb;
 }
 
-.g-dot {
-  background: var(--gray);
-  border-radius: 3rpx;
-}
-
-.grid-2x2.active .g-dot {
-  background: var(--blue);
-}
-
-/* ===== 名片 ===== */
-.vcard {
-  width: 30rpx;
-  height: 38rpx;
-  border: 3rpx solid var(--gray);
-  border-radius: 4rpx;
-  position: relative;
-}
-
-.vcard .v-dot {
-  position: absolute;
-  top: 6rpx;
-  left: 4rpx;
-  width: 6rpx;
-  height: 6rpx;
-  border-radius: 50%;
-  background: var(--gray);
-}
-
-.vcard .v-line {
-  position: absolute;
-  right: 4rpx;
-  height: 3rpx;
-  background: var(--gray);
-  border-radius: 2rpx;
-}
-
-.vcard .v-line:nth-child(2) { top: 8rpx; width: 14rpx; }
-.vcard .v-line:nth-child(3) { top: 16rpx; width: 10rpx; }
-.vcard .v-line:nth-child(4) { top: 24rpx; width: 12rpx; }
-
-.vcard.active {
-  border-color: var(--blue);
-  background: var(--blue-bg);
-}
-
-.vcard.active .v-dot,
-.vcard.active .v-line {
-  background: var(--blue);
-}
-
-/* ===== 联系人 ===== */
-.users {
-  width: 34rpx;
-  height: 26rpx;
-  position: relative;
-}
-
-.users .u1 {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 16rpx;
-  height: 16rpx;
-  border-radius: 50%;
-  background: var(--gray);
-}
-
-.users .u2 {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 20rpx;
-  height: 14rpx;
-  border-radius: 6rpx 6rpx 0 0;
-  background: var(--gray);
-}
-
-.users.active .u1,
-.users.active .u2 {
-  background: var(--blue);
-}
-
-/* ===== 齿轮 ===== */
-.gear {
-  width: 30rpx;
-  height: 30rpx;
-  border: 4rpx solid var(--gray);
-  border-radius: 50%;
-  position: relative;
-}
-
-.gear::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 8rpx;
-  height: 8rpx;
-  background: #fff;
-  border-radius: 50%;
-}
-
-.gear.active {
-  border-color: var(--blue);
-}
-
-/* 文字 */
 .tab-text {
-  font-size: 20rpx;
-  color: var(--gray);
-  margin-top: 2rpx;
-  font-weight: 500;
+  font-size: 22rpx;
+  color: #9ca3af;
 }
 
 .tab-item.active .tab-text {
-  color: var(--blue);
-  font-weight: 700;
-}
-
-/* 底部指示线 */
-.tab-line {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  width: 32rpx;
-  height: 6rpx;
-  background: var(--blue);
-  border-radius: 3rpx;
-  transition: transform 0.2s;
-}
-
-.tab-line.active {
-  transform: translateX(-50%) scaleX(1);
+  color: #2563eb;
+  font-weight: bold;
 }

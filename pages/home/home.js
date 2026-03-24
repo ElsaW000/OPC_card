@@ -47,7 +47,7 @@ Page({
   },
 
   goToExchange() {
-    wx.navigateTo({ url: '/pages/exchangeconfirm/exchangeconfirm' })
+    wx.navigateTo({ url: '/pages/exchange/exchange' })
   },
 
   goToAnalytics() {

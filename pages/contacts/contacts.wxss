@@ -1,27 +1,21 @@
-/* contacts.wxss - 响应式 */
+/* contacts.wxss */
 
 page {
   background-color: #f8fafc;
-  --safe-top: env(safe-area-inset-top);
-  --safe-bottom: env(safe-area-inset-bottom);
 }
 
 .container {
+  width: 100%;
   min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  padding-bottom: calc(100rpx + var(--safe-bottom));
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-/* 搜索栏 - 全宽 + padding */
 .search-bar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  padding: calc(20rpx + var(--safe-top)) 32rpx 20rpx;
+  width: 100%;
+  padding: 20rpx 32rpx 20rpx;
   background-color: #fff;
+  box-sizing: border-box;
 }
 
 .search-input {
@@ -33,18 +27,13 @@ page {
   font-size: 28rpx;
   border: 2rpx solid #f1f5f9;
   box-sizing: border-box;
-  transition: all 0.2s;
 }
 
-.search-input:focus {
-  border-color: #2563eb;
-  background-color: #fff;
-}
-
-/* 标签筛选 - horizontal scroll */
 .tags-scroll {
+  width: 100%;
   background-color: #fff;
   padding-bottom: 16rpx;
+  box-sizing: border-box;
 }
 
 .tags-list {
@@ -52,11 +41,6 @@ page {
   gap: 12rpx;
   padding: 0 32rpx;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.tags-list::-webkit-scrollbar {
-  display: none;
 }
 
 .tag-item {
@@ -66,33 +50,29 @@ page {
   color: #64748b;
   background-color: #f1f5f9;
   border-radius: 9999rpx;
-  font-weight: 500;
-  white-space: nowrap;
 }
 
 .tag-item.active {
-  background: linear-gradient(135deg, #111 0%, #333 100%);
+  background: #111;
   color: #fff;
 }
 
-/* 联系人群组 - flex: 1 自适应 */
 .contact-list {
-  flex: 1;
-  padding: 24rpx 32rpx;
-  overflow-y: auto;
+  width: 100%;
+  padding: 24rpx 32rpx 120rpx;
+  box-sizing: border-box;
 }
 
-/* 联系人卡片 - 使用 grid */
 .contact-item {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 20rpx;
+  width: 100%;
+  display: flex;
   align-items: center;
+  gap: 20rpx;
   padding: 24rpx;
   background-color: #fff;
   border-radius: 24rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
 }
 
 .contact-avatar {
@@ -103,22 +83,9 @@ page {
   flex-shrink: 0;
 }
 
-.contact-avatar image {
-  width: 100%;
-  height: 100%;
-}
-
 .contact-info {
+  flex: 1;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4rpx;
-}
-
-.contact-header {
-  display: flex;
-  align-items: center;
-  gap: 12rpx;
 }
 
 .contact-name {
@@ -127,109 +94,24 @@ page {
   color: #111;
 }
 
-.contact-location {
-  font-size: 22rpx;
-  color: #94a3b8;
-}
-
 .contact-role {
   font-size: 26rpx;
   color: #64748b;
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.contact-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8rpx;
-  margin-top: 8rpx;
-}
-
-.contact-tags .tag {
-  font-size: 20rpx;
-  color: #64748b;
-  background-color: #f1f5f9;
-  padding: 4rpx 12rpx;
-  border-radius: 8rpx;
-  font-weight: 500;
-}
-
-.contact-active {
-  font-size: 22rpx;
-  color: #94a3b8;
+  margin-top: 4rpx;
 }
 
 .contact-actions {
   display: flex;
-  flex-direction: column;
-  gap: 12rpx;
+  gap: 16rpx;
 }
 
 .action-icon {
   font-size: 36rpx;
-  padding: 8rpx;
-  text-align: center;
 }
 
-.empty-state {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.empty-text {
-  font-size: 28rpx;
-  color: #94a3b8;
-}
-
-/* 响应式 */
-@media (max-width: 320px) {
-  .search-bar {
-    padding: 16rpx 20rpx 16rpx;
-  }
-  
-  .tags-list {
-    padding: 0 20rpx;
-  }
-  
-  .contact-list {
-    padding: 16rpx 20rpx;
-  }
-  
-  .contact-item {
-    padding: 20rpx;
-    gap: 16rpx;
-  }
-  
-  .contact-avatar {
-    width: 80rpx;
-    height: 80rpx;
-  }
-}
-
-@media (min-width: 400px) {
-  .search-bar {
-    padding: 28rpx 40rpx 24rpx;
-  }
-  
-  .tags-list {
-    padding: 0 40rpx;
-  }
-  
-  .contact-list {
-    padding: 32rpx 40rpx;
-  }
-  
-  .contact-item {
-    padding: 28rpx;
-  }
-  
-  .contact-avatar {
-    width: 112rpx;
-    height: 112rpx;
+@media (max-width: 375px) {
+  .search-bar, .tags-list, .contact-list {
+    padding-left: 20rpx;
+    padding-right: 20rpx;
   }
 }
