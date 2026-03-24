@@ -1,99 +1,121 @@
 <!--home.wxml - 工作台 -->
 <view class="container">
-  <!-- 顶部标题 -->
+  <!-- Section 1: Header -->
   <view class="header">
     <text class="header-title">工作台</text>
-    <text class="header-subtitle">WORKBENCH</text>
+    <text class="header-subtitle">管理你的 OPC 品牌与人脉网络</text>
   </view>
 
-  <!-- 核心数据指标 -->
+  <!-- Section 2: Dual Data Cards -->
   <view class="stats-row">
-    <view class="stat-card">
+    <!-- Card A: 本周访客 -->
+    <view class="stat-card card-blue">
       <view class="stat-header">
-        <text class="stat-label">本周访客</text>
-        <text class="stat-growth">↑ 12%</text>
+        <view class="stat-title-row">
+          <text class="stat-icon">👁</text>
+          <text class="stat-label">本周访客</text>
+        </view>
+        <text class="stat-growth">↑ 12% 比上周</text>
       </view>
-      <text class="stat-value">1,284</text>
+      <view class="stat-main">
+        <text class="stat-value">1,284</text>
+      </view>
+      <view class="stat-mini">
+        <text>1,354</text>
+        <text class="stat-graph">📈</text>
+        <text>2,173</text>
+      </view>
+      <view class="stat-chart">
+        <view class="chart-line"></view>
+      </view>
     </view>
-    <view class="stat-card">
+
+    <!-- Card B: 交换成功 -->
+    <view class="stat-card card-green">
       <view class="stat-header">
-        <text class="stat-label">交换成功</text>
-        <text class="stat-sub">活跃率 8.5%</text>
+        <view class="stat-title-row">
+          <text class="stat-icon">🔄</text>
+          <text class="stat-label">交换成功</text>
+        </view>
       </view>
-      <text class="stat-value">42</text>
+      <view class="stat-split">
+        <text class="stat-value">42</text>
+        <view class="donut-ring">
+          <text class="donut-text">42</text>
+        </view>
+      </view>
+      <text class="stat-active">活跃率 8.5%</text>
     </view>
   </view>
 
-  <!-- 行动提醒 -->
+  <!-- Section 3: Call-to-Action -->
   <view class="todo-card">
-    <text class="todo-icon">💡</text>
+    <view class="todo-icon-box">ℹ️</view>
     <view class="todo-content">
-      <text class="todo-title">完善后交换率提升 30%</text>
-      <text class="todo-desc">补充更多作品集，让更多人认识你</text>
+      <text class="todo-title">待办提醒: 完善作品集</text>
+      <text class="todo-body">你还有 2 个项目链接未添加，完善后的名片交换率通常会提升 30% 以上。</text>
+      <view class="todo-progress">
+        <view class="progress-bar">
+          <view class="progress-fill" style="width: 60%"></view>
+        </view>
+        <text class="progress-text">60% complete</text>
+      </view>
     </view>
-    <text class="todo-arrow">›</text>
+    <text class="todo-action">立即去完善 ›</text>
   </view>
 
-  <!-- 快捷功能入口 -->
+  <!-- Section 4: Quick Actions -->
   <view class="quick-section">
-    <text class="section-title">快捷功能</text>
     <view class="quick-grid">
       <view class="quick-item" bindtap="goToMyCards">
-        <text class="quick-icon">📇</text>
+        <view class="quick-icon-box purple">👥</view>
         <text class="quick-text">名片管理</text>
       </view>
       <view class="quick-item" bindtap="goToVisitor">
-        <text class="quick-icon">👁</text>
+        <view class="quick-icon-box red">🕐</view>
         <text class="quick-text">浏览记录</text>
       </view>
       <view class="quick-item" bindtap="goToExchange">
-        <text class="quick-icon">🔄</text>
+        <view class="quick-icon-box green">🔄</view>
         <text class="quick-text">交换记录</text>
       </view>
       <view class="quick-item" bindtap="goToAnalytics">
-        <text class="quick-icon">📊</text>
+        <view class="quick-icon-box orange">📊</view>
         <text class="quick-text">数据分析</text>
       </view>
     </view>
   </view>
 
-  <!-- 最近访客 -->
+  <!-- Section 5: Recent Visitors -->
   <view class="visitors-section">
     <view class="section-header">
       <text class="section-title">最近访客</text>
-      <text class="view-all">查看全部 ›</text>
+      <text class="view-all">查看更多 ›</text>
     </view>
-    <view class="visitor-list">
-      <block wx:for="{{visitors}}" wx:key="id">
-        <view class="visitor-item">
-          <image class="visitor-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
-          <view class="visitor-info">
-            <text class="visitor-name">{{item.name}}</text>
-            <text class="visitor-role">{{item.role}}</text>
-          </view>
-          <text class="visitor-time">{{item.time}}</text>
-        </view>
-      </block>
-    </view>
-  </view>
-
-  <!-- 当前名片预览 -->
-  <view class="card-preview">
-    <view class="preview-header">
-      <text class="preview-title">当前名片</text>
-    </view>
-    <view class="preview-card" bindtap="goToMyCards">
-      <view class="preview-bg">
-        <image src="{{currentCard.bannerUrl}}" mode="aspectFill"></image>
+    
+    <!-- Visitor 1 -->
+    <view class="visitor-card">
+      <image class="visitor-avatar" src="https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200" mode="aspectFill"></image>
+      <view class="visitor-info">
+        <text class="visitor-name">Sarah Zhang</text>
+        <text class="visitor-role">产品经理 @ ByteDance</text>
       </view>
-      <view class="preview-content">
-        <view class="preview-info">
-          <text class="preview-name">{{currentCard.name}}</text>
-          <text class="preview-role">{{currentCard.role}}</text>
-        </view>
-        <view class="preview-avatar">
-          <image src="{{currentCard.avatarUrl}}" mode="aspectFill"></image>
-        </view>
+      <view class="visitor-actions">
+        <text class="action-pill">打招呼</text>
+        <text class="action-pill">保存为联系人</text>
+      </view>
+    </view>
+
+    <!-- Visitor 2 -->
+    <view class="visitor-card">
+      <image class="visitor-avatar" src="https://images.unsplash.com/photo-1664101606938-e664f5852fac?w=200" mode="aspectFill"></image>
+      <view class="visitor-info">
+        <text class="visitor-name">David Li</text>
+        <text class="visitor-role">独立开发者</text>
+      </view>
+      <view class="visitor-actions">
+        <text class="action-pill">打招呼</text>
+        <text class="action-pill">保存为联系人</text>
       </view>
     </view>
   </view>
