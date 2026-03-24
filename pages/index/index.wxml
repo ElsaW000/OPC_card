@@ -14,17 +14,15 @@
         <image class="avatar" src="{{avatarUrl}}" mode="aspectFill" />
       </view>
 
-      <!-- 社交按钮 + 保存 -->
-      <view class="profile-header-right">
-        <view class="social-buttons">
-          <button class="social-btn github" bindtap="openLink" data-link="{{githubUrl}}">
-            <text class="iconfont icon-github"></text>
-          </button>
-          <button class="social-btn twitter" bindtap="openLink" data-link="{{twitterUrl}}">
-            <text class="iconfont icon-twitter"></text>
-          </button>
-        </view>
-        <button class="save-btn-top" bindtap="saveContact">保存</button>
+      <!-- 社交按钮 -->
+      <view class="social-buttons">
+        <button class="social-btn github" bindtap="openLink" data-link="{{githubUrl}}">
+          <text class="iconfont icon-github"></text>
+        </button>
+        <button class="social-btn twitter" bindtap="openLink" data-link="{{twitterUrl}}">
+          <text class="iconfont icon-twitter"></text>
+        </button>
+        <button class="follow-btn" bindtap="saveContact">保存</button>
       </view>
     </view>
 
