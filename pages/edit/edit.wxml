@@ -314,9 +314,8 @@
       
       <view class="project-list-edit">
         <view class="project-item-edit" wx:for="{{projects}}" wx:key="id">
-          <view class="project-icon {{item.type === 'link' ? 'indigo' : 'rose'}}">
-            <text wx:if="{{item.type === 'link'}}">🔗</text>
-            <text wx:else>🎬</text>
+          <view class="project-icon indigo">
+            <text>🔗</text>
           </view>
           <view class="project-content">
             <text class="project-title-edit">{{item.title}}</text>
@@ -324,6 +323,32 @@
           </view>
           <view class="project-actions">
             <text class="delete-btn" data-index="{{index}}" bindtap="removeProject">🗑️</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 视频演示 -->
+    <view class="form-section">
+      <view class="section-header">
+        <view class="section-label">
+          <view class="label-dot orange"></view>
+          <text class="section-title">视频演示</text>
+        </view>
+        <view class="add-btn" bindtap="addVideo">+ 添加</view>
+      </view>
+      
+      <view class="video-list-edit">
+        <view class="video-item-edit" wx:for="{{videos}}" wx:key="id">
+          <view class="video-icon orange">
+            <text>🎬</text>
+          </view>
+          <view class="video-content">
+            <text class="video-title-edit">{{item.title}}</text>
+            <text class="video-value-edit">{{item.link}}</text>
+          </view>
+          <view class="video-actions">
+            <text class="delete-btn" data-index="{{index}}" bindtap="removeVideo">🗑️</text>
           </view>
         </view>
       </view>

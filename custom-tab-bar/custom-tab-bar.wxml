@@ -1,11 +1,50 @@
-<!--custom-tab-bar.wxml-->
+<!--custom-tab-bar.wxml - 线性图标风格 -->
 <view class="tab-bar">
-  <view class="tab-bar-border"></view>
-  <block wx:for="{{list}}" wx:key="index">
-    <view class="tab-item" bindtap="switchTab" data-path="{{item.pagePath}}" data-index="{{index}}">
-      <view class="tab-icon">{{item.icon}}</view>
-      <view class="tab-text {{selected === index ? 'active' : ''}}">{{item.text}}</view>
-      <view class="tab-indicator {{selected === index ? 'active' : ''}}"></view>
+  <view 
+    wx:for="{{list}}" 
+    wx:key="index" 
+    class="tab-item {{selected === index ? 'active' : ''}}" 
+    bindtap="switchTab" 
+    data-path="{{item.pagePath}}" 
+    data-index="{{index}}"
+  >
+    <!-- 图标区域 -->
+    <view class="tab-icon-wrap">
+      <!-- 工作台：2x2宫格 -->
+      <view wx:if="{{index === 0}}" class="icon-svg">
+        <view class="grid-2x2 {{selected === index ? 'active' : ''}}">
+          <view class="g-dot"></view>
+          <view class="g-dot"></view>
+          <view class="g-dot"></view>
+          <view class="g-dot"></view>
+        </view>
+      </view>
+      <!-- 名片：卡片 -->
+      <view wx:elif="{{index === 1}}" class="icon-svg">
+        <view class="vcard {{selected === index ? 'active' : ''}}">
+          <view class="v-dot"></view>
+          <view class="v-line"></view>
+          <view class="v-line"></view>
+          <view class="v-line"></view>
+        </view>
+      </view>
+      <!-- 联系人：双人 -->
+      <view wx:elif="{{index === 2}}" class="icon-svg">
+        <view class="users {{selected === index ? 'active' : ''}}">
+          <view class="u1"></view>
+          <view class="u2"></view>
+        </view>
+      </view>
+      <!-- 管理：齿轮 -->
+      <view wx:else class="icon-svg">
+        <view class="gear {{selected === index ? 'active' : ''}}"></view>
+      </view>
     </view>
-  </block>
+    
+    <!-- 文字 -->
+    <text class="tab-text">{{item.text}}</text>
+    
+    <!-- 指示器 -->
+    <view class="tab-line {{selected === index ? 'active' : ''}}"></view>
+  </view>
 </view>

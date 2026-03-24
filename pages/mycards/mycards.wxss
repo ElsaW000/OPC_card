@@ -1,6 +1,5 @@
-/**mycards.wxss - 优化版 + 响应式适配 **/
+/**mycards.wxss - 响应式 **/
 
-/* 全局重置 */
 page {
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
   --safe-top: env(safe-area-inset-top);
@@ -9,11 +8,14 @@ page {
 
 .container {
   min-height: 100vh;
-  min-height: calc(100vh + var(--safe-top));
-  padding-bottom: calc(140rpx + var(--safe-bottom));
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(100rpx + var(--safe-bottom));
+  box-sizing: border-box;
 }
 
-/* Header - 适配刘海屏 */
+/* Header */
 .header {
   position: sticky;
   top: 0;
@@ -21,11 +23,11 @@ page {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  padding: calc(32rpx + var(--safe-top)) 32rpx 24rpx;
+  padding: calc(24rpx + var(--safe-top)) 32rpx 20rpx;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  border-bottom: 2rpx solid #f1f5f9;
+  align-items: center;
+  border-bottom: 1rpx solid #f1f5f9;
 }
 
 .header-content {
@@ -33,25 +35,24 @@ page {
 }
 
 .header-title {
-  font-size: 48rpx;
+  font-size: 44rpx;
   font-weight: 900;
   color: #111;
   display: block;
-  letter-spacing: -1rpx;
 }
 
 .header-subtitle {
   font-size: 18rpx;
   font-weight: 700;
   color: #94a3b8;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.15em;
   display: block;
-  margin-top: 6rpx;
+  margin-top: 4rpx;
 }
 
 .add-btn {
-  width: 88rpx;
-  height: 88rpx;
+  width: 80rpx;
+  height: 80rpx;
   background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
   border-radius: 24rpx;
   display: flex;
@@ -62,35 +63,36 @@ page {
 }
 
 .add-icon {
-  font-size: 44rpx;
+  font-size: 40rpx;
   color: #fff;
   font-weight: 300;
 }
 
-/* Cards Scroll */
+/* Cards Scroll - 使用 flex: 1 自适应 */
 .cards-scroll {
-  padding: 32rpx 24rpx;
+  flex: 1;
+  padding: 24rpx 32rpx;
+  overflow-y: auto;
 }
 
 .cards-list {
   display: flex;
   flex-direction: column;
-  gap: 32rpx;
+  gap: 24rpx;
 }
 
 .card-item {
-  position: relative;
   width: 100%;
 }
 
-/* ID Card - 响应式高度 */
+/* ID Card - 全宽 */
 .id-card {
-  position: relative;
   width: 100%;
-  height: 400rpx;
-  border-radius: 40rpx;
+  height: 380rpx;
+  border-radius: 36rpx;
   overflow: hidden;
-  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.12);
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .card-bg {
@@ -118,12 +120,12 @@ page {
 .gradient-orange .card-overlay { background: linear-gradient(135deg, rgba(249, 115, 22, 0.88) 0%, rgba(251, 146, 60, 0.92) 100%); }
 .gradient-pink .card-overlay { background: linear-gradient(135deg, rgba(236, 72, 153, 0.88) 0%, rgba(244, 114, 182, 0.92) 100%); }
 
-/* Card Content */
+/* Card Content - 使用 flex 布局 */
 .card-content {
   position: relative;
   z-index: 20;
   height: 100%;
-  padding: 40rpx;
+  padding: 36rpx;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -140,14 +142,13 @@ page {
 .card-type {
   display: flex;
   align-items: center;
-  gap: 12rpx;
+  gap: 10rpx;
 }
 
 .type-icon-box {
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 10rpx;
+  padding: 8rpx;
   border-radius: 12rpx;
   border: 2rpx solid rgba(255, 255, 255, 0.3);
 }
@@ -159,7 +160,7 @@ page {
 .type-label {
   font-size: 18rpx;
   font-weight: 900;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   opacity: 0.85;
 }
@@ -171,13 +172,8 @@ page {
   padding: 6rpx 16rpx;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   border-radius: 9999rpx;
   border: 2rpx solid rgba(255, 255, 255, 0.3);
-}
-
-.star {
-  font-size: 18rpx;
 }
 
 .default-text {
@@ -187,19 +183,24 @@ page {
   text-transform: uppercase;
 }
 
+/* Card Footer - 使用 flex */
 .card-footer {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
 }
 
+.card-info {
+  flex: 1;
+  min-width: 0;
+}
+
 .card-name {
-  font-size: 44rpx;
+  font-size: 42rpx;
   font-weight: 900;
   display: block;
-  margin-bottom: 6rpx;
-  letter-spacing: -1rpx;
-  max-width: 380rpx;
+  margin-bottom: 4rpx;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -210,8 +211,8 @@ page {
   font-weight: 600;
   opacity: 0.85;
   display: block;
-  margin-bottom: 10rpx;
-  max-width: 380rpx;
+  margin-bottom: 8rpx;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -224,28 +225,23 @@ page {
   opacity: 0.6;
 }
 
-.company-icon {
-  font-size: 20rpx;
-}
-
 .company-text {
   font-size: 18rpx;
   font-weight: 700;
-  letter-spacing: 0.1em;
   text-transform: uppercase;
-  max-width: 200rpx;
+  max-width: 180rpx;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .card-avatar-box {
-  width: 100rpx;
-  height: 100rpx;
+  width: 96rpx;
+  height: 96rpx;
   border-radius: 24rpx;
   overflow: hidden;
   border: 4rpx solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 6rpx 24rpx rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.2);
   flex-shrink: 0;
 }
 
@@ -257,21 +253,18 @@ page {
 /* Chip Decoration */
 .chip-decoration {
   position: absolute;
-  top: 42%;
-  right: -20rpx;
-  width: 64rpx;
-  height: 64rpx;
+  top: 40%;
+  right: -18rpx;
+  width: 56rpx;
+  height: 56rpx;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   border-radius: 50%;
   border: 2rpx solid rgba(255, 255, 255, 0.2);
 }
 
-/* Card Actions */
+/* Card Actions - 使用 flex */
 .card-actions {
-  margin-top: 20rpx;
-  padding: 0 4rpx;
+  margin-top: 16rpx;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -279,7 +272,7 @@ page {
 
 .actions-left {
   display: flex;
-  gap: 24rpx;
+  gap: 20rpx;
 }
 
 .action-btn {
@@ -306,12 +299,12 @@ page {
 
 .actions-right {
   display: flex;
-  gap: 12rpx;
+  gap: 10rpx;
 }
 
 .icon-btn {
-  width: 56rpx;
-  height: 56rpx;
+  width: 52rpx;
+  height: 52rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -324,17 +317,17 @@ page {
   background: #fef2f2;
 }
 
-/* Add Card Placeholder */
+/* Add Card Placeholder - 全宽 */
 .add-card-placeholder {
   width: 100%;
   height: 160rpx;
-  border-radius: 40rpx;
-  border: 4rpx dashed #cbd5e1;
+  border-radius: 36rpx;
+  border: 3rpx dashed #cbd5e1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12rpx;
+  gap: 10rpx;
   background: #fafafa;
 }
 
@@ -358,7 +351,7 @@ page {
   font-size: 22rpx;
   font-weight: 700;
   color: #94a3b8;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -379,10 +372,6 @@ page {
   margin-bottom: 12rpx;
 }
 
-.tips-icon {
-  font-size: 22rpx;
-}
-
 .tips-title {
   font-size: 22rpx;
   font-weight: 800;
@@ -398,32 +387,35 @@ page {
   font-weight: 500;
 }
 
-/* 响应式调整 - 小屏幕 */
+/* Bottom Spacer */
+.bottom-nav-spacer {
+  height: 20rpx;
+}
+
+/* 响应式 */
 @media (max-width: 320px) {
   .header {
-    padding: 24rpx 20rpx 20rpx;
+    padding: 20rpx 20rpx 16rpx;
   }
   
   .header-title {
-    font-size: 40rpx;
+    font-size: 36rpx;
+  }
+  
+  .cards-scroll {
+    padding: 16rpx 20rpx;
   }
   
   .id-card {
-    height: 360rpx;
+    height: 340rpx;
   }
   
   .card-content {
-    padding: 32rpx;
+    padding: 28rpx;
   }
   
   .card-name {
     font-size: 36rpx;
-    max-width: 280rpx;
-  }
-  
-  .card-role {
-    font-size: 22rpx;
-    max-width: 280rpx;
   }
   
   .card-avatar-box {
@@ -432,22 +424,25 @@ page {
   }
 }
 
-/* 响应式调整 - 大屏幕 */
 @media (min-width: 400px) {
   .header {
-    padding: 40rpx 40rpx 28rpx;
+    padding: 32rpx 40rpx 24rpx;
   }
   
   .header-title {
-    font-size: 56rpx;
+    font-size: 52rpx;
+  }
+  
+  .cards-scroll {
+    padding: 32rpx 40rpx;
   }
   
   .id-card {
-    height: 440rpx;
+    height: 420rpx;
   }
   
   .card-content {
-    padding: 52rpx;
+    padding: 48rpx;
   }
   
   .card-name {

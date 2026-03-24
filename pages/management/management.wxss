@@ -1,13 +1,16 @@
-/* management.wxss */
+/* management.wxss - 响应式 */
 
 page {
-  background-color: #f8f9fa;
+  background-color: #f8fafc;
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
 }
 
 .container {
   min-height: 100vh;
-  padding: 32rpx;
-  padding-bottom: 200rpx;
+  min-height: calc(100vh + var(--safe-top));
+  padding: calc(24rpx + var(--safe-top)) 24rpx calc(160rpx + var(--safe-bottom));
+  box-sizing: border-box;
 }
 
 /* 顶部个人信息卡片 */
@@ -15,16 +18,17 @@ page {
   display: flex;
   align-items: center;
   background: #fff;
-  border-radius: 24rpx;
-  padding: 32rpx;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
+  border-radius: 28rpx;
+  padding: 28rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
 }
 
 .profile-left {
-  width: 120rpx;
-  height: 120rpx;
+  width: 112rpx;
+  height: 112rpx;
   border-radius: 24rpx;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .profile-avatar {
@@ -34,39 +38,41 @@ page {
 
 .profile-middle {
   flex: 1;
-  margin-left: 24rpx;
-  display: flex;
-  flex-direction: column;
+  margin-left: 20rpx;
+  min-width: 0;
 }
 
 .profile-name {
   font-size: 32rpx;
-  font-weight: bold;
-  color: #000;
+  font-weight: 800;
+  color: #111;
+  display: block;
 }
 
 .profile-role {
   font-size: 24rpx;
-  color: #999;
-  margin-top: 8rpx;
+  color: #64748b;
+  margin-top: 6rpx;
+  display: block;
 }
 
 .profile-right {
-  padding: 16rpx;
+  padding: 12rpx;
+  flex-shrink: 0;
 }
 
 .arrow-icon {
   font-size: 40rpx;
-  color: #ccc;
+  color: #cbd5e1;
   font-weight: 300;
 }
 
 /* 功能列表 */
 .menu-card {
-  margin-top: 32rpx;
+  margin-top: 24rpx;
   background: #fff;
-  border-radius: 24rpx;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
+  border-radius: 28rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
   overflow: hidden;
 }
 
@@ -74,37 +80,83 @@ page {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 32rpx;
+  padding: 28rpx 24rpx;
 }
 
 .menu-left {
   display: flex;
   align-items: center;
+  flex: 1;
+  min-width: 0;
 }
 
 .menu-icon {
-  font-size: 36rpx;
+  font-size: 40rpx;
   margin-right: 20rpx;
+  flex-shrink: 0;
 }
 
 .menu-text {
   font-size: 28rpx;
   color: #333;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .menu-divider {
   height: 1rpx;
-  background: #f0f0f0;
-  margin: 0 32rpx;
+  background: #f1f5f9;
+  margin: 0 24rpx;
 }
 
 /* 版本信息 */
 .version-info {
-  margin-top: 48rpx;
+  margin-top: 40rpx;
   text-align: center;
 }
 
 .version-info text {
   font-size: 22rpx;
-  color: #ccc;
+  color: #cbd5e1;
+}
+
+/* 响应式 */
+@media (max-width: 320px) {
+  .container {
+    padding: calc(20rpx + var(--safe-top)) 16rpx calc(140rpx + var(--safe-bottom));
+  }
+  
+  .profile-card {
+    padding: 20rpx;
+  }
+  
+  .profile-left {
+    width: 88rpx;
+    height: 88rpx;
+  }
+  
+  .menu-item {
+    padding: 24rpx 16rpx;
+  }
+}
+
+@media (min-width: 400px) {
+  .container {
+    padding: calc(32rpx + var(--safe-top)) 32rpx calc(180rpx + var(--safe-bottom));
+  }
+  
+  .profile-card {
+    padding: 36rpx;
+  }
+  
+  .profile-left {
+    width: 140rpx;
+    height: 140rpx;
+  }
+  
+  .menu-item {
+    padding: 32rpx;
+  }
 }
