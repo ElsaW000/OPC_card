@@ -22,8 +22,8 @@ Page({
       name: 'getCards',
       success: (res) => {
         wx.hideLoading()
-        if (res.result && res.result.success) {
-          const cards = res.result.data || []
+        if (res.result && res.result.success && res.result.data.length > 0) {
+          const cards = res.result.data
           
           // 添加类型图标和颜色
           const cardsWithStyle = cards.map(card => ({
@@ -33,13 +33,67 @@ Page({
           }))
           
           this.setData({ cards: cardsWithStyle })
+        } else {
+          // 使用 Mock Data
+          this.setData({ cards: this.getMockCards() })
         }
       },
       fail: (err) => {
         wx.hideLoading()
-        console.error('加载失败', err)
+        // 使用 Mock Data
+        this.setData({ cards: this.getMockCards() })
       }
     })
+  },
+
+  getMockCards() {
+    return [
+      {
+        id: '1',
+        type: 'tech',
+        title: '技术开发名片',
+        name: '陈小独立',
+        nameEn: 'Independent Chen',
+        role: 'Full-stack Developer',
+        company: 'CodeFlow AI Studio',
+        locationCountry: '中国',
+        locationCity: '深圳',
+        avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
+        bannerUrl: 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800',
+        isDefault: true,
+        colorClass: 'bg-blue',
+        typeIcon: '📱'
+      },
+      {
+        id: '2',
+        type: 'biz',
+        title: '商务合作名片',
+        name: 'Independent Chen',
+        role: 'Founder & CEO',
+        company: 'One Person Company Ltd.',
+        locationCountry: '中国',
+        locationCity: '深圳',
+        avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
+        bannerUrl: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800',
+        isDefault: false,
+        colorClass: 'bg-slate',
+        typeIcon: '💼'
+      },
+      {
+        id: '3',
+        type: 'social',
+        title: '个人社交名片',
+        name: '阿力',
+        role: '摄影爱好者 / 徒步玩家',
+        locationCountry: '中国',
+        locationCity: '深圳',
+        avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
+        bannerUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800',
+        isDefault: false,
+        colorClass: 'bg-green',
+        typeIcon: '👥'
+      }
+    ]
   },
 
   getTypeIcon(type) {
