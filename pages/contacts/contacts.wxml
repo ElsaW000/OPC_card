@@ -1,0 +1,74 @@
+<!--contacts.wxml - 名片联系人 -->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索联系人..." bindinput="onSearch" />
+  </view>
+
+  <!-- 标签筛选 -->
+  <scroll-view class="tags-scroll" scroll-x="true">
+    <view class="tags-list">
+      <view 
+        class="tag-item {{currentTag === '' ? 'active' : ''}}" 
+        bindtap="filterByTag" 
+        data-tag=""
+      >
+        全部
+      </view>
+      <view 
+        class="tag-item {{currentTag === 'starred' ? 'active' : ''}}" 
+        bindtap="filterByTag" 
+        data-tag="starred"
+      >
+        ⭐ 收藏
+      </view>
+      <block wx:for="{{allTags}}" wx:key="*this">
+        <view 
+          class="tag-item {{currentTag === item ? 'active' : ''}}" 
+          bindtap="filterByTag" 
+          data-tag="{{item}}"
+        >
+          {{item}}
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+
+  <!-- 联系人列表 -->
+  <view class="contact-list">
+    <block wx:for="{{filteredContacts}}" wx:key="id">
+      <view class="contact-item" bindtap="viewContact" data-id="{{item.id}}">
+        <view class="contact-avatar">
+          <image src="{{item.avatarUrl}}" mode="aspectFill" />
+          <view class="starred-icon" wx:if="{{item.isStarred}}">⭐</view>
+        </view>
+        
+        <view class="contact-info">
+          <view class="contact-header">
+            <text class="contact-name">{{item.name}}</text>
+            <text class="contact-location">{{item.locationCountry}}{{item.locationCity}}</text>
+          </view>
+          <text class="contact-role">{{item.role}}</text>
+          <view class="contact-tags">
+            <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+          </view>
+          <text class="contact-active">{{item.lastActiveText}}</text>
+        </view>
+        
+        <view class="contact-actions">
+          <view class="action-icon" catchtap="toggleStar" data-id="{{item.id}}">
+            {{item.isStarred ? '⭐' : '☆'}}
+          </view>
+          <view class="action-icon" catchtap="sendMessage" data-id="{{item.id}}">
+            💬
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{filteredContacts.length === 0}}">
+    <text class="empty-text">暂无联系人</text>
+  </view>
+</view>
