@@ -104,18 +104,8 @@
   font-size: 48rpx;
   font-weight: 700;
   color: #111;
-  display: inline-block;
-  margin-right: 16rpx;
-}
-
-.template-tag {
-  display: inline-block;
-  padding: 4rpx 16rpx;
-  font-size: 22rpx;
-  background-color: #2563eb;
-  color: #fff;
-  border-radius: 9999rpx;
-  vertical-align: middle;
+  display: block;
+  margin-bottom: 8rpx;
 }
 
 .role-location {
