@@ -11,16 +11,16 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTitleText": "OPC名片",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#f3f4f6"
   },
   "tabBar": {
-    "custom": true,
     "color": "#9CA3AF",
     "selectedColor": "#2563EB",
     "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/home/home",
