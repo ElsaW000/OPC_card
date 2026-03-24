@@ -30,7 +30,6 @@
     <view class="profile-info">
       <view class="name-row">
         <text class="name">{{name}}</text>
-        <text class="template-tag">{{templateName}}</text>
       </view>
       <view class="role-location">
         <text class="role">{{role}}</text>
