@@ -41,8 +41,9 @@ Page({
     
     // 基本信息
     name: '',
-    role: '',
-    location: '',
+    nameEn: '', // 英文名
+    locationCountry: '', // 国家
+    locationCity: '', // 省市
     bio: '',
     
     // 程序员字段
@@ -74,6 +75,13 @@ Page({
     
     // 产品/项目
     projects: [],
+    
+    // 视频/短视频
+    videos: [],
+    
+    // 底部自定义联系模块
+    footerTitle: '联系我',
+    footerDesc: '如有合作意向，欢迎通过以下方式联系',
     
     // AI 推荐标签
     suggestedTags: []
@@ -195,6 +203,37 @@ Page({
       content: ''
     });
     this.setData({ customCards });
+  },
+
+  // 添加视频
+  addVideo() {
+    const videos = this.data.videos;
+    videos.push({
+      id: Date.now().toString(),
+      title: '',
+      thumbnail: '',
+      link: '',
+      views: '',
+      duration: ''
+    });
+    this.setData({ videos });
+  },
+
+  // 删除视频
+  removeVideo(e) {
+    const index = e.currentTarget.dataset.index;
+    const videos = this.data.videos;
+    videos.splice(index, 1);
+    this.setData({ videos });
+  },
+
+  // 视频输入变化
+  onVideoChange(e) {
+    const index = e.currentTarget.dataset.index;
+    const field = e.currentTarget.dataset.field;
+    const videos = this.data.videos;
+    videos[index][field] = e.detail.value;
+    this.setData({ videos });
   },
 
   // 删除自定义卡片
@@ -340,8 +379,10 @@ Page({
       
       // 基本信息
       name: this.data.name,
+      nameEn: this.data.nameEn,
+      locationCountry: this.data.locationCountry,
+      locationCity: this.data.locationCity,
       role: this.data.role,
-      location: this.data.location,
       bio: this.data.bio,
       
       // 程序员字段
@@ -372,7 +413,14 @@ Page({
       email: this.data.email,
       
       // 产品/项目
-      projects: projects
+      projects: projects,
+      
+      // 视频/短视频
+      videos: this.data.videos,
+      
+      // 底部联系模块
+      footerTitle: this.data.footerTitle,
+      footerDesc: this.data.footerDesc
     };
     
     wx.cloud.callFunction({

@@ -30,11 +30,12 @@
     <view class="profile-info">
       <view class="name-row">
         <text class="name">{{name}}</text>
+        <text class="name-en" wx:if="{{nameEn}}">({{nameEn}})</text>
       </view>
       <view class="role-location">
         <text class="role">{{role}}</text>
         <text class="separator">|</text>
-        <text class="location">{{location}}</text>
+        <text class="location">{{locationCountry}}，{{locationCity}}</text>
       </view>
       
       <!-- 联系方式（姓名下方） -->
@@ -108,6 +109,28 @@
       </view>
     </view>
 
+    <!-- 视频/短视频 -->
+    <view class="video-section" wx:if="{{videos.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">产品演示 & 短视频</text>
+        <text class="view-all">Recent</text>
+      </view>
+      <scroll-view class="video-scroll" scroll-x="true">
+        <view class="video-list">
+          <view class="video-card" wx:for="{{videos}}" wx:key="id" bindtap="openLink" data-link="{{item.link}}">
+            <image class="video-thumb" src="{{item.thumbnail}}" mode="aspectFill" />
+            <view class="video-info">
+              <text class="video-title">{{item.title}}</text>
+              <view class="video-meta">
+                <text class="video-views">{{item.views}} views</text>
+                <text class="video-duration">{{item.duration}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
     <!-- 数据卡片 -->
     <view class="stats-grid">
       <view class="stat-card">
@@ -145,6 +168,30 @@
             <text class="link-item" wx:if="{{item.link}}">在线地址</text>
             <text class="link-item" wx:if="{{item.github}}">GitHub</text>
           </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部联系模块 -->
+  <view class="footer-section">
+    <view class="footer-title">{{footerTitle || '联系我'}}</view>
+    <text class="footer-desc" wx:if="{{footerDesc}}">{{footerDesc}}</text>
+    
+    <view class="footer-contact">
+      <view class="contact-item-row" bindtap="copyWechat" wx:if="{{wechat}}">
+        <text class="contact-row-icon">💬</text>
+        <view class="contact-row-info">
+          <text class="contact-row-label">微信 (WeChat)</text>
+          <text class="contact-row-value">{{wechat}}</text>
+        </view>
+      </view>
+      
+      <view class="contact-item-row" bindtap="copyEmail" data-text="{{email}}" wx:if="{{email}}">
+        <text class="contact-row-icon">✉️</text>
+        <view class="contact-row-info">
+          <text class="contact-row-label">邮箱 (Email)</text>
+          <text class="contact-row-value">{{email}}</text>
         </view>
       </view>
     </view>

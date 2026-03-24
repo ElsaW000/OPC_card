@@ -18,9 +18,11 @@ Page({
     avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200',
     
     // 个人信息
-    name: '陈小独立 (Independent Chen)',
+    name: '陈小独立',
+    nameEn: 'Independent Chen',
+    locationCountry: '中国',
+    locationCity: '深圳',
     role: 'OPC 创始人 / 全栈工程师',
-    location: '中国，深圳',
     bio: '一名专注于构建 AI 工具与效率应用的独立开发者。我喜欢探索极致的产品体验，并将复杂的逻辑简化为直观的 UI。目前致力于 OPC (一人公司) 的规模化与自动化。',
     
     // 程序员字段
@@ -78,7 +80,23 @@ Page({
         github: 'https://github.com/example/blog',
         tags: ['Blog', 'Next.js', 'SEO']
       }
-    ]
+    ],
+    
+    // 视频/短视频
+    videos: [
+      {
+        id: 'v1',
+        title: '演示：如何在 5 分钟内使用 CodeFlow AI 生成 UI',
+        thumbnail: 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600',
+        link: '',
+        views: '12k',
+        duration: '01:45'
+      }
+    ],
+    
+    // 底部联系模块
+    footerTitle: '联系我',
+    footerDesc: '如有合作意向，欢迎通过以下方式联系'
   },
 
   onLoad() {

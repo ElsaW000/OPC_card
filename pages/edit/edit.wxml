@@ -58,18 +58,28 @@
     <text class="section-title">基本信息</text>
     
     <view class="form-item">
-      <text class="label">姓名</text>
+      <text class="label required">姓名 *</text>
       <input class="input" value="{{name}}" data-field="name" bindinput="onInputChange" placeholder="请输入姓名" />
     </view>
     
     <view class="form-item">
-      <text class="label">职位</text>
+      <text class="label">英文名</text>
+      <input class="input" value="{{nameEn}}" data-field="nameEn" bindinput="onInputChange" placeholder="如：John Chen" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label required">职位 *</text>
       <input class="input" value="{{role}}" data-field="role" bindinput="onInputChange" placeholder="请输入职位" />
     </view>
     
     <view class="form-item">
-      <text class="label">地点</text>
-      <input class="input" value="{{location}}" data-field="location" bindinput="onInputChange" placeholder="请输入地点" />
+      <text class="label required">国家 *</text>
+      <input class="input" value="{{locationCountry}}" data-field="locationCountry" bindinput="onInputChange" placeholder="如：中国" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label required">省市 *</text>
+      <input class="input" value="{{locationCity}}" data-field="locationCity" bindinput="onInputChange" placeholder="如：深圳" />
     </view>
     
     <view class="form-item">
@@ -218,6 +228,55 @@
         </view>
       </view>
       <button class="remove-btn" data-index="{{index}}" bindtap="removeCustomCard">删除</button>
+    </view>
+  </view>
+  
+  <!-- 底部联系模块 -->
+  <view class="form-section">
+    <text class="section-title">底部联系模块</text>
+    
+    <view class="form-item">
+      <text class="label">标题</text>
+      <input class="input" value="{{footerTitle}}" data-field="footerTitle" bindinput="onInputChange" placeholder="如：联系我" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">描述</text>
+      <textarea class="textarea" value="{{footerDesc}}" data-field="footerDesc" bindinput="onInputChange" placeholder="如：有合作意向，欢迎通过以下方式联系" />
+    </view>
+  </view>
+  
+  <!-- 视频/短视频 -->
+  <view class="form-section">
+    <view class="section-header">
+      <text class="section-title">产品演示 & 短视频</text>
+      <button class="add-btn" bindtap="addVideo">添加视频</button>
+    </view>
+    
+    <view class="project-item" wx:for="{{videos}}" wx:key="id">
+      <view class="project-form">
+        <view class="form-item">
+          <text class="label">标题</text>
+          <input class="input" value="{{item.title}}" data-index="{{index}}" data-field="title" bindinput="onVideoChange" placeholder="视频标题" />
+        </view>
+        <view class="form-item">
+          <text class="label">封面图链接</text>
+          <input class="input" value="{{item.thumbnail}}" data-index="{{index}}" data-field="thumbnail" bindinput="onVideoChange" placeholder="封面图 URL" />
+        </view>
+        <view class="form-item">
+          <text class="label">视频链接</text>
+          <input class="input" value="{{item.link}}" data-index="{{index}}" data-field="link" bindinput="onVideoChange" placeholder="视频/播放页链接" />
+        </view>
+        <view class="form-item">
+          <text class="label">播放量</text>
+          <input class="input" value="{{item.views}}" data-index="{{index}}" data-field="views" bindinput="onVideoChange" placeholder="如：12k" />
+        </view>
+        <view class="form-item">
+          <text class="label">时长</text>
+          <input class="input" value="{{item.duration}}" data-index="{{index}}" data-field="duration" bindinput="onVideoChange" placeholder="如：01:45" />
+        </view>
+      </view>
+      <button class="remove-btn" data-index="{{index}}" bindtap="removeVideo">删除</button>
     </view>
   </view>
   
