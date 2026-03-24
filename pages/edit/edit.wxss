@@ -70,12 +70,12 @@
 }
 
 .ai-btn {
-  font-size: 22rpx;
-  color: #2563eb;
-  background-color: #eff6ff;
+  font-size: 24rpx;
+  color: #4b5563;
+  background-color: #f3f4f6;
   border: none;
-  border-radius: 8rpx;
-  padding: 8rpx 16rpx;
+  border-radius: 24rpx;
+  padding: 12rpx 20rpx;
 }
 
 /* AI 推荐标签 */
@@ -115,10 +115,10 @@
 
 .add-btn {
   font-size: 24rpx;
-  color: #2563eb;
-  background-color: #eff6ff;
+  color: #4b5563;
+  background-color: #f3f4f6;
   border: none;
-  border-radius: 9999rpx;
+  border-radius: 24rpx;
   padding: 12rpx 24rpx;
 }
 
@@ -143,10 +143,10 @@
 
 .upload-btn {
   font-size: 24rpx;
-  color: #2563eb;
-  background-color: #eff6ff;
+  color: #4b5563;
+  background-color: #f3f4f6;
   border: none;
-  border-radius: 8rpx;
+  border-radius: 24rpx;
   padding: 12rpx 24rpx;
 }
 
@@ -160,11 +160,6 @@
   color: #6b7280;
   display: block;
   margin-bottom: 8rpx;
-}
-
-.label.required::after {
-  content: ' *';
-  color: #ef4444;
 }
 
 .input {
