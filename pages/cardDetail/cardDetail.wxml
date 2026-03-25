@@ -1,4 +1,4 @@
-<!--cardDetail.wxml-->
+<!--cardDetail.wxml - 他人看到的我的名片 -->
 <view class="container">
   <!-- Banner -->
   <view class="banner">
@@ -46,6 +46,7 @@
   <view class="tags-section">
     <view class="tag">AI</view>
     <view class="tag">独立开发者</view>
+    <view class="tag">Full-stack</view>
   </view>
 
   <!-- 联系方式 -->
@@ -64,6 +65,56 @@
       <text class="contact-icon">💬</text>
       <text class="contact-text">微信</text>
       <text class="contact-value">chenlaoshi</text>
+    </view>
+  </view>
+
+  <!-- 作品集 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">作品集</text>
+      <text class="section-more">查看全部</text>
+    </view>
+    <view class="portfolio-grid">
+      <view class="portfolio-item">
+        <image class="portfolio-img" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400" mode="aspectFill" />
+        <view class="portfolio-info">
+          <text class="portfolio-name">AI助手应用</text>
+          <text class="portfolio-desc">基于GPT-4的智能助手</text>
+        </view>
+      </view>
+      <view class="portfolio-item">
+        <image class="portfolio-img" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" mode="aspectFill" />
+        <view class="portfolio-info">
+          <text class="portfolio-name">数据分析平台</text>
+          <text class="portfolio-desc">企业级数据可视化</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 视频 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">视频</text>
+      <text class="section-more">查看全部</text>
+    </view>
+    <view class="video-list">
+      <view class="video-item">
+        <view class="video-thumb">
+          <image src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400" mode="aspectFill" />
+          <view class="play-icon">▶</view>
+        </view>
+        <text class="video-title">产品演示视频</text>
+        <text class="video-views">1.2万播放</text>
+      </view>
+      <view class="video-item">
+        <view class="video-thumb">
+          <image src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400" mode="aspectFill" />
+          <view class="play-icon">▶</view>
+        </view>
+        <text class="video-title">个人介绍</text>
+        <text class="video-views">8千播放</text>
+      </view>
     </view>
   </view>
 </view>

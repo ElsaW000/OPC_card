@@ -1,4 +1,4 @@
-/* cardDetail.wxss */
+/* cardDetail.wxss - 他人看到的我的名片 */
 
 page {
   --primary: #2563EB;
@@ -21,7 +21,6 @@ page {
 .banner-mask.biz { background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%); }
 .banner-mask.social { background: linear-gradient(135deg, rgba(16, 185, 129, 0.85) 0%, rgba(5, 150, 105, 0.9) 100%); }
 
-/* 顶部操作 */
 .banner-top { position: absolute; top: 80rpx; left: 32rpx; right: 32rpx; display: flex; justify-content: space-between; z-index: 10; }
 .back-btn { width: 64rpx; height: 64rpx; background: rgba(0,0,0,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 .back-btn text { color: #fff; font-size: 32rpx; }
@@ -44,12 +43,35 @@ page {
 .action-text { font-size: 24rpx; font-weight: 500; color: var(--text-main); }
 
 /* 标签 */
-.tags-section { display: flex; gap: 12rpx; padding: 0 32rpx 24rpx; }
+.tags-section { display: flex; gap: 12rpx; padding: 0 32rpx 24rpx; flex-wrap: wrap; }
 .tag { padding: 12rpx 24rpx; background: var(--primary-light); color: var(--primary); font-size: 24rpx; font-weight: 500; border-radius: 12rpx; }
 
 /* 联系方式 */
-.contact-section { padding: 0 32rpx 48rpx; }
+.contact-section { padding: 0 32rpx 24rpx; }
 .contact-item { display: flex; align-items: center; padding: 24rpx; background: #fff; border-radius: 16rpx; margin-bottom: 12rpx; }
 .contact-icon { font-size: 32rpx; margin-right: 16rpx; }
 .contact-text { width: 80rpx; font-size: 24rpx; color: var(--text-light); }
 .contact-value { flex: 1; font-size: 28rpx; color: var(--text-main); font-weight: 500; text-align: right; }
+
+/* Sections */
+.section { padding: 0 32rpx 24rpx; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20rpx; }
+.section-title { font-size: 32rpx; font-weight: 700; color: var(--deep); }
+.section-more { font-size: 24rpx; color: var(--primary); font-weight: 500; }
+
+/* Portfolio */
+.portfolio-grid { display: flex; gap: 16rpx; }
+.portfolio-item { flex: 1; background: #fff; border-radius: 24rpx; overflow: hidden; }
+.portfolio-img { width: 100%; height: 200rpx; object-fit: cover; }
+.portfolio-info { padding: 20rpx; }
+.portfolio-name { font-size: 26rpx; font-weight: 600; color: var(--deep); display: block; }
+.portfolio-desc { font-size: 22rpx; color: var(--text-light); margin-top: 4rpx; display: block; }
+
+/* Video */
+.video-list { display: flex; gap: 16rpx; padding-bottom: 48rpx; }
+.video-item { flex: 1; }
+.video-thumb { position: relative; width: 100%; height: 200rpx; border-radius: 24rpx; overflow: hidden; }
+.video-thumb image { width: 100%; height: 100%; object-fit: cover; }
+.play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 64rpx; height: 64rpx; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 28rpx; }
+.video-title { font-size: 24rpx; font-weight: 500; color: var(--deep); margin-top: 12rpx; display: block; }
+.video-views { font-size: 20rpx; color: var(--text-light); margin-top: 4rpx; display: block; }

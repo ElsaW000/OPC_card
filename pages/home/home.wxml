@@ -1,5 +1,6 @@
-<!--home.wxml-->
+<!--home.wxml - Workbench v3.0 -->
 <view class="container">
+  
   <!-- ID Card Section -->
   <view class="id-section">
     <scroll-view class="card-scroll" scroll-x="true" enhanced="true" show-scrollbar="false" bindscroll="onScroll">
@@ -11,19 +12,19 @@
           <view class="card-overlay"></view>
           <view class="card-content">
             <view class="card-top">
-              <view class="id-badge">默认</view>
-              <view class="id-qr-btn" bindtap="showQR">▦</view>
+              <view class="glass-badge">默认</view>
+              <view class="glass-qr" bindtap="showQR">▦</view>
             </view>
-            <view class="card-middle">
-              <view class="id-info">
-                <text class="id-name">陈小独立</text>
-                <text class="id-role">全栈开发工程师</text>
+            <view class="card-body">
+              <view class="card-text">
+                <text class="glass-name">陈小独立</text>
+                <text class="glass-role">全栈开发工程师</text>
               </view>
-              <view class="id-avatar"><image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image></view>
+              <view class="glass-avatar"><image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image></view>
             </view>
-            <view class="card-bottom">
-              <view class="id-action"><text>编辑</text></view>
-              <view class="id-action" bindtap="setAsDefault" data-index="0"><text>设为默认</text></view>
+            <view class="card-actions">
+              <view class="glass-btn">编辑</view>
+              <view class="glass-btn" bindtap="setAsDefault" data-index="0">设为默认</view>
             </view>
           </view>
         </view>
@@ -34,19 +35,19 @@
           <view class="card-overlay"></view>
           <view class="card-content">
             <view class="card-top">
-              <view class="id-badge">商务</view>
-              <view class="id-qr-btn" bindtap="showQR">▦</view>
+              <view class="glass-badge">商务</view>
+              <view class="glass-qr" bindtap="showQR">▦</view>
             </view>
-            <view class="card-middle">
-              <view class="id-info">
-                <text class="id-name">Independent Chen</text>
-                <text class="id-role">Founder & CEO</text>
+            <view class="card-body">
+              <view class="card-text">
+                <text class="glass-name">Independent Chen</text>
+                <text class="glass-role">Founder & CEO</text>
               </view>
-              <view class="id-avatar"><image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image></view>
+              <view class="glass-avatar"><image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image></view>
             </view>
-            <view class="card-bottom">
-              <view class="id-action"><text>编辑</text></view>
-              <view class="id-action" bindtap="setAsDefault" data-index="1"><text>设为默认</text></view>
+            <view class="card-actions">
+              <view class="glass-btn">编辑</view>
+              <view class="glass-btn" bindtap="setAsDefault" data-index="1">设为默认</view>
             </view>
           </view>
         </view>
@@ -57,19 +58,19 @@
           <view class="card-overlay"></view>
           <view class="card-content">
             <view class="card-top">
-              <view class="id-badge">社交</view>
-              <view class="id-qr-btn" bindtap="showQR">▦</view>
+              <view class="glass-badge">社交</view>
+              <view class="glass-qr" bindtap="showQR">▦</view>
             </view>
-            <view class="card-middle">
-              <view class="id-info">
-                <text class="id-name">阿力</text>
-                <text class="id-role">摄影爱好者</text>
+            <view class="card-body">
+              <view class="card-text">
+                <text class="glass-name">阿力</text>
+                <text class="glass-role">摄影爱好者</text>
               </view>
-              <view class="id-avatar"><image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image></view>
+              <view class="glass-avatar"><image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image></view>
             </view>
-            <view class="card-bottom">
-              <view class="id-action"><text>编辑</text></view>
-              <view class="id-action" bindtap="setAsDefault" data-index="2"><text>设为默认</text></view>
+            <view class="card-actions">
+              <view class="glass-btn">编辑</view>
+              <view class="glass-btn" bindtap="setAsDefault" data-index="2">设为默认</view>
             </view>
           </view>
         </view>
@@ -77,34 +78,32 @@
       </view>
     </scroll-view>
     
-    <view class="page-indicators">
-      <view class="indicator {{currentIndex === 0 ? 'active' : ''}}"></view>
-      <view class="indicator {{currentIndex === 1 ? 'active' : ''}}"></view>
-      <view class="indicator {{currentIndex === 2 ? 'active' : ''}}"></view>
+    <view class="dots">
+      <view class="dot {{currentIndex === 0 ? 'active' : ''}}"></view>
+      <view class="dot {{currentIndex === 1 ? 'active' : ''}}"></view>
+      <view class="dot {{currentIndex === 2 ? 'active' : ''}}"></view>
     </view>
   </view>
 
-  <!-- 2x2 Grid -->
-  <view class="grid-section">
-    <view class="grid-card">
-      <view class="grid-row">
-        <view class="grid-item" bindtap="goToCreate">
-          <view class="grid-icon blue"><text class="iconfont">+</text></view>
-          <text class="grid-text">创建名片</text>
+  <!-- Quick Actions -->
+  <view class="quick-section">
+    <view class="quick-card">
+      <view class="quick-grid">
+        <view class="quick-item" bindtap="goToCreate">
+          <view class="quick-icon blue">＋</view>
+          <text class="quick-label">创建名片</text>
         </view>
-        <view class="grid-item" bindtap="goToStarred">
-          <view class="grid-icon gold"><text class="iconfont">*</text></view>
-          <text class="grid-text">星标联系人</text>
+        <view class="quick-item" bindtap="goToStarred">
+          <view class="quick-icon yellow">☆</view>
+          <text class="quick-label">星标联系人</text>
         </view>
-      </view>
-      <view class="grid-row">
-        <view class="grid-item" bindtap="goToAnalytics">
-          <view class="grid-icon orange"><text class="iconfont">#</text></view>
-          <text class="grid-text">数据分析</text>
+        <view class="quick-item" bindtap="goToAnalytics">
+          <view class="quick-icon orange">📊</view>
+          <text class="quick-label">数据分析</text>
         </view>
-        <view class="grid-item" bindtap="goToSettings">
-          <view class="grid-icon dark"><text class="iconfont">@</text></view>
-          <text class="grid-text">系统设置</text>
+        <view class="quick-item" bindtap="goToSettings">
+          <view class="quick-icon gray">⚙</view>
+          <text class="quick-label">系统设置</text>
         </view>
       </view>
     </view>
@@ -112,31 +111,29 @@
 
   <!-- Visitor Trend -->
   <view class="data-section">
-    <view class="data-card wide">
-      <view class="data-header">
-        <text class="data-title">访客趋势</text>
-        <view class="time-filter">
-          <text class="filter-item {{timeRange === 'day' ? 'active' : ''}}" bindtap="setTimeRange" data-range="day">日</text>
-          <text class="filter-item {{timeRange === 'week' ? 'active' : ''}}" bindtap="setTimeRange" data-range="week">周</text>
-          <text class="filter-item {{timeRange === 'month' ? 'active' : ''}}" bindtap="setTimeRange" data-range="month">月</text>
+    <view class="trend-card">
+      <view class="trend-header">
+        <text class="trend-title">访客趋势</text>
+        <view class="trend-tabs">
+          <text class="trend-tab {{timeRange === 'day' ? 'active' : ''}}" bindtap="setTimeRange" data-range="day">日</text>
+          <text class="trend-tab {{timeRange === 'week' ? 'active' : ''}}" bindtap="setTimeRange" data-range="week">周</text>
+          <text class="trend-tab {{timeRange === 'month' ? 'active' : ''}}" bindtap="setTimeRange" data-range="month">月</text>
         </view>
       </view>
       
-      <view class="chart-container">
-        <view class="chart-y">
+      <view class="trend-chart">
+        <view class="trend-y">
           <text>{{maxValue}}</text>
           <text>{{Math.round(maxValue/2)}}</text>
           <text>0</text>
         </view>
-        <view class="chart-area">
-          <view class="chart-bars">
-            <block wx:for="{{chartData}}" wx:key="index">
-              <view class="bar-wrapper">
-                <view class="bar" style="height:{{item.height}}%;"></view>
-                <text class="bar-label">{{item.label}}</text>
-              </view>
-            </block>
-          </view>
+        <view class="trend-bars">
+          <block wx:for="{{chartData}}" wx:key="index">
+            <view class="trend-bar-item">
+              <view class="trend-bar" style="height:{{item.height}}%;"></view>
+              <text class="trend-label">{{item.label}}</text>
+            </view>
+          </block>
         </view>
       </view>
     </view>
@@ -144,14 +141,26 @@
 
   <!-- Recent Visitors -->
   <view class="data-section">
-    <view class="data-card">
-      <text class="data-title">最近访客</text>
-      <view class="visitor-list">
-        <view class="visitor-item"><view class="visitor-avatar">李</view><view class="visitor-info"><text class="visitor-name">李伟</text><text class="visitor-time">1分钟前</text></view></view>
-        <view class="visitor-item"><view class="visitor-avatar">王</view><view class="visitor-info"><text class="visitor-name">王五</text><text class="visitor-time">1小时前</text></view></view>
+    <view class="visitor-card">
+      <text class="visitor-title">最近访客</text>
+      <view class="visitor-items">
+        <view class="visitor-row">
+          <view class="visitor-avatar-box">李</view>
+          <view class="visitor-detail">
+            <text class="visitor-name">李伟</text>
+            <text class="visitor-time">1分钟前</text>
+          </view>
+        </view>
+        <view class="visitor-row">
+          <view class="visitor-avatar-box">王</view>
+          <view class="visitor-detail">
+            <text class="visitor-name">王五</text>
+            <text class="visitor-time">1小时前</text>
+          </view>
+        </view>
       </view>
     </view>
   </view>
 
-  <view class="bottom-spacer"></view>
+  <view class="spacer"></view>
 </view>
