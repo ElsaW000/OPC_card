@@ -1,56 +1,86 @@
 <!--contacts.wxml-->
 <view class="container">
-  <view class="search-bar">
-    <input class="search-input" placeholder="搜索联系人..." />
+  <!-- Header -->
+  <view class="header">
+    <text class="header-title">联系人</text>
+    <text class="header-subtitle">CONNECTIONS</text>
   </view>
 
-  <view class="tags-row">
-    <view class="tag-item active">全部</view>
-    <view class="tag-item">AI</view>
-    <view class="tag-item">B2B</view>
-    <view class="tag-item">出海</view>
-    <view class="tag-item">Flutter</view>
+  <!-- 搜索框 - 区分底部 -->
+  <view class="search-section">
+    <view class="search-bar">
+      <text class="search-icon">🔍</text>
+      <input class="search-input" placeholder="搜索联系人..." placeholder-class="search-placeholder" />
+    </view>
   </view>
 
+  <!-- 标签筛选 -->
+  <view class="tags-section">
+    <scroll-view scroll-x="true" class="tags-scroll">
+      <view class="tags-list">
+        <view class="tag-item active">全部</view>
+        <view class="tag-item">AI</view>
+        <view class="tag-item">B2B</view>
+        <view class="tag-item">出海</view>
+        <view class="tag-item">Flutter</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 最近交换 -->
   <view class="section">
     <view class="section-header">
       <text class="section-title">最近交换</text>
     </view>
     <view class="contact-list">
-      <view class="contact-item">
-        <image class="contact-avatar" src="https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200" />
-        <view class="contact-info">
-          <view class="contact-top">
-            <text class="contact-name">Sarah Zhang</text>
-            <text class="contact-time">10分钟前</text>
+      <view class="contact-card">
+        <view class="card-left">
+          <image class="contact-avatar" src="https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200" />
+          <view class="contact-info">
+            <view class="contact-top">
+              <text class="contact-name">Sarah Zhang</text>
+            </view>
+            <text class="contact-role">产品经理 @ ByteDance</text>
           </view>
-          <text class="contact-role">产品经理 @ ByteDance</text>
+        </view>
+        <view class="card-right">
+          <text class="contact-time">10分钟前</text>
+          <view class="action-buttons">
+            <view class="action-btn">💬</view>
+            <view class="action-btn">📞</view>
+          </view>
         </view>
       </view>
     </view>
   </view>
 
+  <!-- 全部联系人 -->
   <view class="section">
     <view class="section-header">
       <text class="section-title">全部联系人</text>
+      <text class="section-count">12</text>
     </view>
     <view class="contact-list">
       <block wx:for="{{contacts}}" wx:key="id">
-        <view class="contact-item">
-          <image class="contact-avatar" src="{{item.avatar}}" />
-          <view class="contact-info">
-            <view class="contact-top">
-              <text class="contact-name">{{item.name}}</text>
-              <text class="contact-time">{{item.time}}</text>
-            </view>
-            <text class="contact-role">{{item.role}}</text>
-            <view class="contact-tags">
-              <text class="contact-tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+        <view class="contact-card">
+          <view class="card-left">
+            <image class="contact-avatar" src="{{item.avatar}}" />
+            <view class="contact-info">
+              <view class="contact-top">
+                <text class="contact-name">{{item.name}}</text>
+              </view>
+              <text class="contact-role">{{item.role}}</text>
+              <view class="contact-tags" wx:if="{{item.tags}}">
+                <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+              </view>
             </view>
           </view>
-          <view class="contact-actions">
-            <view class="action-chat">聊天</view>
-            <view class="action-call">电话</view>
+          <view class="card-right">
+            <text class="contact-time">{{item.time}}</text>
+            <view class="action-buttons">
+              <view class="action-btn">💬</view>
+              <view class="action-btn">📞</view>
+            </view>
           </view>
         </view>
       </block>

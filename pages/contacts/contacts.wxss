@@ -1,36 +1,304 @@
-/* contacts.wxss */
+/* contacts.wxss - v3.0 设计规范 */
 
-page { background-color: #f8f9fa; }
-.container { min-height: 100vh; padding-bottom: 120rpx; }
+page {
+  --primary: #2563EB;
+  --primary-light: rgba(37, 99, 235, 0.1);
+  --deep: #121212;
+  --text-main: #121212;
+  --text-sub: #64748B;
+  --text-light: #94A3B8;
+  --gold: #D4AF37;
+  --bg: #F8F9FA;
+  --surface: #FFFFFF;
+  --border: #F1F5F9;
+  --radius-xl: 32rpx;
+  --radius-l: 24rpx;
+  --radius-m: 16rpx;
+  --radius-full: 9999rpx;
+  --shadow-soft: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
+  
+  background-color: var(--bg);
+}
 
-/* Search */
-.search-bar { display: flex; align-items: center; background: #fff; margin: 24rpx; padding: 20rpx 24rpx; border-radius: 24rpx; width: calc(100% - 96rpx); box-sizing: border-box; }
-.search-icon { font-size: 28rpx; margin-right: 16rpx; color: #999; }
-.search-input { flex: 1; font-size: 28rpx; }
+.container {
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+  box-sizing: border-box;
+}
 
-/* Tags */
-.tags-row { display: flex; gap: 16rpx; padding: 0 24rpx 24rpx; overflow-x: auto; white-space: nowrap; }
-.tag-item { display: inline-block; padding: 12rpx 24rpx; background: #fff; border-radius: 32rpx; font-size: 24rpx; color: #666; }
-.tag-item.active { background: #2563eb; color: #fff; }
+/* ===== Header ===== */
+.header {
+  width: 100%;
+  padding: 32rpx;
+  background: #fff;
+  box-sizing: border-box;
+}
 
-/* Section */
-.section { padding: 0 24rpx; margin-bottom: 32rpx; }
-.section-header { margin-bottom: 16rpx; }
-.section-title { font-size: 28rpx; font-weight: bold; color: #000; }
+.header-title {
+  font-size: 44rpx;
+  font-weight: 600;
+  color: var(--deep);
+  letter-spacing: -0.02em;
+}
 
-/* Contact List */
-.contact-list { display: flex; flex-direction: column; gap: 16rpx; }
-.contact-item { display: flex; align-items: center; background: #fff; padding: 24rpx; border-radius: 24rpx; box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.06); }
-.contact-avatar { width: 96rpx; height: 96rpx; border-radius: 16rpx; margin-right: 20rpx; flex-shrink: 0; }
-.contact-info { flex: 1; min-width: 0; }
-.contact-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rpx; }
-.contact-name { font-size: 28rpx; font-weight: bold; color: #000; }
-.contact-time { font-size: 22rpx; color: #999; }
-.contact-role { font-size: 24rpx; color: #666; display: block; margin-bottom: 8rpx; }
-.contact-tags { display: flex; gap: 8rpx; flex-wrap: wrap; }
-.contact-tag { padding: 4rpx 12rpx; background: #f0f9ff; color: #2563eb; border-radius: 8rpx; font-size: 20rpx; }
+.header-subtitle {
+  font-size: 20rpx;
+  font-weight: 600;
+  color: var(--text-light);
+  letter-spacing: 0.15em;
+  margin-top: 4rpx;
+  display: block;
+}
 
-/* Contact Actions */
-.contact-actions { display: flex; gap: 16rpx; flex-shrink: 0; }
-.action-chat { padding: 12rpx 32rpx; border: 2rpx solid #2563eb; border-radius: 16rpx; color: #2563eb; font-size: 24rpx; }
-.action-call { padding: 12rpx; font-size: 24rpx; color: #2563eb; }
+/* ===== Search Section - 白色背景区分 ===== */
+.search-section {
+  width: 100%;
+  padding: 24rpx 32rpx;
+  background: #fff;
+  box-sizing: border-box;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+  border-radius: var(--radius-l);
+  padding: 0 24rpx;
+  height: 88rpx;
+  border: 2rpx solid var(--border);
+}
+
+.search-bar:focus-within {
+  border-color: var(--primary);
+  background: #fff;
+}
+
+.search-icon {
+  font-size: 32rpx;
+  margin-right: 16rpx;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: var(--text-main);
+}
+
+.search-placeholder {
+  color: var(--text-light);
+}
+
+/* ===== Tags Section ===== */
+.tags-section {
+  width: 100%;
+  padding: 20rpx 32rpx 24rpx;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.tags-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.tags-list {
+  display: inline-flex;
+  gap: 12rpx;
+}
+
+.tag-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 14rpx 28rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  color: var(--text-sub);
+  background: var(--bg);
+  border-radius: var(--radius-full);
+  transition: all 0.3s ease;
+}
+
+.tag-item.active {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4rpx 16rpx rgba(37, 99, 235, 0.3);
+}
+
+/* ===== Section ===== */
+.section {
+  padding: 24rpx 32rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--deep);
+}
+
+.section-count {
+  font-size: 24rpx;
+  color: var(--text-light);
+}
+
+/* ===== Contact List ===== */
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+/* 磨砂卡片 - 加宽内边距 */
+.contact-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: var(--surface);
+  border-radius: var(--radius-l);
+  padding: 28rpx;
+  box-shadow: var(--shadow-soft);
+}
+
+.card-left {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+/* 头像 */
+.contact-avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  flex-shrink: 0;
+  margin-right: 20rpx;
+}
+
+.contact-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.contact-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-top {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.contact-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.contact-role {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  margin-top: 4rpx;
+  display: block;
+  width: 100%;
+}
+
+/* 标签 */
+.contact-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-top: 12rpx;
+}
+
+.contact-tags .tag {
+  padding: 6rpx 16rpx;
+  font-size: 20rpx;
+  font-weight: 500;
+  color: var(--primary);
+  background: var(--primary-light);
+  border-radius: var(--radius-m);
+}
+
+/* 右侧：时间 + 按钮 */
+.card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12rpx;
+  flex-shrink: 0;
+}
+
+.contact-time {
+  font-size: 20rpx;
+  color: var(--text-light);
+}
+
+/* 统一风格的操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 10rpx;
+}
+
+.action-btn {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-light);
+  border-radius: var(--radius-full);
+  font-size: 28rpx;
+}
+
+/* ===== 动画 ===== */
+.contact-card {
+  animation: slideUp 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+.contact-card:nth-child(1) { animation-delay: 0ms; }
+.contact-card:nth-child(2) { animation-delay: 40ms; }
+.contact-card:nth-child(3) { animation-delay: 80ms; }
+.contact-card:nth-child(4) { animation-delay: 120ms; }
+.contact-card:nth-child(5) { animation-delay: 160ms; }
+.contact-card:nth-child(6) { animation-delay: 200ms; }
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 375px) {
+  .header, .search-section, .tags-section, .section {
+    padding-left: 20rpx;
+    padding-right: 20rpx;
+  }
+  
+  .contact-card {
+    padding: 24rpx;
+  }
+  
+  .contact-avatar {
+    width: 88rpx;
+    height: 88rpx;
+  }
+}

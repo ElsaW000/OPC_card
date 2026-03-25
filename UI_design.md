@@ -199,12 +199,14 @@ font-weight: 500; /* Selected */
 - Recent Exchange section
 - All Contacts list
 
-### 7.2 Contact Card
-- Avatar (left, rounded)
-- Name + Active time (top)
-- Job title + Company
-- Tags (pill style)
-- Actions: Chat, Call
+### 7.2 Contact Card ✅ 已优化 (v3.0)
+- 白色背景卡片，圆角 24rpx，柔和阴影
+- 头像: 96rpx，圆角 24rpx
+- 名字: 左侧顶部
+- 时间: 右上角
+- 职位: 名字下方
+- 标签: 蓝色胶囊
+- 操作按钮: 右侧圆形按钮 (64rpx)，统一浅蓝背景
 
 ---
 

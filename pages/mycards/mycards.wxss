@@ -1,48 +1,433 @@
-/* mycards.wxss */
+/* mycards.wxss - v3.0 专业图标风格 */
 
-page { background-color: #f8f9fa; }
-.container { min-height: 100vh; padding: 32rpx; padding-bottom: 120rpx; }
+page {
+  --primary: #2563EB;
+  --primary-light: rgba(37, 99, 235, 0.1);
+  --deep: #121212;
+  --text-main: #121212;
+  --text-sub: #64748B;
+  --text-light: #94A3B8;
+  --gold: #D4AF37;
+  --bg: #F8F9FA;
+  --surface: #FFFFFF;
+  --border: #F1F5F9;
+  --radius-xl: 32rpx;
+  --radius-l: 24rpx;
+  --radius-m: 16rpx;
+  --radius-full: 9999rpx;
+  --shadow-soft: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
+  --shadow-float: 0 16rpx 48rpx rgba(47, 101, 238, 0.25);
+  --shadow-hover: 0 12rpx 32rpx rgba(37, 99, 235, 0.35);
+  
+  background-color: var(--bg);
+}
 
-/* Header */
-.header { margin-bottom: 32rpx; }
-.header-title { font-size: 44rpx; font-weight: bold; color: #000; display: block; }
-.header-subtitle { font-size: 20rpx; color: #999; text-transform: uppercase; letter-spacing: 2rpx; margin-top: 8rpx; display: block; }
+.container {
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: 160rpx;
+  box-sizing: border-box;
+}
 
-/* Card List */
-.card-list { display: flex; flex-direction: column; gap: 32rpx; }
+/* ===== Header ===== */
+.header {
+  width: 100%;
+  padding: 32rpx;
+  background: #fff;
+}
 
-/* Card Item */
-.card-item { border-radius: 32rpx; overflow: hidden; box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.06); position: relative; }
-.card-bg { position: absolute; inset: 0; }
-.card-bg image { width: 100%; height: 100%; }
-.card-bg.tech { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-.card-bg.biz { background: linear-gradient(135deg, #475569, #334155); }
-.card-bg.social { background: linear-gradient(135deg, #10b981, #059669); }
+.header-title {
+  font-size: 44rpx;
+  font-weight: 600;
+  color: var(--deep);
+  letter-spacing: -0.02em;
+}
 
-.card-content { position: relative; z-index: 2; padding: 32rpx; color: #fff; min-height: 280rpx; display: flex; flex-direction: column; justify-content: space-between; }
+.header-subtitle {
+  font-size: 20rpx;
+  font-weight: 600;
+  color: var(--text-light);
+  letter-spacing: 0.15em;
+  margin-top: 4rpx;
+  display: block;
+}
 
-/* Card Header */
-.card-header { display: flex; justify-content: space-between; align-items: center; }
-.card-type { display: flex; align-items: center; gap: 12rpx; }
-.type-name { font-size: 20rpx; opacity: 0.8; }
-.card-default { padding: 8rpx 20rpx; background: #2563eb; border-radius: 20rpx; font-size: 20rpx; }
+/* ===== Card List ===== */
+.card-list {
+  padding: 24rpx 32rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
 
-/* Card Body */
-.card-body { display: flex; justify-content: space-between; align-items: flex-end; }
-.card-info { flex: 1; }
-.card-name { display: block; font-size: 44rpx; font-weight: bold; }
-.card-role { display: block; font-size: 26rpx; opacity: 0.9; margin-top: 8rpx; }
-.card-company { display: block; font-size: 22rpx; opacity: 0.7; margin-top: 4rpx; }
-.card-avatar { width: 120rpx; height: 120rpx; border-radius: 24rpx; overflow: hidden; border: 4rpx solid rgba(255,255,255,0.5); }
-.card-avatar image { width: 100%; height: 100%; }
+/* ===== Card Item ===== */
+.card-item {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-float);
+}
 
-/* Card Actions */
-.card-actions { position: relative; z-index: 2; display: flex; justify-content: space-around; padding: 24rpx; background: #fff; }
-.action-btn { display: flex; flex-direction: column; align-items: center; gap: 4rpx; }
-.action-icon { font-size: 32rpx; }
-.action-text { font-size: 20rpx; color: #666; }
-.action-btn.active .action-text { color: #2563eb; }
+.card-banner {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
 
-/* Add Button */
-.add-btn { position: fixed; bottom: 200rpx; right: 32rpx; width: 100rpx; height: 100rpx; background: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 16rpx 48rpx rgba(37,99,235,0.3); z-index: 100; }
-.add-btn text { font-size: 60rpx; color: #fff; font-weight: 300; }
+.banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner-mask {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.banner-mask.tech {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.88) 0%, rgba(29, 78, 216, 0.92) 100%);
+}
+
+.banner-mask.biz {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.96) 100%);
+}
+
+.banner-mask.social {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.88) 0%, rgba(5, 150, 105, 0.92) 100%);
+}
+
+.card-content {
+  position: relative;
+  z-index: 2;
+  padding: 32rpx;
+  min-height: 320rpx;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: auto;
+}
+
+.card-type {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.type-icon {
+  font-size: 24rpx;
+}
+
+.type-name {
+  font-size: 20rpx;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.card-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+/* ===== 图标按钮 - 统一样式 ===== */
+.icon-btn {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-m);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+}
+
+/* 二维码图标 - CSS绘制 */
+.icon-qr {
+  width: 26rpx;
+  height: 26rpx;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2rpx;
+}
+
+.icon-qr::before,
+.icon-qr::after {
+  content: '';
+  background: #fff;
+}
+
+.icon-qr::before {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  border-radius: 2rpx;
+}
+
+.icon-qr::after {
+  grid-column: 3 / 4;
+  grid-row: 3 / 4;
+  border-radius: 2rpx;
+}
+
+.icon-qr .qr-cell {
+  background: #fff;
+  border-radius: 2rpx;
+}
+
+/* 默认徽章 */
+.default-badge {
+  padding: 8rpx 20rpx;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-full);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.badge-text {
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #fff;
+}
+
+.card-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto;
+}
+
+.card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-name {
+  font-size: 52rpx;
+  font-weight: 700;
+  color: #fff;
+  display: block;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+}
+
+.card-role {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 8rpx;
+  display: block;
+}
+
+.card-company {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 4rpx;
+  display: block;
+}
+
+.card-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  border: 4rpx solid rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+  margin-left: 20rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.2);
+}
+
+.card-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+/* ===== 操作按钮 ===== */
+.card-operations {
+  display: flex;
+  gap: 16rpx;
+  padding: 20rpx 24rpx;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.op-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  padding: 20rpx;
+  background: var(--bg);
+  border-radius: var(--radius-m);
+  transition: all 0.3s ease;
+}
+
+.op-btn.active {
+  background: var(--primary-light);
+}
+
+/* 图标盒子 */
+.op-icon-box {
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--border);
+  border-radius: 10rpx;
+}
+
+.op-icon-box.active {
+  background: var(--primary);
+}
+
+/* ===== 各种图标 - CSS绘制 ===== */
+
+/* 星星图标 */
+.icon-star {
+  width: 18rpx;
+  height: 18rpx;
+  background: var(--text-light);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+.icon-star.filled {
+  background: var(--gold);
+}
+
+/* 编辑图标 */
+.icon-edit {
+  width: 16rpx;
+  height: 18rpx;
+  border: 3rpx solid var(--text-sub);
+  border-radius: 4rpx;
+  position: relative;
+}
+
+.icon-edit::before {
+  content: '';
+  position: absolute;
+  top: -4rpx;
+  right: -4rpx;
+  width: 8rpx;
+  height: 8rpx;
+  background: var(--border);
+  border-radius: 2rpx;
+  transform: rotate(45deg);
+}
+
+.op-icon-box.active .icon-edit {
+  border-color: #fff;
+}
+
+/* 分享图标 */
+.icon-share {
+  width: 0;
+  height: 0;
+  border-left: 8rpx solid transparent;
+  border-right: 8rpx solid transparent;
+  border-bottom: 14rpx solid var(--text-sub);
+  position: relative;
+}
+
+.icon-share::before {
+  content: '';
+  position: absolute;
+  top: 6rpx;
+  left: -6rpx;
+  width: 0;
+  height: 0;
+  border-left: 6rpx solid transparent;
+  border-right: 6rpx solid transparent;
+  border-bottom: 10rpx solid var(--border);
+}
+
+.op-icon-box.active .icon-share {
+  border-bottom-color: #fff;
+}
+
+.op-icon-box.active .icon-share::before {
+  border-bottom-color: var(--primary);
+}
+
+/* ===== 添加按钮 ===== */
+.add-card-btn {
+  margin: 24rpx 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  padding: 32rpx;
+  background: #fff;
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s ease;
+}
+
+.add-card-btn:active {
+  transform: scale(0.98);
+  box-shadow: var(--shadow-hover);
+}
+
+.add-icon-box {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+}
+
+.add-icon {
+  font-size: 32rpx;
+  color: #fff;
+  font-weight: 300;
+}
+
+.add-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* ===== 动画 ===== */
+.card-item {
+  animation: slideUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.card-item:nth-child(1) { animation-delay: 0ms; }
+.card-item:nth-child(2) { animation-delay: 100ms; }
+.card-item:nth-child(3) { animation-delay: 200ms; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 375px) {
+  .header, .card-list, .add-card-btn {
+    padding-left: 20rpx;
+    padding-right: 20rpx;
+  }
+  
+  .card-content { padding: 24rpx; min-height: 280rpx; }
+  .card-name { font-size: 44rpx; }
+  .card-avatar { width: 100rpx; height: 100rpx; }
+}

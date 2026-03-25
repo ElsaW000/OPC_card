@@ -1,52 +1,90 @@
-<!--mycards.wxml-->
+<!--mycards.wxml - 优化版图标 -->
 <view class="container">
+  <!-- Header -->
   <view class="header">
     <text class="header-title">我的名片</text>
     <text class="header-subtitle">MULTI-IDENTITY MANAGEMENT</text>
   </view>
 
+  <!-- 名片列表 -->
   <view class="card-list">
     <block wx:for="{{cards}}" wx:key="id">
       <view class="card-item" bindtap="goToDetail" data-id="{{item.id}}">
-        <view class="card-bg {{item.type}}"></view>
+        
+        <!-- Banner 背景 -->
+        <view class="card-banner">
+          <image class="banner-img" src="{{item.bannerUrl}}" mode="aspectFill" />
+          <view class="banner-mask {{item.type}}"></view>
+        </view>
+        
+        <!-- 卡片内容 -->
         <view class="card-content">
-          <view class="card-header">
+          <!-- 顶部 -->
+          <view class="card-top">
             <view class="card-type">
               <text class="type-icon">{{item.typeIcon}}</text>
               <text class="type-name">{{item.title}}</text>
             </view>
-            <view class="card-default" wx:if="{{item.isDefault}}">默认</view>
+            <view class="card-actions-right">
+              <!-- 二维码按钮 -->
+              <view class="icon-btn" catchtap="showQRCode" data-id="{{item.id}}" bindtap="stopPropagation">
+                <view class="icon-qr"></view>
+              </view>
+              <!-- 默认徽章 -->
+              <view class="default-badge" wx:if="{{item.isDefault}}">
+                <text class="badge-text">默认</text>
+              </view>
+            </view>
           </view>
+
+          <!-- 中部 -->
           <view class="card-body">
             <view class="card-info">
               <text class="card-name">{{item.name}}</text>
               <text class="card-role">{{item.role}}</text>
-              <text class="card-company">{{item.company}}</text>
+              <text class="card-company" wx:if="{{item.company}}">{{item.company}}</text>
             </view>
             <view class="card-avatar">
-              <image src="{{item.avatarUrl}}" mode="aspectFill"></image>
+              <image src="{{item.avatarUrl}}" mode="aspectFill" />
             </view>
           </view>
         </view>
-        <view class="card-actions">
-          <view class="action-btn" bindtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.isDefault}}">
-            <text class="action-text">设为默认</text>
+      </view>
+
+      <!-- 操作按钮 - 专业图标风格 -->
+      <view class="card-operations">
+        <!-- 设为默认 -->
+        <view class="op-btn {{item.isDefault ? 'active' : ''}}" bindtap="setDefault" data-id="{{item.id}}">
+          <view class="op-icon-box {{item.isDefault ? 'active' : ''}}">
+            <view class="icon-star {{item.isDefault ? 'filled' : ''}}"></view>
           </view>
-          <view class="action-btn active" wx:else>
-            <text class="action-text">当前</text>
+          <text class="op-text">{{item.isDefault ? '当前默认' : '设为默认'}}</text>
+        </view>
+        
+        <!-- 编辑 -->
+        <view class="op-btn" bindtap="editCard" data-id="{{item.id}}">
+          <view class="op-icon-box">
+            <view class="icon-edit"></view>
           </view>
-          <view class="action-btn" bindtap="editCard" data-id="{{item.id}}">
-            <text class="action-text">编辑</text>
+          <text class="op-text">编辑</text>
+        </view>
+        
+        <!-- 分享 -->
+        <view class="op-btn" bindtap="shareCard" data-id="{{item.id}}">
+          <view class="op-icon-box">
+            <view class="icon-share"></view>
           </view>
-          <view class="action-btn" bindtap="shareCard" data-id="{{item.id}}">
-            <text class="action-text">分享</text>
-          </view>
+          <text class="op-text">分享</text>
         </view>
       </view>
     </block>
   </view>
 
-  <view class="add-btn" bindtap="addCard">
-    <text class="add-icon">+</text>
+  <!-- 添加按钮 -->
+  <view class="add-card-btn" bindtap="addCard">
+    <view class="add-icon-box">
+      <text class="add-icon">+</text>
+    </view>
+    <text class="add-text">创建新身份</text>
   </view>
 </view>
