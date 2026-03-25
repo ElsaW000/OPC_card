@@ -2,6 +2,14 @@
 Page({
   onLoad() {},
 
+  editCard() {
+    wx.navigateTo({ url: '/pages/edit/edit' })
+  },
+
+  shareCard() {
+    wx.showShareMenu({ withShareTicket: true })
+  },
+
   goToMyCards() {
     wx.switchTab({ url: '/pages/mycards/mycards' })
   },
@@ -20,9 +28,5 @@ Page({
 
   goToMember() {
     wx.navigateTo({ url: '/pages/member/member' })
-  },
-
-  goToAI() {
-    wx.navigateTo({ url: '/pages/aiFeatures/aiFeatures' })
   }
 })

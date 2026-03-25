@@ -1,30 +1,42 @@
 /* home.wxss */
 
 page { background-color: #f8f9fa; }
-.container { min-height: 100vh; padding: 0 24rpx 140rpx; position: relative; }
+.container { min-height: 100vh; padding: 0 24rpx 140rpx; }
 
-/* Header BG */
-.header-bg { position: absolute; top: 0; left: 0; right: 0; height: 320rpx; background: linear-gradient(135deg, #3b82f6, #fef3c7); border-radius: 0 0 64rpx 64rpx; }
+/* ID Card Section */
+.id-section { padding-top: 24rpx; margin-bottom: 32rpx; }
+.card-scroll { width: 100%; white-space: nowrap; }
+.card-wrapper { display: inline-flex; gap: 20rpx; padding: 0 4rpx; }
 
-/* Header Card */
-.header-card { position: relative; background: linear-gradient(135deg, #2563eb, #1d4ed8); border-radius: 32rpx; padding: 32rpx; margin-top: 120rpx; box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.1); }
-.card-header { display: flex; justify-content: space-between; margin-bottom: 20rpx; }
-.card-badge { background: #ffd700; padding: 6rpx 16rpx; border-radius: 8rpx; }
-.badge-text { font-size: 20rpx; color: #000; font-weight: bold; }
-.card-qr { background: rgba(255,255,255,0.2); padding: 6rpx 16rpx; border-radius: 8rpx; color: #fff; font-size: 20rpx; }
-.card-body { display: flex; justify-content: space-between; align-items: flex-end; }
-.card-info { }
-.card-name { display: block; color: #fff; font-size: 44rpx; font-weight: bold; }
-.card-role { display: block; color: rgba(255,255,255,0.9); font-size: 26rpx; margin-top: 8rpx; }
-.card-avatar { width: 100rpx; height: 100rpx; border-radius: 20rpx; overflow: hidden; border: 3rpx solid rgba(255,255,255,0.5); }
-.card-avatar image { width: 100%; height: 100%; }
+/* ID Card - Like ID Badge */
+.id-card { width: 600rpx; height: 320rpx; border-radius: 24rpx; padding: 24rpx; display: inline-block; vertical-align: top; box-sizing: border-box; position: relative; overflow: hidden; }
+.id-card.blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.id-card.biz { background: linear-gradient(135deg, #475569, #1e293b); }
+.id-card.social { background: linear-gradient(135deg, #10b981, #059669); }
 
-/* Action Buttons */
-.action-buttons { display: flex; gap: 16rpx; margin-top: 24rpx; margin-bottom: 32rpx; }
-.action-btn { flex: 1; background: #fff; border-radius: 32rpx; padding: 20rpx 0; text-align: center; box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.06); }
-.action-btn text { font-size: 26rpx; color: #333; }
-.action-btn.toggle { background: #2563eb; }
-.action-btn.toggle text { color: #fff; }
+/* ID Header */
+.id-header { display: flex; justify-content: space-between; margin-bottom: 16rpx; }
+.id-badge { background: rgba(255,255,255,0.2); padding: 6rpx 16rpx; border-radius: 8rpx; font-size: 20rpx; color: #fff; }
+.id-qr { background: rgba(255,255,255,0.2); padding: 6rpx 12rpx; border-radius: 8rpx; font-size: 20rpx; color: #fff; }
+
+/* ID Content */
+.id-content { display: flex; justify-content: space-between; align-items: flex-end; }
+.id-info { }
+.id-name { display: block; color: #fff; font-size: 36rpx; font-weight: bold; }
+.id-role { display: block; color: rgba(255,255,255,0.9); font-size: 24rpx; margin-top: 4rpx; }
+.id-company { display: block; color: rgba(255,255,255,0.7); font-size: 20rpx; margin-top: 4rpx; }
+.id-avatar { width: 88rpx; height: 88rpx; border-radius: 16rpx; overflow: hidden; border: 3rpx solid rgba(255,255,255,0.5); }
+.id-avatar image { width: 100%; height: 100%; }
+
+/* ID Actions */
+.id-actions { display: flex; gap: 16rpx; margin-top: 20rpx; }
+.id-action { flex: 1; background: rgba(255,255,255,0.15); border-radius: 12rpx; padding: 14rpx 0; text-align: center; }
+.id-action text { color: #fff; font-size: 24rpx; }
+
+/* Page Indicators */
+.page-indicators { display: flex; justify-content: center; gap: 12rpx; margin-top: 20rpx; }
+.indicator { width: 12rpx; height: 12rpx; border-radius: 6rpx; background: #d1d5db; }
+.indicator.active { background: #2563eb; width: 32rpx; }
 
 /* Grid */
 .grid-section { background: #fff; border-radius: 24rpx; padding: 24rpx; margin-bottom: 24rpx; box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.06); }

@@ -1,30 +1,92 @@
 <!--home.wxml-->
 <view class="container">
-  <!-- Header Section -->
-  <view class="header-bg"></view>
-  <view class="header-card">
-    <view class="card-header">
-      <view class="card-badge">
-        <text class="badge-text">默认</text>
+  <!-- ID Card Section (Swipeable) -->
+  <view class="id-section">
+    <scroll-view class="card-scroll" scroll-x="true" enhanced="true" show-scrollbar="false">
+      <view class="card-wrapper">
+        <view class="id-card">
+          <view class="id-header">
+            <view class="id-badge">默认</view>
+            <view class="id-qr">QR</view>
+          </view>
+          <view class="id-content">
+            <view class="id-info">
+              <text class="id-name">陈小独立</text>
+              <text class="id-role">全栈开发工程师</text>
+              <text class="id-company">CODEFLOW AI STUDIO</text>
+            </view>
+            <view class="id-avatar">
+              <image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image>
+            </view>
+          </view>
+          <view class="id-actions">
+            <view class="id-action" bindtap="editCard">
+              <text>编辑</text>
+            </view>
+            <view class="id-action" bindtap="shareCard">
+              <text>分享名片</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- Card 2 -->
+        <view class="id-card biz">
+          <view class="id-header">
+            <view class="id-badge">商务</view>
+          </view>
+          <view class="id-content">
+            <view class="id-info">
+              <text class="id-name">Independent Chen</text>
+              <text class="id-role">Founder & CEO</text>
+              <text class="id-company">ONE PERSON COMPANY</text>
+            </view>
+            <view class="id-avatar">
+              <image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image>
+            </view>
+          </view>
+          <view class="id-actions">
+            <view class="id-action" bindtap="editCard">
+              <text>编辑</text>
+            </view>
+            <view class="id-action" bindtap="shareCard">
+              <text>分享名片</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- Card 3 -->
+        <view class="id-card social">
+          <view class="id-header">
+            <view class="id-badge">社交</view>
+          </view>
+          <view class="id-content">
+            <view class="id-info">
+              <text class="id-name">阿力</text>
+              <text class="id-role">摄影爱好者</text>
+              <text class="id-company">自由职业</text>
+            </view>
+            <view class="id-avatar">
+              <image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image>
+            </view>
+          </view>
+          <view class="id-actions">
+            <view class="id-action" bindtap="editCard">
+              <text>编辑</text>
+            </view>
+            <view class="id-action" bindtap="shareCard">
+              <text>分享名片</text>
+            </view>
+          </view>
+        </view>
       </view>
-      <view class="card-qr">QR</view>
+    </scroll-view>
+    
+    <!-- Page Indicators -->
+    <view class="page-indicators">
+      <view class="indicator active"></view>
+      <view class="indicator"></view>
+      <view class="indicator"></view>
     </view>
-    <view class="card-body">
-      <view class="card-info">
-        <text class="card-name">陈小独立</text>
-        <text class="card-role">全栈开发工程师</text>
-      </view>
-      <view class="card-avatar">
-        <image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image>
-      </view>
-    </view>
-  </view>
-  
-  <!-- Action Buttons -->
-  <view class="action-buttons">
-    <view class="action-btn"><text>编辑</text></view>
-    <view class="action-btn"><text>分享</text></view>
-    <view class="action-btn toggle"><text>设为默认</text></view>
   </view>
 
   <!-- 2x2 Grid -->
