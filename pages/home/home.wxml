@@ -1,10 +1,8 @@
 <!--home.wxml-->
 <view class="container">
-  <!-- Top: Premium Card Preview -->
+  <!-- Premium Card -->
   <view class="header-card">
-    <view class="card-bg-gradient">
-      <view class="gradient-inner"></view>
-    </view>
+    <view class="card-bg-gradient"></view>
     <view class="header-content">
       <view class="header-info">
         <text class="header-name">Independent Chen</text>
@@ -17,31 +15,31 @@
     </view>
   </view>
 
-  <!-- Middle: 2x2 Grid -->
+  <!-- 2x2 Grid -->
   <view class="grid-section">
     <view class="grid-card">
       <view class="grid-2x2">
         <view class="grid-item" bindtap="goToMyCards">
           <view class="grid-icon" style="background: linear-gradient(135deg, #dbeafe, #93c5fd);">
-            <text style="font-size: 40rpx;">&#x1F4BC;</text>
+            <text class="grid-icon-text">BC</text>
           </view>
           <text class="grid-text">My Cards</text>
         </view>
         <view class="grid-item" bindtap="goToVisitor">
           <view class="grid-icon" style="background: linear-gradient(135deg, #fce7f3, #f9a8d4);">
-            <text style="font-size: 40rpx;">&#x1F441;</text>
+            <text class="grid-icon-text">EY</text>
           </view>
           <text class="grid-text">Visitor Records</text>
         </view>
         <view class="grid-item" bindtap="goToContacts">
           <view class="grid-icon" style="background: linear-gradient(135deg, #d1fae5, #6ee7b7);">
-            <text style="font-size: 40rpx;">&#x1F4DD;</text>
+            <text class="grid-icon-text">EX</text>
           </view>
           <text class="grid-text">Exchange History</text>
         </view>
         <view class="grid-item" bindtap="goToAnalytics">
           <view class="grid-icon" style="background: linear-gradient(135deg, #e0e7ff, #a5b4fc);">
-            <text style="font-size: 40rpx;">&#x1F4CA;</text>
+            <text class="grid-icon-text">DA</text>
           </view>
           <text class="grid-text">Data Analytics</text>
         </view>
@@ -53,7 +51,7 @@
   <view class="ai-section">
     <view class="ai-card">
       <view class="ai-header">
-        <view class="ai-icon">&#x1F916;</view>
+        <text class="ai-icon">AI</text>
         <text class="ai-title">AI Assistant</text>
       </view>
       <view class="ai-features">
@@ -69,7 +67,7 @@
 
   <!-- Member Banner -->
   <view class="member-banner">
-    <view class="member-icon">&#x1F6E1;</view>
+    <view class="member-icon">PRO</view>
     <view class="member-content">
       <text class="member-title">PRO Member</text>
       <text class="member-desc">Upgrade to view all visitor details</text>
@@ -91,7 +89,6 @@
           <text class="visitor-role">PM @ ByteDance</text>
         </view>
         <view class="visitor-meta">
-          <text class="visitor-source">&#x1F4F7;</text>
           <text class="visitor-time">2m ago</text>
         </view>
       </view>
@@ -102,7 +99,6 @@
           <text class="visitor-role">Indie Developer</text>
         </view>
         <view class="visitor-meta">
-          <text class="visitor-source">&#x1F4F7;</text>
           <text class="visitor-time">2h ago</text>
         </view>
       </view>
@@ -113,7 +109,6 @@
           <text class="visitor-role">Designer @ Adobe</text>
         </view>
         <view class="visitor-meta">
-          <text class="visitor-source">&#x1F4F7;</text>
           <text class="visitor-time">1d ago</text>
         </view>
       </view>

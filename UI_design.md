@@ -1,172 +1,138 @@
-# OPC 名片小程序 - UI 设计文档 (v2.0)
+# OPC Business Card Mini-program - UI Design Document (v2.0)
 
-> 设计理念：现代简约 (Modern Minimalism)、极简流体、细腻投影
-> 核心目标：突出"多身份管理"的便捷性与"中间交换按钮"的视觉中心化
-
----
-
-## 1. 全局设计系统
-
-### 1.1 色彩体系
-
-| 类别 | 变量名 | 色值 | 应用场景 |
-|------|--------|------|----------|
-| 品牌色 | Color-Primary | #2563EB | 激活状态、主按钮、进度条 |
-| 背景色 | Color-BG | #F8F9FA | 页面全局底色 |
-| 容器色 | Color-Surface | #FFFFFF | 卡片、弹窗背景 |
-| 文本主色 | Text-Main | #000000 | 标题、姓名、正文 |
-| 文本次色 | Text-Sub | #666666 | 职位、公司名、辅助说明 |
-| 功能色 | Color-Gold | #FFD700 | PRO 会员标识、星标 |
-
-### 1.2 物理规范
-
-**圆角层级**：
-- Radius-XL: 32rpx（名片大卡片、底部弹窗）
-- Radius-L: 24rpx（列表卡片、功能入口）
-- Radius-M: 16rpx（按钮、标签）
-
-**阴影规范**：
-- Shadow-Soft: `0 8rpx 24rpx rgba(0,0,0,0.06)`（常规卡片）
-- Shadow-Float: `0 16rpx 48rpx rgba(47,101,238,0.3)`（中间交换按钮）
+> Design Philosophy: Modern Minimalism, Minimalist Fluidity, Soft Shadows
+> Core Goal: Highlight "Multi-Identity Management" convenience and "Center Exchange Button" visual focus
 
 ---
 
-## 2. 导航架构
+## 1. Global Design System
 
-### TabBar 配置（4个Tab + 1个重要按钮）
+### 1.1 Color Palette
 
-| Tab | 页面路径 | 标题 |
-|-----|----------|------|
-| 1 | pages/mycards/mycards | 我的名片 |
-| 2 | pages/contacts/contacts | 联系人 |
-| 3 | (中间蓝色圆按钮) | 交换名片 |
-| 4 | pages/home/home | 工作台 |
-| 5 | pages/management/management | 管理 |
+| Category | Variable | Hex | Use Case |
+|---------|----------|-----|----------|
+| Primary | Color-Primary | #2563EB | Active state, main button, progress |
+| Background | Color-BG | #F8F9FA | Page background |
+| Surface | Color-Surface | #FFFFFF | Cards, popups |
+| Text Main | Text-Main | #000000 | Title, name, body |
+| Text Sub | Text-Sub | #666666 | Job title, company, info |
+| Gold | Color-Gold | #FFD700 | PRO badge, star |
 
-### 中间按钮交互
+### 1.2 Spacing & Radius
 
-- **视觉**：蓝色圆底，白字 "+" 或交换图标，略微向上悬浮超出 TabBar 高度
-- **动效**：点击后背景执行高斯模糊，页面由下至上弹出"交换名片"全屏浮层
+**Corner Radius**:
+- XL: 32rpx (Card, popup)
+- L: 24rpx (List items, grid)
+- M: 16rpx (Button, tag)
 
----
-
-## 3. 核心页面设计
-
-### 3.1 我的名片 (Tab 1)
-
-**视觉风格**：采用"卡片堆叠流"
-
-**关键组件**：
-- **身份标识**：默认名片右上角带有 Color-Primary 色块标注
-- **卡片设计**：
-  - 技术版：亮蓝色渐变底纹
-  - 商务版：深灰蓝拉丝质感
-  - 社交版：翠绿色呼吸感渐变
-- **底部操作**：按钮采用线性图标 + 细文字，保持页面呼吸感
+**Shadow**:
+- Soft: `0 8rpx 24rpx rgba(0,0,0,0.06)`
+- Float: `0 16rpx 48rpx rgba(47,101,238,0.3)`
 
 ---
 
-### 3.2 工作台 (Tab 4)
+## 2. Tab Structure (4 Tabs)
 
-**核心逻辑**：作为用户的"数字仪表盘"
-
-**模块分布**：
-- **顶部概览**：当前默认名片的微缩版，点击可快速进入展示页
-- **2x2 宫格**：图标采用"微彩色"处理，增强点击欲
-- **最近访客预览**：仅展示前 3 名，带"更多"入口跳转访客页
-
----
-
-### 3.3 联系人页 (Tab 2)
-
-**结构**：
-- 搜索栏
-- 标签筛选（Pills）
-- 交换记录（最近交换）
-- 星标联系人
-- 全部联系人列表
-
-**卡片设计**：带微阴影的白色圆角矩形
+| Tab | Page | Label |
+|-----|------|-------|
+| 1 | pages/mycards/mycards | My Cards |
+| 2 | pages/contacts/contacts | Contacts |
+| 3 | pages/home/home | Workbench |
+| 4 | pages/management/management | Manage |
 
 ---
 
-### 3.4 访客页面
+## 3. Workbench Page Design Prompts
 
-**视觉处理**：
-- **数据大牌**：左右对齐展示"今日新增"与"主要来源"
-- **访客列表**：左侧头像加圆角，右侧来源路径带微缩图标（如微信图标、二维码图标）
-- **付费墙**：列表第 4 条开始应用 `backdrop-filter: blur(10px)`，配合蓝色盾牌引导升级
-
----
-
-### 3.5 管理页 (Tab 5)
-
-**结构**：
-- 个人信息卡片
-- 功能列表（我的二维码、账号管理、绑定手机/微信、隐私设置、通知设置、PRO会员、常见问题、服务协议、隐私政策、关于）
-- 退出登录
-
----
-
-## 4. 交互逻辑
-
-### 4.1 名片交换路径
-
+### Prompt 1: Workbench Top Section
 ```
-发起：点击中间蓝色按钮
-决策：页面顶部横向滑块切换"我要投出的名片"
-动作：下方扫码框实时取景，或点击"搜索"手动查找
-反馈：成功后弹出"交换成功"微动效，自动返回原 Tab
+UI design of a mobile Mini-program "Workbench" page, white background, modern minimalism style.
+Top Section: A floating premium business card preview with rounded corners (32rpx), light blue gradient background, displaying name "Independent Chen", title "Founder", and a square rounded avatar on the right.
+Middle Section: A 2x2 grid layout of shortcut icons. Icons are clean and colorful, labeled "My Cards", "Visitor Records", "Exchange History", and "Data Analytics".
+Visual Style: Soft shadows (0 8rpx 24rpx rgba(0,0,0,0.06)), Helvetica font, plenty of white space.
+TabBar: Bottom navigation bar with 5 slots: 4 text-based tabs and a prominent, elevated circular blue button in the center for "Exchange".
+High-fidelity, 8k resolution, UX/UI, clean interface --ar 9:16
 ```
 
-### 4.2 会员分级策略
-
-| 权益项 | 免费用户 | PRO 会员 |
-|--------|----------|----------|
-| 名片上限 | 3 张 | 不限 |
-| 访客详情 | 前 3 条 | 全量查看 |
-| AI 助手 | 试用次数 | 无限使用 |
-| 导出功能 | 锁定 | 支持 CSV/Excel |
-
----
-
-## 5. 页面清单
-
+### Prompt 2: Workbench Bottom Section (Scrolled)
 ```
-pages/
-├── mycards/           # 我的名片（Tab 1）
-│   └── cardDetail/   # 名片展示页
-├── contacts/          # 联系人（Tab 2）
-├── home/              # 工作台（Tab 4）
-│   ├── visitor/       # 访客
-│   ├── analytics/     # 数据分析
-│   ├── member/        # 会员权益
-│   └── aiFeatures/    # AI功能
-├── management/        # 管理（Tab 5）
-│   └── qrcode/        # 名片二维码
-├── exchange/          # 交换名片（中间按钮触发）
-├── edit/              # 编辑名片
-└── webview/           # 网页视图
+UI design of the scrolled-down part of a mobile Mini-program "Workbench" page.
+AI Section: A full-width card with a subtle blue glow effect labeled "AI Assistant", featuring "One-click Card Generation" and "Smart Tag Recommendation".
+Visitor List: A vertical list titled "Recent Visitors". Each row shows a rounded avatar, name, active time (e.g., "2 mins ago"), and a small source icon (e.g., QR code icon).
+Member Section: A "PRO Member" banner with gold accents and a shield icon, saying "Upgrade to view all visitor details".
+Visual Style: Glassmorphism elements, Radius-L (24rpx) for cards, light gray background (#F8F9FA).
+Bottom: The same sticky TabBar with the central blue circular button.
+High-fidelity, mobile app UI, professional dashboard --ar 9:16
 ```
 
 ---
 
-## 6. 待补充细节
+## 4. My Cards Page Design
 
-- **缺省页**：需设计"暂无联系人"、"暂无访客"的插画风格（建议使用线性线条插画）
-- **加载态**：名片生成时的 AI 进度条动效
+### Layout
+- Vertical scroll card flow
+- Each card is independent rounded rectangle
+- 3 example cards:
+  - Tech: Blue gradient, "Chen Xiao Duli", "Full-stack Developer", "CODEFLOW AI STUDIO"
+  - Biz: Dark gray-blue, "Independent Chen", "Founder & CEO"
+  - Social: Green gradient
+
+### Card Features
+- Default badge (top right)
+- Avatar (right side)
+- Action buttons: Set Default, Edit, Share, Delete
+- Add button: Blue circle "+" (bottom right)
 
 ---
 
-## 7. 视觉规范（摘要）
+## 5. Contacts Page Design
 
-- **圆角**：XL 32rpx / L 24rpx / M 16rpx
-- **阴影**：常规卡片 0 8rpx 24rpx rgba(0,0,0,0.06)
-- **背景**：页面 #F8F9FA，卡片 #FFFFFF
-- **主色**：#2563EB
-- **会员色**：#FFD700
+### Layout
+- Search bar
+- Tag filters (Pills): All, AI, B2B, Oversea, Flutter
+- Recent Exchange section
+- All Contacts list
+
+### Contact Card
+- Avatar (left)
+- Name + Time (top)
+- Job title + Company
+- Tags
+- Actions: Chat, Call
 
 ---
 
-*最后更新：2026-03-25*
-*版本：v2.0*
+## 6. Management Page Design
+
+### Layout
+- Profile card (avatar, name, phone)
+- Menu list:
+  - My QR Code
+  - Account Management
+  - Bind Phone
+  - Bind WeChat
+  - Privacy
+  - Notifications
+  - PRO Member
+  - FAQ
+  - Terms
+  - Privacy Policy
+  - About
+- Logout button
+
+---
+
+## 7. Other Pages
+
+- Visitor Page (from Workbench)
+- Analytics Page (from Workbench)
+- Member Page (from Workbench)
+- AI Features Page (from Workbench)
+- Card Detail Page (from My Cards)
+- QR Code Page
+- Exchange Page
+
+---
+
+*Last Updated: 2026-03-25*
+*Version: v2.0*
