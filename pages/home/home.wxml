@@ -1,16 +1,35 @@
-<!--home.wxml - Workbench Page -->
+<!--home.wxml-->
 <view class="container">
-  <!-- Premium Card -->
-  <view class="header-card">
-    <view class="card-bg-gradient"></view>
-    <view class="header-content">
-      <view class="header-info">
-        <text class="header-name">Independent Chen</text>
-        <text class="header-role">Founder</text>
-        <text class="header-company">CODEFLOW AI STUDIO</text>
+  <!-- Header with Card -->
+  <view class="header-section">
+    <view class="header-bg"></view>
+    <view class="header-card">
+      <view class="card-badge">
+        <text class="badge-icon">*</text>
+        <text class="badge-text">Default</text>
+        <text class="qr-icon">QR</text>
       </view>
-      <view class="header-avatar">
-        <image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image>
+      <view class="card-content">
+        <view class="card-info">
+          <text class="card-name">Chen Xiao Duli</text>
+          <text class="card-role">Full-stack Developer</text>
+        </view>
+        <view class="card-avatar">
+          <image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image>
+        </view>
+      </view>
+    </view>
+    <!-- Card Actions -->
+    <view class="card-actions">
+      <view class="action-btn">
+        <text>Edit</text>
+      </view>
+      <view class="action-btn">
+        <text>Share</text>
+      </view>
+      <view class="action-toggle">
+        <text>Set Default</text>
+        <view class="toggle-switch"></view>
       </view>
     </view>
   </view>
@@ -19,99 +38,109 @@
   <view class="grid-section">
     <view class="grid-card">
       <view class="grid-2x2">
-        <view class="grid-item" bindtap="goToMyCards">
-          <view class="grid-icon" style="background: linear-gradient(135deg, #dbeafe, #93c5fd);">
-            <text class="grid-icon-text">BC</text>
+        <view class="grid-item">
+          <view class="grid-icon blue">
+            <text class="grid-icon-text">+</text>
           </view>
-          <text class="grid-text">My Cards</text>
+          <text class="grid-text">Create Card</text>
         </view>
-        <view class="grid-item" bindtap="goToVisitor">
-          <view class="grid-icon" style="background: linear-gradient(135deg, #fce7f3, #f9a8d4);">
-            <text class="grid-icon-text">EY</text>
+        <view class="grid-item">
+          <view class="grid-icon gold">
+            <text class="grid-icon-text">*</text>
           </view>
-          <text class="grid-text">Visitors</text>
+          <text class="grid-text">Starred</text>
         </view>
-        <view class="grid-item" bindtap="goToContacts">
-          <view class="grid-icon" style="background: linear-gradient(135deg, #d1fae5, #6ee7b7);">
-            <text class="grid-icon-text">EX</text>
-          </view>
-          <text class="grid-text">Exchange</text>
-        </view>
-        <view class="grid-item" bindtap="goToAnalytics">
-          <view class="grid-icon" style="background: linear-gradient(135deg, #e0e7ff, #a5b4fc);">
-            <text class="grid-icon-text">DA</text>
+        <view class="grid-item">
+          <view class="grid-icon orange">
+            <text class="grid-icon-text">#</text>
           </view>
           <text class="grid-text">Analytics</text>
         </view>
-      </view>
-    </view>
-  </view>
-
-  <!-- AI Section -->
-  <view class="ai-section">
-    <view class="ai-card">
-      <view class="ai-header">
-        <text class="ai-icon">AI</text>
-        <text class="ai-title">AI Assistant</text>
-      </view>
-      <view class="ai-features">
-        <view class="ai-feature">
-          <text class="ai-feature-text">One-click Card Generation</text>
-        </view>
-        <view class="ai-feature">
-          <text class="ai-feature-text">Smart Tag Recommendation</text>
+        <view class="grid-item">
+          <view class="grid-icon blue2">
+            <text class="grid-icon-text">S</text>
+          </view>
+          <text class="grid-text">Settings</text>
         </view>
       </view>
     </view>
   </view>
 
-  <!-- Member Banner -->
-  <view class="member-banner">
-    <view class="member-icon">PRO</view>
-    <view class="member-content">
-      <text class="member-title">PRO Member</text>
-      <text class="member-desc">Upgrade to view all visitor details</text>
+  <!-- Data Overview -->
+  <view class="data-section">
+    <view class="data-card">
+      <view class="data-header">
+        <text class="data-title">Visitor Activity</text>
+      </view>
+      <view class="data-chart">
+        <view class="chart-bars">
+          <view class="bar" style="height: 40%;"></view>
+          <view class="bar" style="height: 60%;"></view>
+          <view class="bar" style="height: 35%;"></view>
+          <view class="bar" style="height: 80%;"></view>
+          <view class="bar" style="height: 55%;"></view>
+          <view class="bar" style="height: 70%;"></view>
+          <view class="bar" style="height: 45%;"></view>
+        </view>
+        <text class="chart-label">Visitors per day</text>
+      </view>
     </view>
-    <view class="member-btn">Upgrade</view>
+    <view class="data-card">
+      <view class="data-header">
+        <text class="data-title">Recent Visitors</text>
+      </view>
+      <view class="visitor-mini-list">
+        <view class="visitor-mini">
+          <view class="visitor-mini-avatar">L</view>
+          <view class="visitor-mini-info">
+            <text class="visitor-mini-name">Li Wei</text>
+            <text class="visitor-mini-time">1m ago</text>
+          </view>
+        </view>
+        <view class="visitor-mini">
+          <view class="visitor-mini-avatar">J</view>
+          <view class="visitor-mini-info">
+            <text class="visitor-mini-name">Jane Doe</text>
+            <text class="visitor-mini-time">1h ago</text>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 
-  <!-- Recent Visitors -->
-  <view class="visitors-section">
-    <view class="section-header">
-      <text class="section-title">Recent Visitors</text>
-      <text class="section-more">View All</text>
-    </view>
-    <view class="visitor-list">
-      <view class="visitor-item">
-        <image class="visitor-avatar" src="https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200" />
-        <view class="visitor-info">
-          <text class="visitor-name">Sarah Zhang</text>
-          <text class="visitor-role">PM @ ByteDance</text>
-        </view>
-        <view class="visitor-meta">
-          <text class="visitor-time">2m ago</text>
-        </view>
-      </view>
-      <view class="visitor-item">
-        <image class="visitor-avatar" src="https://images.unsplash.com/photo-1664101606938-e664f5852fac?w=200" />
-        <view class="visitor-info">
-          <text class="visitor-name">David Li</text>
-          <text class="visitor-role">Indie Developer</text>
-        </view>
-        <view class="visitor-meta">
-          <text class="visitor-time">2h ago</text>
-        </view>
-      </view>
-      <view class="visitor-item">
-        <image class="visitor-avatar" src="https://images.unsplash.com/photo-1645951252284-4aa663bf59ca?w=200" />
-        <view class="visitor-info">
-          <text class="visitor-name">Emily Wang</text>
-          <text class="visitor-role">Designer @ Adobe</text>
-        </view>
-        <view class="visitor-meta">
-          <text class="visitor-time">1d ago</text>
-        </view>
+  <!-- Multi-Card Analytics -->
+  <view class="analytics-section">
+    <view class="section-title">Multi-Card Analytics</view>
+    <view class="analytics-card">
+      <view class="mini-cards">
+        <view class="mini-card blue"></view>
+        <view class="mini-card gray"></view>
+        <view class="mini-card green"></view>
       </view>
     </view>
   </view>
+
+  <!-- Management Actions -->
+  <view class="actions-section">
+    <view class="action-list-card">
+      <view class="action-list-item">
+        <text class="action-list-icon">C</text>
+        <text class="action-list-text">Card Settings</text>
+        <text class="action-list-arrow">></text>
+      </view>
+      <view class="action-list-item">
+        <text class="action-list-icon">N</text>
+        <text class="action-list-text">Notification Preferences</text>
+        <text class="action-list-arrow">></text>
+      </view>
+      <view class="action-list-item">
+        <text class="action-list-icon">H</text>
+        <text class="action-list-text">Help & Support</text>
+        <text class="action-list-arrow">></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Bottom Spacer for TabBar -->
+  <view class="bottom-spacer"></view>
 </view>
