@@ -1,69 +1,52 @@
-<!--mycards.wxml-->
+<!--mycards.wxml - My Cards Page -->
 <view class="container">
-  <!-- Header -->
   <view class="header">
-    <text class="header-title">&#x6211;&#x7684;&#x540D;&#x7247;</text>
+    <text class="header-title">My Cards</text>
     <text class="header-subtitle">MULTI-IDENTITY MANAGEMENT</text>
   </view>
 
-  <!-- Card List -->
   <view class="card-list">
     <block wx:for="{{cards}}" wx:key="id">
       <view class="card-item" bindtap="goToDetail" data-id="{{item.id}}">
-        <view class="card-bg {{item.type}}">
-          <image src="{{item.bannerUrl}}" mode="aspectFill"></image>
-        </view>
-        
+        <view class="card-bg {{item.type}}"></view>
         <view class="card-content">
           <view class="card-header">
             <view class="card-type">
-              <text>{{item.typeIcon}}</text>
+              <text class="type-icon">{{item.typeIcon}}</text>
               <text class="type-name">{{item.title}}</text>
             </view>
-            <view class="card-default" wx:if="{{item.isDefault}}">&#x9ED8;&#x8BA4;</view>
+            <view class="card-default" wx:if="{{item.isDefault}}">Default</view>
           </view>
-          
           <view class="card-body">
             <view class="card-info">
               <text class="card-name">{{item.name}}</text>
               <text class="card-role">{{item.role}}</text>
-              <text class="card-company" wx:if="{{item.company}}">{{item.company}}</text>
+              <text class="card-company">{{item.company}}</text>
             </view>
             <view class="card-avatar">
               <image src="{{item.avatarUrl}}" mode="aspectFill"></image>
             </view>
           </view>
         </view>
-        
-        <!-- Actions -->
         <view class="card-actions">
           <view class="action-btn" bindtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.isDefault}}">
-            <text class="action-icon">&#x2B50;</text>
-            <text class="action-text">&#x8BBE;&#x4E3A;&#x9ED8;&#x8BA4;</text>
+            <text class="action-text">Set Default</text>
           </view>
           <view class="action-btn active" wx:else>
-            <text class="action-icon">&#x2713;</text>
-            <text class="action-text">&#x5F53;&#x524D;&#x9ED8;&#x8BA4;</text>
+            <text class="action-text">Current</text>
           </view>
           <view class="action-btn" bindtap="editCard" data-id="{{item.id}}">
-            <text class="action-icon">&#x270F;&#xFE0F;</text>
-            <text class="action-text">&#x7F16;&#x8F91;</text>
+            <text class="action-text">Edit</text>
           </view>
           <view class="action-btn" bindtap="shareCard" data-id="{{item.id}}">
-            <text class="action-icon">&#x1F4E4;</text>
-            <text class="action-text">&#x5206;&#x53D1;</text>
-          </view>
-          <view class="action-btn" bindtap="deleteCard" data-id="{{item.id}}" wx:if="{{cards.length > 1}}">
-            <text class="action-icon">&#x1F5D1;</text>
-            <text class="action-text">&#x5220;&#x9664;</text>
+            <text class="action-text">Share</text>
           </view>
         </view>
       </view>
     </block>
   </view>
 
-  <!-- Add Button -->
   <view class="add-btn" bindtap="addCard">
-    <text>+</text>
+    <text class="add-icon">+</text>
   </view>
 </view>

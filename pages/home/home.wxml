@@ -1,4 +1,4 @@
-<!--home.wxml-->
+<!--home.wxml - Workbench Page -->
 <view class="container">
   <!-- Premium Card -->
   <view class="header-card">
@@ -29,19 +29,19 @@
           <view class="grid-icon" style="background: linear-gradient(135deg, #fce7f3, #f9a8d4);">
             <text class="grid-icon-text">EY</text>
           </view>
-          <text class="grid-text">Visitor Records</text>
+          <text class="grid-text">Visitors</text>
         </view>
         <view class="grid-item" bindtap="goToContacts">
           <view class="grid-icon" style="background: linear-gradient(135deg, #d1fae5, #6ee7b7);">
             <text class="grid-icon-text">EX</text>
           </view>
-          <text class="grid-text">Exchange History</text>
+          <text class="grid-text">Exchange</text>
         </view>
         <view class="grid-item" bindtap="goToAnalytics">
           <view class="grid-icon" style="background: linear-gradient(135deg, #e0e7ff, #a5b4fc);">
             <text class="grid-icon-text">DA</text>
           </view>
-          <text class="grid-text">Data Analytics</text>
+          <text class="grid-text">Analytics</text>
         </view>
       </view>
     </view>

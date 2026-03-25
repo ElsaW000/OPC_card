@@ -1,75 +1,72 @@
-<!--management.wxml-->
+<!--management.wxml - Manage Page -->
 <view class="container">
-  <!-- Profile -->
   <view class="profile-card">
     <image class="profile-avatar" src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" />
     <view class="profile-info">
-      <text class="profile-name">&#x9648;&#x5C0F;&#x72EC;&#x7ACB;</text>
+      <text class="profile-name">Chen Xiao Duli</text>
       <text class="profile-phone">138****8000</text>
     </view>
   </view>
 
-  <!-- Menu -->
   <view class="menu-list">
     <view class="menu-item" bindtap="goToQRCode">
-      <text class="menu-icon">&#x1F4F1;</text>
-      <text class="menu-text">&#x6211;&#x7684;&#x4E8C;&#x7EF4;&#x7801;</text>
-      <text class="menu-arrow">&#x2039;</text>
+      <text class="menu-icon">QR</text>
+      <text class="menu-text">My QR Code</text>
+      <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">&#x1F510;</text>
-      <text class="menu-text">&#x8D26;&#x53F7;&#x7BA1;&#x7406;</text>
-      <text class="menu-arrow">&#x2039;</text>
+      <text class="menu-icon">AC</text>
+      <text class="menu-text">Account</text>
+      <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">&#x1F512;</text>
-      <text class="menu-text">&#x7ED1;&#x5B9A;&#x624B;&#x673A;&#x53F7;</text>
-      <text class="menu-arrow">&#x2039;</text>
+      <text class="menu-icon">PH</text>
+      <text class="menu-text">Bind Phone</text>
+      <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">&#x1F4AC;</text>
-      <text class="menu-text">&#x7ED1;&#x5B9A;&#x5FAE;&#x4FE1;</text>
-      <text class="menu-arrow">&#x2039;</text>
+      <text class="menu-icon">WX</text>
+      <text class="menu-text">Bind WeChat</text>
+      <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">&#x1F441;</text>
-      <text class="menu-text">&#x9690;&#x79C1;&#x8BBE;&#x7F6E;</text>
-      <text class="menu-arrow">&#x2039;</text>
+      <text class="menu-icon">PV</text>
+      <text class="menu-text">Privacy</text>
+      <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">&#x1F514;</text>
-      <text class="menu-text">&#x901A;&#x77E5;&#x8BBE;&#x7F6E;</text>
-      <text class="menu-arrow">&#x2039;</text>
+      <text class="menu-icon">NT</text>
+      <text class="menu-text">Notifications</text>
+      <text class="menu-arrow">></text>
     </view>
     <view class="menu-item" bindtap="goToMember">
-      <text class="menu-icon">&#x2B50;</text>
-      <text class="menu-text">PRO &#x4F1A;&#x5458;</text>
-      <text class="menu-tag">&#x7ACB;&#x5373;&#x5F00;&#x901A;</text>
+      <text class="menu-icon">PR</text>
+      <text class="menu-text">PRO Member</text>
+      <text class="menu-tag">Upgrade</text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">&#x2753;</text>
-      <text class="menu-text">&#x5E38;&#x89C1;&#x95EE;&#x9898;</text>
-      <text class="menu-arrow">&#x2039;</text>
+      <text class="menu-icon">FQ</text>
+      <text class="menu-text">FAQ</text>
+      <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">&#x1F4C4;</text>
-      <text class="menu-text">&#x670D;&#x52A1;&#x534F;&#x8BAE;</text>
-      <text class="menu-arrow">&#x2039;</text>
+      <text class="menu-icon">TS</text>
+      <text class="menu-text">Terms</text>
+      <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">&#x1F512;</text>
-      <text class="menu-text">&#x9690;&#x79C1;&#x653F;&#x7B56;</text>
-      <text class="menu-arrow">&#x2039;</text>
+      <text class="menu-icon">PP</text>
+      <text class="menu-text">Privacy Policy</text>
+      <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">&#x2139;&#xFE0F;</text>
-      <text class="menu-text">&#x5173;&#x4E8E;&#x6211;&#x4EEC;</text>
-      <text class="menu-arrow">&#x2039;</text>
+      <text class="menu-icon">AB</text>
+      <text class="menu-text">About</text>
+      <text class="menu-arrow">></text>
     </view>
   </view>
 
-  <!-- Logout -->
   <view class="logout-btn">
-    <text>&#x9000;&#x51FA;&#x767B;&#x5F55;</text>
+    <text>Logout</text>
   </view>
 </view>

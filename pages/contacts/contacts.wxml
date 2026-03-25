@@ -1,24 +1,20 @@
-<!--contacts.wxml-->
+<!--contacts.wxml - Contacts Page -->
 <view class="container">
-  <!-- Search -->
   <view class="search-bar">
-    <text class="search-icon">&#x641C;</text>
-    <input class="search-input" placeholder="&#x641C;&#x7D22;&#x8054;&#x7CFB;&#x4EBA;" />
+    <input class="search-input" placeholder="Search contacts..." />
   </view>
 
-  <!-- Tags -->
   <view class="tags-row">
-    <view class="tag-item active">&#x5168;&#x90E8;</view>
+    <view class="tag-item active">All</view>
     <view class="tag-item">AI</view>
-    <view class="tag-item">B&#x7AEF;&#x4EA7;&#x54C1;</view>
-    <view class="tag-item">&#x51FA;&#x6D77;</view>
+    <view class="tag-item">B2B</view>
+    <view class="tag-item">Oversea</view>
     <view class="tag-item">Flutter</view>
   </view>
 
-  <!-- Recent Exchange -->
   <view class="section">
     <view class="section-header">
-      <text class="section-title">&#x6700;&#x8FD1;&#x4EA4;&#x6362;</text>
+      <text class="section-title">Recent Exchanges</text>
     </view>
     <view class="contact-list">
       <view class="contact-item">
@@ -26,18 +22,17 @@
         <view class="contact-info">
           <view class="contact-top">
             <text class="contact-name">Sarah Zhang</text>
-            <text class="contact-time">10&#x5206;&#x949F;&#x524D;</text>
+            <text class="contact-time">10m ago</text>
           </view>
-          <text class="contact-role">&#x4EA7;&#x54C1;&#x7BA1;&#x7406; @ ByteDance</text>
+          <text class="contact-role">PM @ ByteDance</text>
         </view>
       </view>
     </view>
   </view>
 
-  <!-- All Contacts -->
   <view class="section">
     <view class="section-header">
-      <text class="section-title">&#x5168;&#x90E8;&#x8054;&#x7CFB;&#x4EBA;</text>
+      <text class="section-title">All Contacts</text>
     </view>
     <view class="contact-list">
       <block wx:for="{{contacts}}" wx:key="id">
@@ -54,8 +49,8 @@
             </view>
           </view>
           <view class="contact-actions">
-            <view class="action-chat">&#x804A;&#x5929;</view>
-            <view class="action-call">&#x7535;&#x8BDD;</view>
+            <view class="action-chat">Chat</view>
+            <view class="action-call">Call</view>
           </view>
         </view>
       </block>
