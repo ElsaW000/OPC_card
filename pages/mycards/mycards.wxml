@@ -1,7 +1,7 @@
-<!--mycards.wxml - My Cards Page -->
+<!--mycards.wxml-->
 <view class="container">
   <view class="header">
-    <text class="header-title">My Cards</text>
+    <text class="header-title">我的名片</text>
     <text class="header-subtitle">MULTI-IDENTITY MANAGEMENT</text>
   </view>
 
@@ -15,7 +15,7 @@
               <text class="type-icon">{{item.typeIcon}}</text>
               <text class="type-name">{{item.title}}</text>
             </view>
-            <view class="card-default" wx:if="{{item.isDefault}}">Default</view>
+            <view class="card-default" wx:if="{{item.isDefault}}">默认</view>
           </view>
           <view class="card-body">
             <view class="card-info">
@@ -30,16 +30,16 @@
         </view>
         <view class="card-actions">
           <view class="action-btn" bindtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.isDefault}}">
-            <text class="action-text">Set Default</text>
+            <text class="action-text">设为默认</text>
           </view>
           <view class="action-btn active" wx:else>
-            <text class="action-text">Current</text>
+            <text class="action-text">当前</text>
           </view>
           <view class="action-btn" bindtap="editCard" data-id="{{item.id}}">
-            <text class="action-text">Edit</text>
+            <text class="action-text">编辑</text>
           </view>
           <view class="action-btn" bindtap="shareCard" data-id="{{item.id}}">
-            <text class="action-text">Share</text>
+            <text class="action-text">分享</text>
           </view>
         </view>
       </view>

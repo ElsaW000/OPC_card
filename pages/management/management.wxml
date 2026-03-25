@@ -1,72 +1,61 @@
-<!--management.wxml - Manage Page -->
+<!--management.wxml-->
 <view class="container">
   <view class="profile-card">
     <image class="profile-avatar" src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" />
     <view class="profile-info">
-      <text class="profile-name">Chen Xiao Duli</text>
+      <text class="profile-name">陈小独立</text>
       <text class="profile-phone">138****8000</text>
     </view>
   </view>
 
   <view class="menu-list">
     <view class="menu-item" bindtap="goToQRCode">
-      <text class="menu-icon">QR</text>
-      <text class="menu-text">My QR Code</text>
+      <text class="menu-text">我的二维码</text>
       <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">AC</text>
-      <text class="menu-text">Account</text>
+      <text class="menu-text">账号管理</text>
       <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">PH</text>
-      <text class="menu-text">Bind Phone</text>
+      <text class="menu-text">绑定手机号</text>
       <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">WX</text>
-      <text class="menu-text">Bind WeChat</text>
+      <text class="menu-text">绑定微信</text>
       <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">PV</text>
-      <text class="menu-text">Privacy</text>
+      <text class="menu-text">隐私设置</text>
       <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">NT</text>
-      <text class="menu-text">Notifications</text>
+      <text class="menu-text">通知设置</text>
       <text class="menu-arrow">></text>
     </view>
     <view class="menu-item" bindtap="goToMember">
-      <text class="menu-icon">PR</text>
-      <text class="menu-text">PRO Member</text>
-      <text class="menu-tag">Upgrade</text>
+      <text class="menu-text">PRO会员</text>
+      <text class="menu-tag">开通</text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">FQ</text>
-      <text class="menu-text">FAQ</text>
+      <text class="menu-text">常见问题</text>
       <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">TS</text>
-      <text class="menu-text">Terms</text>
+      <text class="menu-text">服务协议</text>
       <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">PP</text>
-      <text class="menu-text">Privacy Policy</text>
+      <text class="menu-text">隐私政策</text>
       <text class="menu-arrow">></text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">AB</text>
-      <text class="menu-text">About</text>
+      <text class="menu-text">关于我们</text>
       <text class="menu-arrow">></text>
     </view>
   </view>
 
   <view class="logout-btn">
-    <text>Logout</text>
+    <text>退出登录</text>
   </view>
 </view>
