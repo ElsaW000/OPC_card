@@ -1,32 +1,70 @@
-// exchange.js
+// exchange.js - 交换名片
 
 Page({
   data: {
-    stats: {
-      total: 42,
-      month: 8,
-      week: 3
-    },
-    records: [
-      { id: '1', name: 'Sarah Zhang', role: '产品经理 @ ByteDance', avatar: 'https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200', time: '10分钟前', status: 'success' },
-      { id: '2', name: 'David Li', role: '独立开发者', avatar: 'https://images.unsplash.com/photo-1664101606938-e664f5852fac?w=200', time: '2小时前', status: 'success' },
-      { id: '3', name: 'Emily Wang', role: '设计师 @ Adobe', avatar: 'https://images.unsplash.com/photo-1645951252284-4aa663bf59ca?w=200', time: '昨天', status: 'success' },
-      { id: '4', name: 'John Chen', role: '创业者', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200', time: '昨天', status: 'pending' }
-    ]
+    currentTab: 0,
+    currentCard: {
+      name: '陈独立',
+      role: 'Full-stack Developer',
+      company: 'CodeFlow AI Studio'
+    }
   },
 
   onLoad() {
-    this.loadRecords()
+    this.loadCurrentCard();
   },
 
-  loadRecords() {
+  loadCurrentCard() {
+    // 加载当前默认名片
     wx.cloud.callFunction({
-      name: 'getExchangeRecords',
+      name: 'getCards',
       success: (res) => {
-        if (res.result && res.result.success) {
-          this.setData({ records: res.result.data })
+        if (res.result && res.result.success && res.result.defaultCard) {
+          this.setData({
+            currentCard: {
+              name: res.result.defaultCard.name,
+              role: res.result.defaultCard.role,
+              company: res.result.defaultCard.company
+            }
+          });
         }
       }
-    })
+    });
+  },
+
+  switchTab(e) {
+    const index = e.currentTarget.dataset.index;
+    this.setData({ currentTab: index });
+  },
+
+  changeCard() {
+    // 切换到其他名片
+    wx.navigateTo({
+      url: '/pages/mycards/mycards'
+    });
+  },
+
+  searchManual() {
+    // 手动搜索交换
+    wx.showToast({
+      title: '功能开发中',
+      icon: 'none'
+    });
+  },
+
+  startScan() {
+    // 开始扫描
+    wx.scanCode({
+      success: (res) => {
+        console.log('扫描结果:', res.result);
+        wx.showToast({
+          title: '扫描成功',
+          icon: 'success'
+        });
+      },
+      fail: (err) => {
+        console.error('扫描失败:', err);
+      }
+    });
   }
-})
+});

@@ -1,21 +1,21 @@
-// home.js - 工作台
+// home.js - å·¥ä½œå°
 
 const app = getApp()
 
 Page({
   data: {
     currentCard: {
-      name: '陈独立',
+      name: 'é™ˆç‹¬ç«‹',
       role: 'Full-stack Developer',
-      locationCountry: '中国',
-      locationCity: '深圳',
+      locationCountry: 'ä¸­å›½',
+      locationCity: 'æ·±åœ³',
       avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400',
       bannerUrl: 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800'
     },
     visitors: [
-      { id: '1', name: 'Sarah Zhang', role: 'ByteDance 产品经理', avatar: 'https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200', time: '10 分钟前' },
-      { id: '2', name: 'David Li', role: '独立开发者', avatar: 'https://images.unsplash.com/photo-1664101606938-e664f5852fac?w=200', time: '2 小时前' },
-      { id: '3', name: 'Emily Wang', role: 'Adobe 设计师', avatar: 'https://images.unsplash.com/photo-1645951252284-4aa663bf59ca?w=200', time: '5 小时前' }
+      { id: '1', name: 'Sarah Zhang', role: 'ByteDance äº§å“ç»ç†', avatar: 'https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200', time: '10 åˆ†é’Ÿå‰' },
+      { id: '2', name: 'David Li', role: 'ç‹¬ç«‹å¼€å‘è€…', avatar: 'https://images.unsplash.com/photo-1664101606938-e664f5852fac?w=200', time: '2 å°æ—¶å‰' },
+      { id: '3', name: 'Emily Wang', role: 'Adobe è®¾è®¡å¸ˆ', avatar: 'https://images.unsplash.com/photo-1645951252284-4aa663bf59ca?w=200', time: '5 å°æ—¶å‰' }
     ]
   },
 
@@ -24,6 +24,12 @@ Page({
   },
 
   onShow() {
+    const tabBar = this.getTabBar()
+    if (tabBar && tabBar.data) {
+      tabBar.setData({ selected: 2 })
+    }
+
+    
     this.loadCurrentCard()
   },
 
@@ -55,6 +61,6 @@ Page({
   },
 
   onShareAppMessage() {
-    return { title: '查看我的名片', path: '/pages/home/home' }
+    return { title: 'æŸ¥çœ‹æˆ‘çš„åç‰‡', path: '/pages/home/home' }
   }
 })

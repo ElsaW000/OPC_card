@@ -13,6 +13,12 @@ Page({
 
   onShow() {
     this.loadCards()
+    
+    // 更新 TabBar 状态
+    const tabBar = this.getTabBar()
+    if (tabBar && tabBar.data) {
+      tabBar.setData({ selected: 0 })
+    }
   },
 
   loadCards() {

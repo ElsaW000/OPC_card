@@ -1,4 +1,4 @@
-// contacts.js - 名片联系人
+// contacts.js - åç‰‡è”ç³»äºº
 
 Page({
   data: {
@@ -14,11 +14,17 @@ Page({
   },
 
   onShow() {
+    const tabBar = this.getTabBar()
+    if (tabBar && tabBar.data) {
+      tabBar.setData({ selected: 1 })
+    }
+
+    
     this.loadContacts()
   },
 
   loadContacts() {
-    wx.showLoading({ title: '加载中...' })
+    wx.showLoading({ title: 'åŠ è½½ä¸­...' })
     
     wx.cloud.callFunction({
       name: 'getContacts',
@@ -27,7 +33,7 @@ Page({
         if (res.result && res.result.success) {
           const contacts = res.result.data || []
           
-          // 提取所有标签
+          // æå–æ‰€æœ‰æ ‡ç­¾
           const tagSet = new Set()
           contacts.forEach(c => {
             if (c.tags) {
@@ -44,11 +50,11 @@ Page({
       },
       fail: (err) => {
         wx.hideLoading()
-        // 使用模拟数据
+        // ä½¿ç”¨æ¨¡æ‹Ÿæ•°æ®
         this.setData({
           contacts: this.getMockContacts(),
           filteredContacts: this.getMockContacts(),
-          allTags: ['AI', '产品', '技术', '设计']
+          allTags: ['AI', 'äº§å“', 'æŠ€æœ¯', 'è®¾è®¡']
         })
       }
     })
@@ -59,25 +65,25 @@ Page({
       {
         id: '1',
         name: 'Sarah Zhang',
-        role: '高级产品经理',
+        role: 'é«˜çº§äº§å“ç»ç†',
         company: 'ByteDance',
-        locationCountry: '北京',
+        locationCountry: 'åŒ—äº¬',
         locationCity: '',
         avatarUrl: 'https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200',
-        tags: ['AI', 'B端产品', '出海'],
-        lastActiveText: '10分钟前',
+        tags: ['AI', 'Bç«¯äº§å“', 'å‡ºæµ·'],
+        lastActiveText: '10åˆ†é’Ÿå‰',
         isStarred: true
       },
       {
         id: '2',
         name: 'David Li',
-        role: '独立开发者',
+        role: 'ç‹¬ç«‹å¼€å‘è€…',
         company: 'Solopreneur',
-        locationCountry: '杭州',
+        locationCountry: 'æ­å·ž',
         locationCity: '',
         avatarUrl: 'https://images.unsplash.com/photo-1664101606938-e664f5852fac?w=200',
         tags: ['Flutter', 'Rust', 'Web3'],
-        lastActiveText: '2小时前',
+        lastActiveText: '2å°æ—¶å‰',
         isStarred: false
       }
     ]
@@ -98,14 +104,14 @@ Page({
   filterContacts() {
     let contacts = this.data.contacts
     
-    // 按标签筛选
+    // æŒ‰æ ‡ç­¾ç­›é€‰
     if (this.data.currentTag === 'starred') {
       contacts = contacts.filter(c => c.isStarred)
     } else if (this.data.currentTag) {
       contacts = contacts.filter(c => c.tags && c.tags.includes(this.data.currentTag))
     }
     
-    // 按关键词搜索
+    // æŒ‰å…³é”®è¯æœç´¢
     if (this.data.searchKeyword) {
       const keyword = this.data.searchKeyword.toLowerCase()
       contacts = contacts.filter(c => 
@@ -128,7 +134,7 @@ Page({
   toggleStar(e) {
     const id = e.currentTarget.dataset.id
     wx.showToast({
-      title: '已收藏',
+      title: 'å·²æ”¶è—',
       icon: 'success'
     })
   },
@@ -136,7 +142,7 @@ Page({
   sendMessage(e) {
     const id = e.currentTarget.dataset.id
     wx.showToast({
-      title: '发起聊天',
+      title: 'å‘èµ·èŠå¤©',
       icon: 'none'
     })
   }

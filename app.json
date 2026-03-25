@@ -1,44 +1,47 @@
 {
   "pages": [
-    "pages/home/home",
     "pages/mycards/mycards",
     "pages/contacts/contacts",
+    "pages/home/home",
     "pages/management/management",
     "pages/visitor/visitor",
     "pages/analytics/analytics",
+    "pages/member/member",
+    "pages/aiFeatures/aiFeatures",
+    "pages/cardDetail/cardDetail",
+    "pages/qrcode/qrcode",
+    "pages/exchange/exchange",
     "pages/edit/edit",
-    "pages/exchangeconfirm/exchangeconfirm",
     "pages/webview/webview"
   ],
   "window": {
+    "navigationBarTitleText": "OPC名片",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#f8f9fa",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "OPC",
-    "navigationBarTextStyle": "black",
-    "backgroundColor": "#f8f9fa"
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
-    "custom": true,
     "color": "#999999",
-    "selectedColor": "#2F65EE",
-    "backgroundColor": "rgba(255, 255, 255, 0.95)",
+    "selectedColor": "#2563EB",
+    "backgroundColor": "#ffffff",
     "borderStyle": "white",
     "list": [
       {
-        "pagePath": "pages/home/home",
-        "text": "GongZuoTai"
+        "pagePath": "pages/mycards/mycards",
+        "text": "我的名片"
       },
       {
         "pagePath": "pages/contacts/contacts",
-        "text": "LianXiRen"
+        "text": "联系人"
       },
       {
-        "pagePath": "pages/mycards/mycards",
-        "text": "WoDeMingPian"
+        "pagePath": "pages/home/home",
+        "text": "工作台"
       },
       {
         "pagePath": "pages/management/management",
-        "text": "GuanLi"
+        "text": "管理"
       }
     ]
   },
