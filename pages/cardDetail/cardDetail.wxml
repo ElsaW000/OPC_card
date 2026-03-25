@@ -1,2 +1,69 @@
-<!--pages/cardDetail/cardDetail.wxml-->
-<text>pages/cardDetail/cardDetail.wxml</text>
+<!--cardDetail.wxml-->
+<view class="container">
+  <!-- Banner -->
+  <view class="banner">
+    <image class="banner-img" src="{{card.bannerUrl}}" mode="aspectFill" />
+    <view class="banner-mask {{card.type}}"></view>
+    
+    <!-- 顶部操作 -->
+    <view class="banner-top">
+      <view class="back-btn" bindtap="goBack">←</view>
+      <view class="qr-btn">
+        <image class="qr-icon" src="/images/icons/二维码white.png" mode="aspectFit" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 名片主体 -->
+  <view class="card-main">
+    <view class="card-info">
+      <text class="card-name">{{card.name}}</text>
+      <text class="card-role">{{card.role}}</text>
+      <text class="card-company" wx:if="{{card.company}}">{{card.company}}</text>
+    </view>
+    <view class="card-avatar">
+      <image src="{{card.avatarUrl}}" mode="aspectFill" />
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <view class="action-btn">
+      <image class="action-icon" src="{{card.isDefault ? '/images/icons/默认已选择.png' : '/images/icons/默认未选择 (1).png'}}" mode="aspectFit" />
+      <text class="action-text">{{card.isDefault ? '当前默认' : '设为默认'}}</text>
+    </view>
+    <view class="action-btn">
+      <image class="action-icon" src="/images/icons/编辑.png" mode="aspectFit" />
+      <text class="action-text">编辑</text>
+    </view>
+    <view class="action-btn">
+      <image class="action-icon" src="/images/icons/分享.png" mode="aspectFit" />
+      <text class="action-text">分享</text>
+    </view>
+  </view>
+
+  <!-- 标签 -->
+  <view class="tags-section">
+    <view class="tag">AI</view>
+    <view class="tag">独立开发者</view>
+  </view>
+
+  <!-- 联系方式 -->
+  <view class="contact-section">
+    <view class="contact-item">
+      <text class="contact-icon">📱</text>
+      <text class="contact-text">手机</text>
+      <text class="contact-value">138****8888</text>
+    </view>
+    <view class="contact-item">
+      <text class="contact-icon">✉️</text>
+      <text class="contact-text">邮箱</text>
+      <text class="contact-value">chen@example.com</text>
+    </view>
+    <view class="contact-item">
+      <text class="contact-icon">💬</text>
+      <text class="contact-text">微信</text>
+      <text class="contact-value">chenlaoshi</text>
+    </view>
+  </view>
+</view>

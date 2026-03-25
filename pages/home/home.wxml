@@ -5,16 +5,14 @@
     <scroll-view class="card-scroll" scroll-x="true" enhanced="true" show-scrollbar="false" bindscroll="onScroll">
       <view class="card-wrapper">
         
-        <!-- Card 1: Default -->
+        <!-- Card 1 -->
         <view class="id-card">
           <image class="card-bg" src="https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800" mode="aspectFill"></image>
           <view class="card-overlay"></view>
           <view class="card-content">
             <view class="card-top">
               <view class="id-badge">默认</view>
-              <view class="id-qr-btn" bindtap="showQR">
-                <view class="qr-box"><view class="qr-dot"></view><view class="qr-dot"></view><view class="qr-dot"></view><view class="qr-dot"></view></view>
-              </view>
+              <view class="id-qr-btn" bindtap="showQR">▦</view>
             </view>
             <view class="card-middle">
               <view class="id-info">
@@ -30,16 +28,14 @@
           </view>
         </view>
         
-        <!-- Card 2: Business -->
+        <!-- Card 2 -->
         <view class="id-card">
           <image class="card-bg" src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800" mode="aspectFill"></image>
           <view class="card-overlay"></view>
           <view class="card-content">
             <view class="card-top">
               <view class="id-badge">商务</view>
-              <view class="id-qr-btn" bindtap="showQR">
-                <view class="qr-box"><view class="qr-dot"></view><view class="qr-dot"></view><view class="qr-dot"></view><view class="qr-dot"></view></view>
-              </view>
+              <view class="id-qr-btn" bindtap="showQR">▦</view>
             </view>
             <view class="card-middle">
               <view class="id-info">
@@ -55,16 +51,14 @@
           </view>
         </view>
         
-        <!-- Card 3: Social -->
+        <!-- Card 3 -->
         <view class="id-card">
           <image class="card-bg" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800" mode="aspectFill"></image>
           <view class="card-overlay"></view>
           <view class="card-content">
             <view class="card-top">
               <view class="id-badge">社交</view>
-              <view class="id-qr-btn" bindtap="showQR">
-                <view class="qr-box"><view class="qr-dot"></view><view class="qr-dot"></view><view class="qr-dot"></view><view class="qr-dot"></view></view>
-              </view>
+              <view class="id-qr-btn" bindtap="showQR">▦</view>
             </view>
             <view class="card-middle">
               <view class="id-info">
@@ -90,34 +84,26 @@
     </view>
   </view>
 
-  <!-- 2x2 Grid - Premium Icons -->
+  <!-- 2x2 Grid -->
   <view class="grid-section">
     <view class="grid-card">
       <view class="grid-row">
-        <view class="grid-item">
-          <view class="grid-icon-wrap blue">
-            <view class="icon-plus"></view>
-          </view>
+        <view class="grid-item" bindtap="goToCreate">
+          <view class="grid-icon blue"><text class="iconfont">+</text></view>
           <text class="grid-text">创建名片</text>
         </view>
-        <view class="grid-item">
-          <view class="grid-icon-wrap gold">
-            <view class="icon-star"></view>
-          </view>
+        <view class="grid-item" bindtap="goToStarred">
+          <view class="grid-icon gold"><text class="iconfont">*</text></view>
           <text class="grid-text">星标联系人</text>
         </view>
       </view>
       <view class="grid-row">
-        <view class="grid-item">
-          <view class="grid-icon-wrap orange">
-            <view class="icon-chart"></view>
-          </view>
+        <view class="grid-item" bindtap="goToAnalytics">
+          <view class="grid-icon orange"><text class="iconfont">#</text></view>
           <text class="grid-text">数据分析</text>
         </view>
-        <view class="grid-item">
-          <view class="grid-icon-wrap dark">
-            <view class="icon-setting"></view>
-          </view>
+        <view class="grid-item" bindtap="goToSettings">
+          <view class="grid-icon dark"><text class="iconfont">@</text></view>
           <text class="grid-text">系统设置</text>
         </view>
       </view>

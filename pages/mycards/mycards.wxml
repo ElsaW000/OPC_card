@@ -1,4 +1,4 @@
-<!--mycards.wxml - 优化版图标 -->
+<!--mycards.wxml -->
 <view class="container">
   <!-- Header -->
   <view class="header">
@@ -26,9 +26,9 @@
               <text class="type-name">{{item.title}}</text>
             </view>
             <view class="card-actions-right">
-              <!-- 二维码按钮 -->
+              <!-- 二维码 - 白色 -->
               <view class="icon-btn" catchtap="showQRCode" data-id="{{item.id}}" bindtap="stopPropagation">
-                <view class="icon-qr"></view>
+                <image class="btn-icon" src="/images/icons/二维码white.png" mode="aspectFit" />
               </view>
               <!-- 默认徽章 -->
               <view class="default-badge" wx:if="{{item.isDefault}}">
@@ -51,29 +51,23 @@
         </view>
       </view>
 
-      <!-- 操作按钮 - 专业图标风格 -->
+      <!-- 操作按钮 -->
       <view class="card-operations">
-        <!-- 设为默认 -->
+        <!-- 设为默认 - 选中/未选中区分 -->
         <view class="op-btn {{item.isDefault ? 'active' : ''}}" bindtap="setDefault" data-id="{{item.id}}">
-          <view class="op-icon-box {{item.isDefault ? 'active' : ''}}">
-            <view class="icon-star {{item.isDefault ? 'filled' : ''}}"></view>
-          </view>
+          <image class="op-icon" src="{{item.isDefault ? '/images/icons/默认已选择.png' : '/images/icons/默认未选择 (1).png'}}" mode="aspectFit" />
           <text class="op-text">{{item.isDefault ? '当前默认' : '设为默认'}}</text>
         </view>
         
         <!-- 编辑 -->
         <view class="op-btn" bindtap="editCard" data-id="{{item.id}}">
-          <view class="op-icon-box">
-            <view class="icon-edit"></view>
-          </view>
+          <image class="op-icon" src="/images/icons/编辑.png" mode="aspectFit" />
           <text class="op-text">编辑</text>
         </view>
         
         <!-- 分享 -->
         <view class="op-btn" bindtap="shareCard" data-id="{{item.id}}">
-          <view class="op-icon-box">
-            <view class="icon-share"></view>
-          </view>
+          <image class="op-icon" src="/images/icons/分享.png" mode="aspectFit" />
           <text class="op-text">分享</text>
         </view>
       </view>

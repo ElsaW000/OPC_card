@@ -95,15 +95,11 @@ Page({
     wx.showShareMenu({ withShareTicket: true })
   },
 
-  goToMyCards() {
-    wx.switchTab({ url: '/pages/mycards/mycards' })
+  goToCreate() {
+    wx.navigateTo({ url: '/pages/edit/edit' })
   },
 
-  goToVisitor() {
-    wx.navigateTo({ url: '/pages/visitor/visitor' })
-  },
-
-  goToContacts() {
+  goToStarred() {
     wx.switchTab({ url: '/pages/contacts/contacts' })
   },
 
@@ -111,7 +107,7 @@ Page({
     wx.navigateTo({ url: '/pages/analytics/analytics' })
   },
 
-  goToMember() {
-    wx.navigateTo({ url: '/pages/member/member' })
+  goToSettings() {
+    wx.switchTab({ url: '/pages/management/management' })
   }
 })
