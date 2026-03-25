@@ -39,7 +39,6 @@ Page({
     let maxValue = 100
     
     if (range === 'day') {
-      // Hourly data for a day
       chartData = [
         { label: '8时', value: 12, height: 12 },
         { label: '10时', value: 28, height: 28 },
@@ -51,7 +50,6 @@ Page({
       ]
       maxValue = 100
     } else if (range === 'week') {
-      // Weekly data
       chartData = [
         { label: '周一', value: 45, height: 45 },
         { label: '周二', value: 78, height: 78 },
@@ -63,7 +61,6 @@ Page({
       ]
       maxValue = 100
     } else if (range === 'month') {
-      // Monthly data (weeks)
       chartData = [
         { label: '第1周', value: 320, height: 80 },
         { label: '第2周', value: 280, height: 70 },
@@ -78,6 +75,16 @@ Page({
       chartData,
       maxValue
     })
+  },
+
+  setAsDefault(e) {
+    const index = e.currentTarget.dataset.index
+    this.setData({ currentIndex: index })
+    wx.showToast({ title: '已设为默认', icon: 'success' })
+  },
+
+  showQR() {
+    wx.navigateTo({ url: '/pages/qrcode/qrcode' })
   },
 
   editCard() {
