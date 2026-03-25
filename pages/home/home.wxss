@@ -8,24 +8,29 @@ page { background-color: #f8f9fa; }
 .card-scroll { width: 100%; white-space: nowrap; }
 .card-wrapper { display: flex; gap: 20rpx; padding: 0 24rpx; box-sizing: border-box; }
 
-/* ID Card - Banner with Overlay */
-.id-card { width: 100%; height: 360rpx; border-radius: 24rpx; box-sizing: border-box; position: relative; overflow: hidden; flex-shrink: 0; background-size: cover; background-position: center; }
-.card-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.25); }
+/* ID Card */
+.id-card { width: 100%; height: 360rpx; border-radius: 24rpx; position: relative; overflow: hidden; flex-shrink: 0; }
+
+.card-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.card-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.2); }
 .card-content { position: relative; z-index: 2; height: 100%; padding: 24rpx; display: flex; flex-direction: column; justify-content: space-between; }
 
-.id-header { display: flex; justify-content: space-between; align-items: center; }
+/* Card Top - Badge & QR */
+.card-top { display: flex; justify-content: space-between; align-items: center; }
 .id-badge { background: rgba(0,0,0,0.5); padding: 8rpx 20rpx; border-radius: 8rpx; font-size: 22rpx; color: #fff; font-weight: bold; }
 .id-qr-btn { width: 56rpx; height: 56rpx; background: rgba(0,0,0,0.5); border-radius: 12rpx; display: flex; align-items: center; justify-content: center; }
 .qr-icon { color: #fff; font-size: 32rpx; }
 
-.id-body { display: flex; justify-content: space-between; align-items: flex-end; }
+/* Card Middle - Info & Avatar */
+.card-middle { display: flex; justify-content: space-between; align-items: flex-end; }
 .id-info { }
 .id-name { display: block; color: #fff; font-size: 40rpx; font-weight: bold; text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.3); }
 .id-role { display: block; color: rgba(255,255,255,0.9); font-size: 26rpx; margin-top: 6rpx; text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.3); }
 .id-avatar { width: 96rpx; height: 96rpx; border-radius: 20rpx; overflow: hidden; border: 4rpx solid rgba(255,255,255,0.6); box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.2); }
 .id-avatar image { width: 100%; height: 100%; }
 
-.id-actions { display: flex; gap: 16rpx; }
+/* Card Bottom - Actions */
+.card-bottom { display: flex; gap: 16rpx; }
 .id-action { flex: 1; background: rgba(0,0,0,0.5); border-radius: 16rpx; padding: 18rpx 0; text-align: center; }
 .id-action text { color: #fff; font-size: 24rpx; }
 

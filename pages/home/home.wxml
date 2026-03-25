@@ -6,23 +6,24 @@
       <view class="card-wrapper">
         
         <!-- Card 1: Default -->
-        <view class="id-card" style="background-image: url('https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800');">
+        <view class="id-card">
+          <image class="card-bg" src="https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800" mode="aspectFill"></image>
           <view class="card-overlay"></view>
           <view class="card-content">
-            <view class="id-header">
+            <view class="card-top">
               <view class="id-badge">默认</view>
               <view class="id-qr-btn" bindtap="showQR">
-                <text class="qr-icon">▢</text>
+                <text class="qr-icon">⬜</text>
               </view>
             </view>
-            <view class="id-body">
+            <view class="card-middle">
               <view class="id-info">
                 <text class="id-name">陈小独立</text>
                 <text class="id-role">全栈开发工程师</text>
               </view>
               <view class="id-avatar"><image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image></view>
             </view>
-            <view class="id-actions">
+            <view class="card-bottom">
               <view class="id-action"><text>编辑</text></view>
               <view class="id-action" bindtap="setAsDefault" data-index="0"><text>设为默认</text></view>
             </view>
@@ -30,23 +31,24 @@
         </view>
         
         <!-- Card 2: Business -->
-        <view class="id-card" style="background-image: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800');">
+        <view class="id-card">
+          <image class="card-bg" src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800" mode="aspectFill"></image>
           <view class="card-overlay"></view>
           <view class="card-content">
-            <view class="id-header">
+            <view class="card-top">
               <view class="id-badge">商务</view>
               <view class="id-qr-btn" bindtap="showQR">
-                <text class="qr-icon">▢</text>
+                <text class="qr-icon">⬜</text>
               </view>
             </view>
-            <view class="id-body">
+            <view class="card-middle">
               <view class="id-info">
                 <text class="id-name">Independent Chen</text>
                 <text class="id-role">Founder & CEO</text>
               </view>
               <view class="id-avatar"><image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image></view>
             </view>
-            <view class="id-actions">
+            <view class="card-bottom">
               <view class="id-action"><text>编辑</text></view>
               <view class="id-action" bindtap="setAsDefault" data-index="1"><text>设为默认</text></view>
             </view>
@@ -54,23 +56,24 @@
         </view>
         
         <!-- Card 3: Social -->
-        <view class="id-card" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800');">
+        <view class="id-card">
+          <image class="card-bg" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800" mode="aspectFill"></image>
           <view class="card-overlay"></view>
           <view class="card-content">
-            <view class="id-header">
+            <view class="card-top">
               <view class="id-badge">社交</view>
               <view class="id-qr-btn" bindtap="showQR">
-                <text class="qr-icon">▢</text>
+                <text class="qr-icon">⬜</text>
               </view>
             </view>
-            <view class="id-body">
+            <view class="card-middle">
               <view class="id-info">
                 <text class="id-name">阿力</text>
                 <text class="id-role">摄影爱好者</text>
               </view>
               <view class="id-avatar"><image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image></view>
             </view>
-            <view class="id-actions">
+            <view class="card-bottom">
               <view class="id-action"><text>编辑</text></view>
               <view class="id-action" bindtap="setAsDefault" data-index="2"><text>设为默认</text></view>
             </view>
