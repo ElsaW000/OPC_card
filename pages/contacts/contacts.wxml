@@ -1,24 +1,24 @@
 <!--contacts.wxml-->
 <view class="container">
-  <!-- 搜索栏 -->
+  <!-- Search -->
   <view class="search-bar">
-    <text class="search-icon">🔍</text>
-    <input class="search-input" placeholder="搜索联系人" />
+    <text class="search-icon">Search</text>
+    <input class="search-input" placeholder="Search contacts" />
   </view>
 
-  <!-- 标签筛选 -->
+  <!-- Tags -->
   <view class="tags-row">
-    <view class="tag-item active">全部</view>
+    <view class="tag-item active">All</view>
     <view class="tag-item">AI</view>
-    <view class="tag-item">B端产品</view>
-    <view class="tag-item">出海</view>
+    <view class="tag-item">B2B</view>
+    <view class="tag-item">Oversea</view>
     <view class="tag-item">Flutter</view>
   </view>
 
-  <!-- 交换记录 -->
+  <!-- Recent Exchange -->
   <view class="section">
     <view class="section-header">
-      <text class="section-title">最近交换</text>
+      <text class="section-title">Recent Exchanges</text>
     </view>
     <view class="contact-list">
       <view class="contact-item">
@@ -26,9 +26,9 @@
         <view class="contact-info">
           <view class="contact-top">
             <text class="contact-name">Sarah Zhang</text>
-            <text class="contact-time">10分钟前</text>
+            <text class="contact-time">10m ago</text>
           </view>
-          <text class="contact-role">高级产品经理 @ ByteDance</text>
+          <text class="contact-role">PM @ ByteDance</text>
         </view>
       </view>
       <view class="contact-item">
@@ -36,18 +36,18 @@
         <view class="contact-info">
           <view class="contact-top">
             <text class="contact-name">David Li</text>
-            <text class="contact-time">2小时前</text>
+            <text class="contact-time">2h ago</text>
           </view>
-          <text class="contact-role">独立开发者</text>
+          <text class="contact-role">Indie Developer</text>
         </view>
       </view>
     </view>
   </view>
 
-  <!-- 全部联系人 -->
+  <!-- All Contacts -->
   <view class="section">
     <view class="section-header">
-      <text class="section-title">全部联系人</text>
+      <text class="section-title">All Contacts</text>
     </view>
     <view class="contact-list">
       <block wx:for="{{contacts}}" wx:key="id">
@@ -64,8 +64,8 @@
             </view>
           </view>
           <view class="contact-actions">
-            <view class="action-chat">聊天</view>
-            <view class="action-call">📞</view>
+            <view class="action-chat">Chat</view>
+            <view class="action-call">Call</view>
           </view>
         </view>
       </block>
