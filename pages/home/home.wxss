@@ -11,8 +11,8 @@ page { background-color: #f8f9fa; }
 /* ID Card */
 .id-card { width: 100%; height: 320rpx; border-radius: 24rpx; padding: 24rpx; box-sizing: border-box; position: relative; overflow: hidden; flex-shrink: 0; }
 .id-card.blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-.id-card.biz { background: linear-gradient(135deg, #475569, #1e293b); }
-.id-card.social { background: linear-gradient(135deg, #10b981, #059669); }
+.id-card.gray { background: linear-gradient(135deg, #475569, #1e293b); }
+.id-card.green { background: linear-gradient(135deg, #10b981, #059669); }
 
 .id-header { display: flex; justify-content: space-between; margin-bottom: 16rpx; }
 .id-badge { background: rgba(255,255,255,0.2); padding: 6rpx 16rpx; border-radius: 8rpx; font-size: 20rpx; color: #fff; }
@@ -22,7 +22,6 @@ page { background-color: #f8f9fa; }
 .id-info { }
 .id-name { display: block; color: #fff; font-size: 36rpx; font-weight: bold; }
 .id-role { display: block; color: rgba(255,255,255,0.9); font-size: 24rpx; margin-top: 4rpx; }
-.id-company { display: block; color: rgba(255,255,255,0.7); font-size: 20rpx; margin-top: 4rpx; }
 .id-avatar { width: 88rpx; height: 88rpx; border-radius: 16rpx; overflow: hidden; border: 3rpx solid rgba(255,255,255,0.5); }
 .id-avatar image { width: 100%; height: 100%; }
 
@@ -78,15 +77,6 @@ page { background-color: #f8f9fa; }
 .visitor-info { flex: 1; display: flex; justify-content: space-between; align-items: center; }
 .visitor-name { font-size: 26rpx; color: #333; }
 .visitor-time { font-size: 22rpx; color: #999; }
-
-/* Analytics */
-.analytics-section { margin-bottom: 24rpx; }
-.section-title { font-size: 28rpx; font-weight: bold; color: #000; margin-bottom: 16rpx; display: block; }
-.analytics-card { background: #fff; border-radius: 24rpx; padding: 24rpx; box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.06); display: flex; gap: 16rpx; }
-.mini-card { flex: 1; height: 80rpx; border-radius: 16rpx; }
-.mini-card.blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-.mini-card.gray { background: linear-gradient(135deg, #475569, #334155); }
-.mini-card.green { background: linear-gradient(135deg, #10b981, #059669); }
 
 /* Bottom Spacer */
 .bottom-spacer { height: 120rpx; }

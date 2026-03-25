@@ -4,7 +4,8 @@
   <view class="id-section">
     <scroll-view class="card-scroll" scroll-x="true" enhanced="true" show-scrollbar="false" bindscroll="onScroll">
       <view class="card-wrapper">
-        <view class="id-card">
+        <!-- Card 1: Default (Blue) -->
+        <view class="id-card blue">
           <view class="id-header">
             <view class="id-badge">默认</view>
             <view class="id-qr">QR</view>
@@ -22,7 +23,8 @@
           </view>
         </view>
         
-        <view class="id-card biz">
+        <!-- Card 2: Business (Gray) -->
+        <view class="id-card gray">
           <view class="id-header"><view class="id-badge">商务</view></view>
           <view class="id-content">
             <view class="id-info">
@@ -37,7 +39,8 @@
           </view>
         </view>
         
-        <view class="id-card social">
+        <!-- Card 3: Social (Green) -->
+        <view class="id-card green">
           <view class="id-header"><view class="id-badge">社交</view></view>
           <view class="id-content">
             <view class="id-info">
@@ -113,16 +116,6 @@
         <view class="visitor-item"><view class="visitor-avatar">李</view><view class="visitor-info"><text class="visitor-name">李伟</text><text class="visitor-time">1分钟前</text></view></view>
         <view class="visitor-item"><view class="visitor-avatar">王</view><view class="visitor-info"><text class="visitor-name">王五</text><text class="visitor-time">1小时前</text></view></view>
       </view>
-    </view>
-  </view>
-
-  <!-- Analytics -->
-  <view class="analytics-section">
-    <view class="section-title">多名片数据分析</view>
-    <view class="analytics-card">
-      <view class="mini-card blue"></view>
-      <view class="mini-card gray"></view>
-      <view class="mini-card green"></view>
     </view>
   </view>
 
