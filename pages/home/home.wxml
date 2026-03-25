@@ -1,13 +1,13 @@
 <!--home.wxml-->
 <view class="container">
-  <!-- 顶部名片预览 -->
+  <!-- Header Card -->
   <view class="header-card">
     <view class="header-bg">
       <image src="https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800" mode="aspectFill"></image>
     </view>
     <view class="header-content">
       <view class="header-info">
-        <text class="header-name">陈小独立</text>
+        <text class="header-name">&#x9648;&#x5C0F;&#x72EC;&#x7ACB;</text>
         <text class="header-role">Full-stack Developer</text>
         <text class="header-company">CODEFLOW AI STUDIO</text>
       </view>
@@ -17,76 +17,76 @@
     </view>
   </view>
 
-  <!-- 快捷入口 -->
+  <!-- Grid -->
   <view class="grid-section">
     <view class="grid-card">
       <view class="grid-2x2">
         <view class="grid-item" bindtap="goToMyCards">
-          <view class="grid-icon purple">👥</view>
-          <text class="grid-text">名片管理</text>
+          <view class="grid-icon purple">&#x1F465;</view>
+          <text class="grid-text">&#x540D;&#x7247;&#x7BA1;&#x7406;</text>
         </view>
         <view class="grid-item" bindtap="goToVisitor">
-          <view class="grid-icon pink">🕐</view>
-          <text class="grid-text">浏览记录</text>
+          <view class="grid-icon pink">&#x1F551;</view>
+          <text class="grid-text">&#x6D4F;&#x8BBF;&#x8BB0;&#x5F55;</text>
         </view>
         <view class="grid-item" bindtap="goToContacts">
-          <view class="grid-icon green">🔄</view>
-          <text class="grid-text">交换记录</text>
+          <view class="grid-icon green">&#x1F504;</view>
+          <text class="grid-text">&#x4EA4;&#x6362;&#x8BB0;&#x5F55;</text>
         </view>
         <view class="grid-item" bindtap="goToAnalytics">
-          <view class="grid-icon blue">📊</view>
-          <text class="grid-text">数据分析</text>
+          <view class="grid-icon blue">&#x1F4CA;</view>
+          <text class="grid-text">&#x6570;&#x636E;&#x5206;&#x6790;</text>
         </view>
       </view>
     </view>
   </view>
 
-  <!-- 第二行快捷入口 -->
+  <!-- Row 2 -->
   <view class="grid-section">
     <view class="grid-card">
       <view class="grid-2x2">
         <view class="grid-item" bindtap="goToMember">
-          <view class="grid-icon gold">⭐</view>
-          <text class="grid-text">会员权益</text>
+          <view class="grid-icon gold">&#x2B50;</view>
+          <text class="grid-text">&#x4F1A;&#x5458;&#x6743;&#x76CA;</text>
         </view>
-        <view class="grid-item" bindtap="goToAI">
-          <view class="grid-icon indigo">🤖</view>
-          <text class="grid-text">AI功能</text>
+        <view class="grid-item" bindtap="GoToAI">
+          <view class="grid-icon indigo">&#x1F916;</view>
+          <text class="grid-text">AI&#x529F;&#x80FD;</text>
         </view>
       </view>
     </view>
   </view>
 
-  <!-- 最近访客 -->
+  <!-- Recent Visitors -->
   <view class="visitors-section">
     <view class="section-header">
-      <text class="section-title">最近访客</text>
-      <text class="section-more">更多</text>
+      <text class="section-title">&#x6700;&#x8FD1;&#x8BBF;&#x5BA2;</text>
+      <text class="section-more">&#x66F4;&#x591A;</text>
     </view>
     <view class="visitor-list">
       <view class="visitor-item">
         <image class="visitor-avatar" src="https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200" />
         <view class="visitor-info">
           <text class="visitor-name">Sarah Zhang</text>
-          <text class="visitor-role">高级产品经理 @ ByteDance</text>
+          <text class="visitor-role">&#x4EA7;&#x54C1;&#x7BA1;&#x7406; @ ByteDance</text>
         </view>
-        <text class="visitor-time">10分钟前</text>
+        <text class="visitor-time">10&#x5206;&#x949F;&#x524D;</text>
       </view>
       <view class="visitor-item">
         <image class="visitor-avatar" src="https://images.unsplash.com/photo-1664101606938-e664f5852fac?w=200" />
         <view class="visitor-info">
           <text class="visitor-name">David Li</text>
-          <text class="visitor-role">独立开发者</text>
+          <text class="visitor-role">&#x72EC;&#x7ACB;&#x5F00;&#x53D1;&#x8005;</text>
         </view>
-        <text class="visitor-time">2小时前</text>
+        <text class="visitor-time">2&#x5C0F;&#x65F6;&#x524D;</text>
       </view>
       <view class="visitor-item">
         <image class="visitor-avatar" src="https://images.unsplash.com/photo-1645951252284-4aa663bf59ca?w=200" />
         <view class="visitor-info">
           <text class="visitor-name">Emily Wang</text>
-          <text class="visitor-role">设计师 @ Adobe</text>
+          <text class="visitor-role">&#x8BBE;&#x8BA1;&#x5E08; @ Adobe</text>
         </view>
-        <text class="visitor-time">昨天</text>
+        <text class="visitor-time">&#x6628;&#x5929;</text>
       </view>
     </view>
   </view>

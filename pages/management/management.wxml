@@ -1,75 +1,75 @@
 <!--management.wxml-->
 <view class="container">
-  <!-- 个人信息 -->
+  <!-- Profile -->
   <view class="profile-card">
     <image class="profile-avatar" src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" />
     <view class="profile-info">
-      <text class="profile-name">陈小独立</text>
+      <text class="profile-name">&#x9648;&#x5C0F;&#x72EC;&#x7ACB;</text>
       <text class="profile-phone">138****8000</text>
     </view>
   </view>
 
-  <!-- 功能列表 -->
+  <!-- Menu -->
   <view class="menu-list">
     <view class="menu-item" bindtap="goToQRCode">
-      <text class="menu-icon">📱</text>
-      <text class="menu-text">我的二维码</text>
-      <text class="menu-arrow">›</text>
+      <text class="menu-icon">&#x1F4F1;</text>
+      <text class="menu-text">&#x6211;&#x7684;&#x4E8C;&#x7EF4;&#x7801;</text>
+      <text class="menu-arrow">&#x2039;</text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">🔐</text>
-      <text class="menu-text">账号管理</text>
-      <text class="menu-arrow">›</text>
+      <text class="menu-icon">&#x1F510;</text>
+      <text class="menu-text">&#x8D26;&#x53F7;&#x7BA1;&#x7406;</text>
+      <text class="menu-arrow">&#x2039;</text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">🔒</text>
-      <text class="menu-text">绑定手机号</text>
-      <text class="menu-arrow">›</text>
+      <text class="menu-icon">&#x1F512;</text>
+      <text class="menu-text">&#x7ED1;&#x5B9A;&#x624B;&#x673A;&#x53F7;</text>
+      <text class="menu-arrow">&#x2039;</text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">💬</text>
-      <text class="menu-text">绑定微信</text>
-      <text class="menu-arrow">›</text>
+      <text class="menu-icon">&#x1F4AC;</text>
+      <text class="menu-text">&#x7ED1;&#x5B9A;&#x5FAE;&#x4FE1;</text>
+      <text class="menu-arrow">&#x2039;</text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">👁</text>
-      <text class="menu-text">隐私设置</text>
-      <text class="menu-arrow">›</text>
+      <text class="menu-icon">&#x1F441;</text>
+      <text class="menu-text">&#x9690;&#x79C1;&#x8BBE;&#x7F6E;</text>
+      <text class="menu-arrow">&#x2039;</text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">🔔</text>
-      <text class="menu-text">通知设置</text>
-      <text class="menu-arrow">›</text>
+      <text class="menu-icon">&#x1F514;</text>
+      <text class="menu-text">&#x901A;&#x77E5;&#x8BBE;&#x7F6E;</text>
+      <text class="menu-arrow">&#x2039;</text>
     </view>
     <view class="menu-item" bindtap="goToMember">
-      <text class="menu-icon">⭐</text>
-      <text class="menu-text">PRO 会员</text>
-      <text class="menu-tag">立即开通</text>
+      <text class="menu-icon">&#x2B50;</text>
+      <text class="menu-text">PRO &#x4F1A;&#x5458;</text>
+      <text class="menu-tag">&#x7ACB;&#x5373;&#x5F00;&#x901A;</text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">❓</text>
-      <text class="menu-text">常见问题</text>
-      <text class="menu-arrow">›</text>
+      <text class="menu-icon">&#x2753;</text>
+      <text class="menu-text">&#x5E38;&#x89C1;&#x95EE;&#x9898;</text>
+      <text class="menu-arrow">&#x2039;</text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">📄</text>
-      <text class="menu-text">服务协议</text>
-      <text class="menu-arrow">›</text>
+      <text class="menu-icon">&#x1F4C4;</text>
+      <text class="menu-text">&#x670D;&#x52A1;&#x534F;&#x8BAE;</text>
+      <text class="menu-arrow">&#x2039;</text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">🔐</text>
-      <text class="menu-text">隐私政策</text>
-      <text class="menu-arrow">›</text>
+      <text class="menu-icon">&#x1F512;</text>
+      <text class="menu-text">&#x9690;&#x79C1;&#x653F;&#x7B56;</text>
+      <text class="menu-arrow">&#x2039;</text>
     </view>
     <view class="menu-item">
-      <text class="menu-icon">ℹ️</text>
-      <text class="menu-text">关于我们</text>
-      <text class="menu-arrow">›</text>
+      <text class="menu-icon">&#x2139;&#xFE0F;</text>
+      <text class="menu-text">&#x5173;&#x4E8E;&#x6211;&#x4EEC;</text>
+      <text class="menu-arrow">&#x2039;</text>
     </view>
   </view>
 
-  <!-- 退出登录 -->
+  <!-- Logout -->
   <view class="logout-btn">
-    <text>退出登录</text>
+    <text>&#x9000;&#x51FA;&#x767B;&#x5F55;</text>
   </view>
 </view>
