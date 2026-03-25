@@ -1,74 +1,74 @@
-<!--contacts.wxml - 名片联系人 -->
+<!--contacts.wxml-->
 <view class="container">
   <!-- 搜索栏 -->
   <view class="search-bar">
-    <input class="search-input" placeholder="搜索联系人..." bindinput="onSearch" />
+    <text class="search-icon">🔍</text>
+    <input class="search-input" placeholder="搜索联系人" />
   </view>
 
   <!-- 标签筛选 -->
-  <scroll-view class="tags-scroll" scroll-x="true">
-    <view class="tags-list">
-      <view 
-        class="tag-item {{currentTag === '' ? 'active' : ''}}" 
-        bindtap="filterByTag" 
-        data-tag=""
-      >
-        全部
+  <view class="tags-row">
+    <view class="tag-item active">全部</view>
+    <view class="tag-item">AI</view>
+    <view class="tag-item">B端产品</view>
+    <view class="tag-item">出海</view>
+    <view class="tag-item">Flutter</view>
+  </view>
+
+  <!-- 交换记录 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">最近交换</text>
+    </view>
+    <view class="contact-list">
+      <view class="contact-item">
+        <image class="contact-avatar" src="https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200" />
+        <view class="contact-info">
+          <view class="contact-top">
+            <text class="contact-name">Sarah Zhang</text>
+            <text class="contact-time">10分钟前</text>
+          </view>
+          <text class="contact-role">高级产品经理 @ ByteDance</text>
+        </view>
       </view>
-      <view 
-        class="tag-item {{currentTag === 'starred' ? 'active' : ''}}" 
-        bindtap="filterByTag" 
-        data-tag="starred"
-      >
-        ⭐ 收藏
+      <view class="contact-item">
+        <image class="contact-avatar" src="https://images.unsplash.com/photo-1664101606938-e664f5852fac?w=200" />
+        <view class="contact-info">
+          <view class="contact-top">
+            <text class="contact-name">David Li</text>
+            <text class="contact-time">2小时前</text>
+          </view>
+          <text class="contact-role">独立开发者</text>
+        </view>
       </view>
-      <block wx:for="{{allTags}}" wx:key="*this">
-        <view 
-          class="tag-item {{currentTag === item ? 'active' : ''}}" 
-          bindtap="filterByTag" 
-          data-tag="{{item}}"
-        >
-          {{item}}
+    </view>
+  </view>
+
+  <!-- 全部联系人 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">全部联系人</text>
+    </view>
+    <view class="contact-list">
+      <block wx:for="{{contacts}}" wx:key="id">
+        <view class="contact-item">
+          <image class="contact-avatar" src="{{item.avatar}}" />
+          <view class="contact-info">
+            <view class="contact-top">
+              <text class="contact-name">{{item.name}}</text>
+              <text class="contact-time">{{item.time}}</text>
+            </view>
+            <text class="contact-role">{{item.role}}</text>
+            <view class="contact-tags">
+              <text class="contact-tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+            </view>
+          </view>
+          <view class="contact-actions">
+            <view class="action-chat">聊天</view>
+            <view class="action-call">📞</view>
+          </view>
         </view>
       </block>
     </view>
-  </scroll-view>
-
-  <!-- 联系人列表 -->
-  <view class="contact-list">
-    <block wx:for="{{filteredContacts}}" wx:key="id">
-      <view class="contact-item" bindtap="viewContact" data-id="{{item.id}}">
-        <view class="contact-avatar">
-          <image src="{{item.avatarUrl}}" mode="aspectFill" />
-          <view class="starred-icon" wx:if="{{item.isStarred}}">⭐</view>
-        </view>
-        
-        <view class="contact-info">
-          <view class="contact-header">
-            <text class="contact-name">{{item.name}}</text>
-            <text class="contact-location">{{item.locationCountry}}{{item.locationCity}}</text>
-          </view>
-          <text class="contact-role">{{item.role}}</text>
-          <view class="contact-tags">
-            <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
-          </view>
-          <text class="contact-active">{{item.lastActiveText}}</text>
-        </view>
-        
-        <view class="contact-actions">
-          <view class="action-icon" catchtap="toggleStar" data-id="{{item.id}}">
-            {{item.isStarred ? '⭐' : '☆'}}
-          </view>
-          <view class="action-icon" catchtap="sendMessage" data-id="{{item.id}}">
-            💬
-          </view>
-        </view>
-      </view>
-    </block>
-  </view>
-
-  <!-- 空状态 -->
-  <view class="empty-state" wx:if="{{filteredContacts.length === 0}}">
-    <text class="empty-text">暂无联系人</text>
   </view>
 </view>

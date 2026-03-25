@@ -1,35 +1,75 @@
-<!--management.wxml - 管理页面 -->
+<!--management.wxml-->
 <view class="container">
-  <!-- 顶部个人信息 -->
+  <!-- 个人信息 -->
   <view class="profile-card">
-    <view class="profile-left">
-      <image class="profile-avatar" src="{{profile.avatarUrl}}" mode="aspectFill"></image>
-    </view>
-    <view class="profile-middle">
-      <text class="profile-name">{{profile.name}}</text>
-      <text class="profile-role">{{profile.role}}</text>
-    </view>
-    <view class="profile-right">
-      <text class="arrow-icon">›</text>
+    <image class="profile-avatar" src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" />
+    <view class="profile-info">
+      <text class="profile-name">陈小独立</text>
+      <text class="profile-phone">138****8000</text>
     </view>
   </view>
 
   <!-- 功能列表 -->
-  <view class="menu-card">
-    <block wx:for="{{menuItems}}" wx:key="id">
-      <view class="menu-item" bindtap="onMenuTap" data-path="{{item.path}}">
-        <view class="menu-left">
-          <text class="menu-icon">{{item.icon}}</text>
-          <text class="menu-text">{{item.name}}</text>
-        </view>
-        <text class="arrow-icon">›</text>
-      </view>
-      <view class="menu-divider" wx:if="{{index < menuItems.length - 1}}"></view>
-    </block>
+  <view class="menu-list">
+    <view class="menu-item" bindtap="goToQRCode">
+      <text class="menu-icon">📱</text>
+      <text class="menu-text">我的二维码</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item">
+      <text class="menu-icon">🔐</text>
+      <text class="menu-text">账号管理</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item">
+      <text class="menu-icon">🔒</text>
+      <text class="menu-text">绑定手机号</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item">
+      <text class="menu-icon">💬</text>
+      <text class="menu-text">绑定微信</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item">
+      <text class="menu-icon">👁</text>
+      <text class="menu-text">隐私设置</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item">
+      <text class="menu-icon">🔔</text>
+      <text class="menu-text">通知设置</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goToMember">
+      <text class="menu-icon">⭐</text>
+      <text class="menu-text">PRO 会员</text>
+      <text class="menu-tag">立即开通</text>
+    </view>
+    <view class="menu-item">
+      <text class="menu-icon">❓</text>
+      <text class="menu-text">常见问题</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item">
+      <text class="menu-icon">📄</text>
+      <text class="menu-text">服务协议</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item">
+      <text class="menu-icon">🔐</text>
+      <text class="menu-text">隐私政策</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item">
+      <text class="menu-icon">ℹ️</text>
+      <text class="menu-text">关于我们</text>
+      <text class="menu-arrow">›</text>
+    </view>
   </view>
 
-  <!-- 版本信息 -->
-  <view class="version-info">
-    <text>OPC 名片 v1.0.0</text>
+  <!-- 退出登录 -->
+  <view class="logout-btn">
+    <text>退出登录</text>
   </view>
 </view>
