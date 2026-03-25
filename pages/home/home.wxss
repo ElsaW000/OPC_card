@@ -9,24 +9,33 @@ page { background-color: #f8f9fa; }
 .card-wrapper { display: flex; gap: 20rpx; padding: 0 24rpx; box-sizing: border-box; }
 
 /* ID Card */
-.id-card { width: 100%; height: 320rpx; border-radius: 24rpx; box-sizing: border-box; position: relative; overflow: hidden; flex-shrink: 0; }
-.card-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.15); }
-.card-inner { position: relative; z-index: 2; height: 100%; padding: 24rpx; display: flex; flex-direction: column; justify-content: space-between; }
+.id-card { width: 100%; height: 340rpx; border-radius: 24rpx; box-sizing: border-box; position: relative; overflow: hidden; flex-shrink: 0; padding: 24rpx; display: flex; flex-direction: column; justify-content: space-between; }
 
-.id-header { display: flex; justify-content: space-between; margin-bottom: 16rpx; }
-.id-badge { background: rgba(0,0,0,0.4); padding: 6rpx 16rpx; border-radius: 8rpx; font-size: 20rpx; color: #fff; }
-.id-qr { background: rgba(0,0,0,0.4); padding: 6rpx 12rpx; border-radius: 8rpx; font-size: 20rpx; color: #fff; }
+.id-header { display: flex; justify-content: space-between; align-items: center; }
+.id-badge { padding: 8rpx 20rpx; border-radius: 8rpx; font-size: 22rpx; font-weight: bold; }
+.id-badge.dark { background: rgba(0,0,0,0.4); color: #fff; }
+.id-badge.light { background: rgba(255,255,255,0.9); color: #000; }
+
+.id-qr-btn { width: 56rpx; height: 56rpx; border-radius: 12rpx; display: flex; align-items: center; justify-content: center; }
+.id-qr-btn.dark { background: rgba(0,0,0,0.4); }
+.id-qr-btn.light { background: rgba(255,255,255,0.9); }
+.qr-icon { font-size: 32rpx; font-weight: bold; }
 
 .id-content { display: flex; justify-content: space-between; align-items: flex-end; }
 .id-info { }
-.id-name { display: block; color: #fff; font-size: 36rpx; font-weight: bold; text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.3); }
-.id-role { display: block; color: rgba(255,255,255,0.9); font-size: 24rpx; margin-top: 4rpx; text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.3); }
-.id-avatar { width: 88rpx; height: 88rpx; border-radius: 16rpx; overflow: hidden; border: 3rpx solid rgba(255,255,255,0.5); box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.2); }
+.id-name { display: block; font-size: 40rpx; font-weight: bold; }
+.id-role { display: block; font-size: 26rpx; margin-top: 6rpx; }
+.id-card text { color: #fff; }
+.id-card .id-role { color: rgba(255,255,255,0.85); }
+
+.id-avatar { width: 96rpx; height: 96rpx; border-radius: 20rpx; overflow: hidden; border: 4rpx solid rgba(255,255,255,0.5); box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.2); }
 .id-avatar image { width: 100%; height: 100%; }
 
-.id-actions { display: flex; gap: 16rpx; margin-top: 20rpx; }
-.id-action { flex: 1; background: rgba(0,0,0,0.4); border-radius: 12rpx; padding: 14rpx 0; text-align: center; }
-.id-action text { color: #fff; font-size: 24rpx; }
+.id-actions { display: flex; gap: 16rpx; }
+.id-action { flex: 1; border-radius: 16rpx; padding: 18rpx 0; text-align: center; font-size: 24rpx; }
+.id-action.dark { background: rgba(0,0,0,0.4); }
+.id-action.light { background: rgba(255,255,255,0.9); }
+.id-action text { color: inherit; }
 
 /* Page Indicators */
 .page-indicators { display: flex; justify-content: center; gap: 12rpx; margin-top: 20rpx; }
