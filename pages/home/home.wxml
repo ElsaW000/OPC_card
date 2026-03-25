@@ -1,14 +1,14 @@
 <!--home.wxml-->
 <view class="container">
-  <!-- Header Card -->
+  <!-- Top: Premium Card Preview -->
   <view class="header-card">
-    <view class="header-bg">
-      <image src="https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800" mode="aspectFill"></image>
+    <view class="card-bg-gradient">
+      <view class="gradient-inner"></view>
     </view>
     <view class="header-content">
       <view class="header-info">
-        <text class="header-name">&#x9648;&#x5C0F;&#x72EC;&#x7ACB;</text>
-        <text class="header-role">Full-stack Developer</text>
+        <text class="header-name">Independent Chen</text>
+        <text class="header-role">Founder</text>
         <text class="header-company">CODEFLOW AI STUDIO</text>
       </view>
       <view class="header-avatar">
@@ -17,76 +17,105 @@
     </view>
   </view>
 
-  <!-- Grid -->
+  <!-- Middle: 2x2 Grid -->
   <view class="grid-section">
     <view class="grid-card">
       <view class="grid-2x2">
         <view class="grid-item" bindtap="goToMyCards">
-          <view class="grid-icon purple">&#x1F465;</view>
-          <text class="grid-text">&#x540D;&#x7247;&#x7BA1;&#x7406;</text>
+          <view class="grid-icon" style="background: linear-gradient(135deg, #dbeafe, #93c5fd);">
+            <text style="font-size: 40rpx;">&#x1F4BC;</text>
+          </view>
+          <text class="grid-text">My Cards</text>
         </view>
         <view class="grid-item" bindtap="goToVisitor">
-          <view class="grid-icon pink">&#x1F551;</view>
-          <text class="grid-text">&#x6D4F;&#x8BBF;&#x8BB0;&#x5F55;</text>
+          <view class="grid-icon" style="background: linear-gradient(135deg, #fce7f3, #f9a8d4);">
+            <text style="font-size: 40rpx;">&#x1F441;</text>
+          </view>
+          <text class="grid-text">Visitor Records</text>
         </view>
         <view class="grid-item" bindtap="goToContacts">
-          <view class="grid-icon green">&#x1F504;</view>
-          <text class="grid-text">&#x4EA4;&#x6362;&#x8BB0;&#x5F55;</text>
+          <view class="grid-icon" style="background: linear-gradient(135deg, #d1fae5, #6ee7b7);">
+            <text style="font-size: 40rpx;">&#x1F4DD;</text>
+          </view>
+          <text class="grid-text">Exchange History</text>
         </view>
         <view class="grid-item" bindtap="goToAnalytics">
-          <view class="grid-icon blue">&#x1F4CA;</view>
-          <text class="grid-text">&#x6570;&#x636E;&#x5206;&#x6790;</text>
+          <view class="grid-icon" style="background: linear-gradient(135deg, #e0e7ff, #a5b4fc);">
+            <text style="font-size: 40rpx;">&#x1F4CA;</text>
+          </view>
+          <text class="grid-text">Data Analytics</text>
         </view>
       </view>
     </view>
   </view>
 
-  <!-- Row 2 -->
-  <view class="grid-section">
-    <view class="grid-card">
-      <view class="grid-2x2">
-        <view class="grid-item" bindtap="goToMember">
-          <view class="grid-icon gold">&#x2B50;</view>
-          <text class="grid-text">&#x4F1A;&#x5458;&#x6743;&#x76CA;</text>
+  <!-- AI Section -->
+  <view class="ai-section">
+    <view class="ai-card">
+      <view class="ai-header">
+        <view class="ai-icon">&#x1F916;</view>
+        <text class="ai-title">AI Assistant</text>
+      </view>
+      <view class="ai-features">
+        <view class="ai-feature">
+          <text class="ai-feature-text">One-click Card Generation</text>
         </view>
-        <view class="grid-item" bindtap="GoToAI">
-          <view class="grid-icon indigo">&#x1F916;</view>
-          <text class="grid-text">AI&#x529F;&#x80FD;</text>
+        <view class="ai-feature">
+          <text class="ai-feature-text">Smart Tag Recommendation</text>
         </view>
       </view>
     </view>
+  </view>
+
+  <!-- Member Banner -->
+  <view class="member-banner">
+    <view class="member-icon">&#x1F6E1;</view>
+    <view class="member-content">
+      <text class="member-title">PRO Member</text>
+      <text class="member-desc">Upgrade to view all visitor details</text>
+    </view>
+    <view class="member-btn">Upgrade</view>
   </view>
 
   <!-- Recent Visitors -->
   <view class="visitors-section">
     <view class="section-header">
-      <text class="section-title">&#x6700;&#x8FD1;&#x8BBF;&#x5BA2;</text>
-      <text class="section-more">&#x66F4;&#x591A;</text>
+      <text class="section-title">Recent Visitors</text>
+      <text class="section-more">View All</text>
     </view>
     <view class="visitor-list">
       <view class="visitor-item">
         <image class="visitor-avatar" src="https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200" />
         <view class="visitor-info">
           <text class="visitor-name">Sarah Zhang</text>
-          <text class="visitor-role">&#x4EA7;&#x54C1;&#x7BA1;&#x7406; @ ByteDance</text>
+          <text class="visitor-role">PM @ ByteDance</text>
         </view>
-        <text class="visitor-time">10&#x5206;&#x949F;&#x524D;</text>
+        <view class="visitor-meta">
+          <text class="visitor-source">&#x1F4F7;</text>
+          <text class="visitor-time">2m ago</text>
+        </view>
       </view>
       <view class="visitor-item">
         <image class="visitor-avatar" src="https://images.unsplash.com/photo-1664101606938-e664f5852fac?w=200" />
         <view class="visitor-info">
           <text class="visitor-name">David Li</text>
-          <text class="visitor-role">&#x72EC;&#x7ACB;&#x5F00;&#x53D1;&#x8005;</text>
+          <text class="visitor-role">Indie Developer</text>
         </view>
-        <text class="visitor-time">2&#x5C0F;&#x65F6;&#x524D;</text>
+        <view class="visitor-meta">
+          <text class="visitor-source">&#x1F4F7;</text>
+          <text class="visitor-time">2h ago</text>
+        </view>
       </view>
       <view class="visitor-item">
         <image class="visitor-avatar" src="https://images.unsplash.com/photo-1645951252284-4aa663bf59ca?w=200" />
         <view class="visitor-info">
           <text class="visitor-name">Emily Wang</text>
-          <text class="visitor-role">&#x8BBE;&#x8BA1;&#x5E08; @ Adobe</text>
+          <text class="visitor-role">Designer @ Adobe</text>
         </view>
-        <text class="visitor-time">&#x6628;&#x5929;</text>
+        <view class="visitor-meta">
+          <text class="visitor-source">&#x1F4F7;</text>
+          <text class="visitor-time">1d ago</text>
+        </view>
       </view>
     </view>
   </view>
