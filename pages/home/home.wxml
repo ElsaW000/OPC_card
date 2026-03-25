@@ -13,7 +13,7 @@
             <view class="card-top">
               <view class="id-badge">默认</view>
               <view class="id-qr-btn" bindtap="showQR">
-                <text class="qr-icon">⬜</text>
+                <view class="qr-grid"><view class="qr-dot"></view><view class="qr-dot"></view><view class="qr-dot"></view><view class="qr-dot"></view></view>
               </view>
             </view>
             <view class="card-middle">
@@ -38,7 +38,7 @@
             <view class="card-top">
               <view class="id-badge">商务</view>
               <view class="id-qr-btn" bindtap="showQR">
-                <text class="qr-icon">⬜</text>
+                <view class="qr-grid"><view class="qr-dot"></view><view class="qr-dot"></view><view class="qr-dot"></view><view class="qr-dot"></view></view>
               </view>
             </view>
             <view class="card-middle">
@@ -63,7 +63,7 @@
             <view class="card-top">
               <view class="id-badge">社交</view>
               <view class="id-qr-btn" bindtap="showQR">
-                <text class="qr-icon">⬜</text>
+                <view class="qr-grid"><view class="qr-dot"></view><view class="qr-dot"></view><view class="qr-dot"></view><view class="qr-dot"></view></view>
               </view>
             </view>
             <view class="card-middle">
