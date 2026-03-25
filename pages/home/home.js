@@ -3,23 +3,22 @@ Page({
   data: {
     currentIndex: 0,
     timeRange: 'day',
-    cardWidth: 600,
-    cardGap: 20
+    cardCount: 3
   },
 
   onLoad() {
-    const cardWidth = 600
-    const cardGap = 20
-    this.setData({ cardWidth, cardGap })
+    const systemInfo = wx.getSystemInfoSync()
+    const cardWidth = systemInfo.windowWidth - 48 // 24rpx * 2 padding
+    this.setData({ cardWidth })
   },
 
   onScroll(e) {
     const scrollLeft = e.detail.scrollLeft
-    const cardWidth = this.data.cardWidth
-    const cardGap = this.data.cardGap
+    const cardWidth = this.data.cardWidth || (wx.getSystemInfoSync().windowWidth - 48)
+    const cardGap = 20
     const totalWidth = cardWidth + cardGap
     const currentIndex = Math.round(scrollLeft / totalWidth)
-    if (currentIndex !== this.data.currentIndex) {
+    if (currentIndex !== this.data.currentIndex && currentIndex >= 0 && currentIndex < this.data.cardCount) {
       this.setData({ currentIndex })
     }
   },
