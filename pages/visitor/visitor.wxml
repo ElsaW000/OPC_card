@@ -1,25 +1,21 @@
-<!--visitor.wxml - 访客记录 -->
 <view class="container">
   <view class="header">
-    <view class="header-title">访客记录</view>
-    <view class="header-subtitle">Who Viewed My Card</view>
+    <view class="header-title">{{labels.title}}</view>
+    <view class="header-subtitle">{{labels.subtitle}}</view>
   </view>
 
-  <!-- 筛选 -->
   <view class="filter-tabs">
-    <view class="tab {{currentTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
-    <view class="tab {{currentTab === 'today' ? 'active' : ''}}" bindtap="switchTab" data-tab="today">今日</view>
-    <view class="tab {{currentTab === 'week' ? 'active' : ''}}" bindtap="switchTab" data-tab="week">本周</view>
+    <view class="tab {{currentTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all">{{labels.tabAll}}</view>
+    <view class="tab {{currentTab === 'today' ? 'active' : ''}}" bindtap="switchTab" data-tab="today">{{labels.tabToday}}</view>
+    <view class="tab {{currentTab === 'week' ? 'active' : ''}}" bindtap="switchTab" data-tab="week">{{labels.tabWeek}}</view>
   </view>
 
-  <!-- 访客列表 -->
-  <view class="visitor-list">
+  <view class="visitor-list" wx:if="{{visitors.length}}">
     <block wx:for="{{visitors}}" wx:key="id">
       <view class="visitor-item">
         <view class="visitor-avatar">
           <image src="{{item.avatarUrl}}" mode="aspectFill" />
         </view>
-        
         <view class="visitor-info">
           <view class="visitor-header">
             <text class="visitor-name">{{item.name}}</text>
@@ -27,18 +23,17 @@
           </view>
           <text class="visitor-role">{{item.role}}</text>
           <view class="visitor-source">
-            <text>来自：{{item.source}}</text>
+            <text>{{labels.sourcePrefix}}{{item.source}}</text>
           </view>
         </view>
-        
         <view class="visitor-action">
-          <button class="exchange-btn" bindtap="exchangeCard" data-id="{{item.id}}">交换</button>
+          <button class="exchange-btn" bindtap="exchangeCard" data-id="{{item.id}}">{{labels.exchange}}</button>
         </view>
       </view>
     </block>
   </view>
 
-  <view class="empty-state" wx:if="{{visitors.length === 0}}">
-    <text class="empty-text">暂无访客记录</text>
+  <view class="empty-state" wx:else>
+    <text class="empty-text">{{labels.empty}}</text>
   </view>
 </view>

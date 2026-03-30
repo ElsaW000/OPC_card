@@ -1,67 +1,33 @@
 <!--contacts.wxml-->
 <view class="container">
-  <!-- Header -->
   <view class="header">
-    <text class="header-title">联系人</text>
+    <text class="header-title">{{labels.title}}</text>
     <text class="header-subtitle">CONNECTIONS</text>
   </view>
 
-  <!-- 搜索框 - 区分底部 -->
   <view class="search-section">
     <view class="search-bar">
-      <text class="search-icon">🔍</text>
-      <input class="search-input" placeholder="搜索联系人..." placeholder-class="search-placeholder" />
+      <text class="search-icon">{{labels.searchIcon}}</text>
+      <input class="search-input" placeholder="{{labels.searchPlaceholder}}" placeholder-class="search-placeholder" bindinput="onSearchInput" value="{{searchKeyword}}" />
     </view>
   </view>
 
-  <!-- 标签筛选 -->
   <view class="tags-section">
     <scroll-view scroll-x="true" class="tags-scroll">
       <view class="tags-list">
-        <view class="tag-item active">全部</view>
-        <view class="tag-item">AI</view>
-        <view class="tag-item">B2B</view>
-        <view class="tag-item">出海</view>
-        <view class="tag-item">Flutter</view>
+        <block wx:for="{{filterTags}}" wx:key="index">
+          <view class="tag-item {{activeTag === item ? 'active' : ''}}" bindtap="selectTag" data-tag="{{item}}">{{item}}</view>
+        </block>
       </view>
     </scroll-view>
   </view>
 
-  <!-- 最近交换 -->
-  <view class="section">
+  <view class="section" wx:if="{{recentContacts.length}}">
     <view class="section-header">
-      <text class="section-title">最近交换</text>
+      <text class="section-title">{{labels.recentSection}}</text>
     </view>
     <view class="contact-list">
-      <view class="contact-card">
-        <view class="card-left">
-          <image class="contact-avatar" src="https://images.unsplash.com/photo-1573164713791-0dfcd2a183a7?w=200" />
-          <view class="contact-info">
-            <view class="contact-top">
-              <text class="contact-name">Sarah Zhang</text>
-            </view>
-            <text class="contact-role">产品经理 @ ByteDance</text>
-          </view>
-        </view>
-        <view class="card-right">
-          <text class="contact-time">10分钟前</text>
-          <view class="action-buttons">
-            <view class="action-btn">💬</view>
-            <view class="action-btn">📞</view>
-          </view>
-        </view>
-      </view>
-    </view>
-  </view>
-
-  <!-- 全部联系人 -->
-  <view class="section">
-    <view class="section-header">
-      <text class="section-title">全部联系人</text>
-      <text class="section-count">12</text>
-    </view>
-    <view class="contact-list">
-      <block wx:for="{{contacts}}" wx:key="id">
+      <block wx:for="{{recentContacts}}" wx:key="id">
         <view class="contact-card">
           <view class="card-left">
             <image class="contact-avatar" src="{{item.avatar}}" />
@@ -70,7 +36,35 @@
                 <text class="contact-name">{{item.name}}</text>
               </view>
               <text class="contact-role">{{item.role}}</text>
-              <view class="contact-tags" wx:if="{{item.tags}}">
+            </view>
+          </view>
+          <view class="card-right">
+            <text class="contact-time">{{item.time}}</text>
+            <view class="action-buttons">
+              <view class="action-btn" bindtap="toggleStar" data-id="{{item.id}}">{{item.actionText}}</view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">{{labels.allSection}}</text>
+      <text class="section-count">{{totalCount}}</text>
+    </view>
+    <view class="contact-list">
+      <block wx:for="{{filteredContacts}}" wx:key="id">
+        <view class="contact-card">
+          <view class="card-left">
+            <image class="contact-avatar" src="{{item.avatar}}" />
+            <view class="contact-info">
+              <view class="contact-top">
+                <text class="contact-name">{{item.name}}</text>
+              </view>
+              <text class="contact-role">{{item.role}}</text>
+              <view class="contact-tags" wx:if="{{item.tags.length}}">
                 <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:for-index="tagIndex" wx:key="tagIndex">{{tag}}</text>
               </view>
             </view>
@@ -78,8 +72,7 @@
           <view class="card-right">
             <text class="contact-time">{{item.time}}</text>
             <view class="action-buttons">
-              <view class="action-btn">💬</view>
-              <view class="action-btn">📞</view>
+              <view class="action-btn" bindtap="toggleStar" data-id="{{item.id}}">{{item.actionText}}</view>
             </view>
           </view>
         </view>

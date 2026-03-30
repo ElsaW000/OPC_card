@@ -30,34 +30,6 @@ page {
   background: linear-gradient(180deg, rgba(8, 15, 31, 0.12) 0%, rgba(8, 15, 31, 0.42) 100%);
 }
 
-.hero-corner {
-  position: absolute;
-  top: 132rpx;
-  width: 56rpx;
-  height: 56rpx;
-  border-radius: 16rpx;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(18rpx);
-  border: 1rpx solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 10rpx 28rpx rgba(15, 23, 42, 0.16);
-}
-
-.hero-corner.left {
-  left: 24rpx;
-}
-
-.hero-corner.right {
-  right: 24rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-corner-icon {
-  width: 28rpx;
-  height: 28rpx;
-}
-
 .profile-shell {
   position: relative;
   margin: -58rpx 24rpx 0;
@@ -107,6 +79,12 @@ page {
   align-items: center;
   justify-content: center;
   box-shadow: 0 10rpx 24rpx rgba(37, 99, 235, 0.08);
+  border: none;
+  padding: 0;
+}
+
+.circle-action::after {
+  border: none;
 }
 
 .circle-action-icon {
@@ -250,6 +228,34 @@ page {
 .section-more {
   font-size: 22rpx;
   color: #94a3b8;
+}
+
+.custom-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.custom-card {
+  padding: 28rpx;
+  border-radius: 28rpx;
+  background: #ffffff;
+  box-shadow: 0 12rpx 28rpx rgba(15, 23, 42, 0.06);
+}
+
+.custom-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--color-deep);
+}
+
+.custom-content {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  line-height: 1.68;
+  color: #475569;
 }
 
 .portfolio-list {

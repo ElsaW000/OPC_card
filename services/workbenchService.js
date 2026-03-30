@@ -8,15 +8,60 @@ const { request } = require('./httpClient')
 
 const TEXT = {
   ai: 'AI',
-  product: '产品',
+  product: '\u4ea7\u54c1',
   react: 'React',
-  dev: '开发',
+  dev: '\u5f00\u53d1',
   saas: 'SaaS',
   flutter: 'Flutter',
-  efficiency: '效率',
-  startup: '创业',
-  wechatShare: '微信分享',
-  qrVisit: '二维码访问'
+  efficiency: '\u6548\u7387',
+  startup: '\u521b\u4e1a',
+  wechatShare: '\u5fae\u4fe1\u5206\u4eab',
+  qrVisit: '\u4e8c\u7ef4\u7801\u8bbf\u95ee'
+}
+
+function normalizeDefaultCard(card = null) {
+  if (!card) return null
+  return {
+    _id: card._id || card.id || '',
+    id: card.id || card._id || '',
+    name: card.name || '',
+    role: card.role || '',
+    company: card.company || '',
+    bannerUrl: card.bannerUrl || card.banner_url || '',
+    avatarUrl: card.avatarUrl || card.avatar_url || '',
+    techStack: card.techStack || card.tech_stack || '',
+    projects: Array.isArray(card.projects) ? card.projects : [],
+    customCards: Array.isArray(card.customCards) ? card.customCards : []
+  }
+}
+
+function normalizeContact(contact = {}) {
+  return {
+    _id: contact._id || contact.id || '',
+    id: contact.id || contact._id || '',
+    name: contact.name || '\u8054\u7cfb\u4eba',
+    role: contact.role || '',
+    company: contact.company || '',
+    avatarUrl: contact.avatarUrl || contact.avatar_url || '',
+    latestInteractionText: contact.latestInteractionText || '',
+    starred: !!contact.starred,
+    tags: Array.isArray(contact.tags) ? contact.tags : []
+  }
+}
+
+function normalizeVisitor(visitor = {}) {
+  return {
+    _id: visitor._id || visitor.id || '',
+    id: visitor.id || visitor._id || '',
+    name: visitor.name || '\u65b0\u8bbf\u5ba2',
+    role: visitor.role || '\u540d\u7247\u8bbf\u5ba2',
+    avatarUrl: visitor.avatarUrl || visitor.avatar_url || '',
+    source: visitor.source || '\u540d\u7247\u5206\u4eab',
+    location: visitor.location || '',
+    visitDate: visitor.visitDate || '',
+    visitTimeText: visitor.visitTimeText || '\u521a\u521a',
+    visitCount: Number(visitor.visitCount || 1)
+  }
 }
 
 function buildWeeklyViews(visitors = []) {
@@ -109,9 +154,9 @@ function getWorkbench() {
   const contactsResult = getContacts()
   const settings = readSettings()
   const cards = cardsResult.data || []
-  const defaultCard = cardsResult.defaultCard || cards.find((item) => item.isDefault) || cards[0] || null
-  const visitors = visitorsResult.visitors || []
-  const contacts = contactsResult.contacts || []
+  const defaultCard = normalizeDefaultCard(cardsResult.defaultCard || cards.find((item) => item.isDefault) || cards[0] || null)
+  const visitors = (visitorsResult.visitors || []).map(normalizeVisitor)
+  const contacts = (contactsResult.contacts || []).map(normalizeContact)
   const starredContacts = contacts.filter((item) => item.starred).slice(0, 4)
   const personaTags = buildPersonaTags(visitors, contacts, defaultCard)
 
@@ -138,21 +183,22 @@ async function getWorkbenchAsync() {
   if (!isRemoteApiEnabled()) {
     return getWorkbench()
   }
+
   const user = getCurrentUser()
   const result = await request({ url: '/workbench', method: 'GET', userId: user.userId })
   return {
     success: true,
-    defaultCard: result.defaultCard || null,
-    weeklyViews: result.weeklyViews || 0,
-    personaTags: result.personaTags || [],
-    personaSummary: result.personaSummary || [],
-    starredContacts: result.starredContacts || [],
-    recentVisitors: result.recentVisitors || [],
-    visitorCount: result.visitorCount || 0,
+    defaultCard: normalizeDefaultCard(result.defaultCard || null),
+    weeklyViews: Number(result.weeklyViews || 0),
+    visitorCount: Number(result.visitorCount || 0),
+    personaTags: Array.isArray(result.personaTags) ? result.personaTags : [],
+    personaSummary: Array.isArray(result.personaSummary) ? result.personaSummary : [],
+    starredContacts: Array.isArray(result.starredContacts) ? result.starredContacts.map(normalizeContact) : [],
+    recentVisitors: Array.isArray(result.recentVisitors) ? result.recentVisitors.map(normalizeVisitor) : [],
     settingsSummary: result.settingsSummary || {
-      aiTone: '专业且友好',
+      aiTone: '\u4e13\u4e1a\u4e14\u53cb\u597d',
       publicDynamics: true,
-      privacyMode: '交换后可见',
+      privacyMode: '\u4ea4\u6362\u540e\u53ef\u89c1',
       blacklistCount: 0
     },
     mode: 'remote-api'

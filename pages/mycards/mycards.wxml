@@ -1,12 +1,9 @@
-<!--mycards.wxml -->
 <view class="container">
-  <!-- Header -->
   <view class="header">
-    <text class="header-title">我的名片</text>
-    <text class="header-subtitle">MULTI-IDENTITY MANAGEMENT</text>
+    <text class="header-title">{{labels.title}}</text>
+    <text class="header-subtitle">{{labels.subtitle}}</text>
   </view>
 
-  <!-- 名片列表 - 直接显示3张 -->
   <view class="card-list">
     <block wx:for="{{cards}}" wx:key="id">
       <view class="card-item" bindtap="goToDetail" data-id="{{item.id}}">
@@ -22,10 +19,10 @@
             </view>
             <view class="card-actions-right">
               <view class="icon-btn" catchtap="showQRCode" data-id="{{item.id}}" bindtap="stopPropagation">
-                <image class="btn-icon" src="/images/icons/二维码white.png" mode="aspectFit" />
+                <image class="btn-icon" src="/images/icons/qr-white.png" mode="aspectFit" />
               </view>
               <view class="default-badge" wx:if="{{item.isDefault}}">
-                <text class="badge-text">默认</text>
+                <text class="badge-text">{{labels.defaultBadge}}</text>
               </view>
             </view>
           </view>
@@ -43,26 +40,25 @@
       </view>
       <view class="card-operations">
         <view class="op-btn {{item.isDefault ? 'active' : ''}}" bindtap="setDefault" data-id="{{item.id}}">
-          <image class="op-icon" src="{{item.isDefault ? '/images/icons/默认已选择.png' : '/images/icons/默认未选择 (1).png'}}" mode="aspectFit" />
-          <text class="op-text">{{item.isDefault ? '当前默认' : '设为默认'}}</text>
+          <image class="op-icon" src="{{item.isDefault ? '/images/icons/default-selected.png' : '/images/icons/default-unselected.png'}}" mode="aspectFit" />
+          <text class="op-text">{{item.isDefault ? labels.currentDefault : labels.setDefault}}</text>
         </view>
         <view class="op-btn" bindtap="editCard" data-id="{{item.id}}">
-          <image class="op-icon" src="/images/icons/编辑.png" mode="aspectFit" />
-          <text class="op-text">编辑</text>
+          <image class="op-icon" src="/images/icons/edit.png" mode="aspectFit" />
+          <text class="op-text">{{labels.edit}}</text>
         </view>
-        <view class="op-btn" bindtap="shareCard" data-id="{{item.id}}">
-          <image class="op-icon" src="/images/icons/分享.png" mode="aspectFit" />
-          <text class="op-text">分享</text>
-        </view>
+        <button class="op-btn share-btn" open-type="share" bindtap="prepareShareCard" data-id="{{item.id}}">
+          <image class="op-icon" src="/images/icons/share.png" mode="aspectFit" />
+          <text class="op-text">{{labels.share}}</text>
+        </button>
       </view>
     </block>
   </view>
 
-  <!-- 添加按钮 -->
   <view class="add-card-btn" bindtap="addCard">
     <view class="add-icon-box">
       <text class="add-icon">+</text>
     </view>
-    <text class="add-text">创建新身份</text>
+    <text class="add-text">{{labels.addIdentity}}</text>
   </view>
 </view>

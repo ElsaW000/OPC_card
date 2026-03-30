@@ -1,2 +1,30 @@
-<!--pages/qrcode/qrcode.wxml-->
-<text>pages/qrcode/qrcode.wxml</text>
+<view class="qrcode-page" wx:if="{{card}}">
+  <view class="qrcode-card">
+    <text class="qrcode-title">{{labels.title}}</text>
+    <text class="qrcode-subtitle">{{labels.subtitle}}</text>
+
+    <view class="card-preview">
+      <image class="card-avatar" wx:if="{{card.avatarUrl}}" src="{{card.avatarUrl}}" mode="aspectFill" />
+      <view class="card-avatar placeholder" wx:else>
+        <text class="card-avatar-text">{{card.avatarInitial}}</text>
+      </view>
+      <view class="card-meta">
+        <text class="card-name">{{card.name}}</text>
+        <text class="card-role">{{card.role}}</text>
+      </view>
+    </view>
+
+    <view class="fake-qr">
+      <view class="fake-qr-grid">
+        <view class="fake-qr-cell {{item.active ? 'active' : ''}}" wx:for="{{qrCells}}" wx:key="id"></view>
+      </view>
+    </view>
+
+    <text class="path-label">{{sharePath}}</text>
+
+    <view class="action-row">
+      <button class="action-btn primary" open-type="share">{{labels.share}}</button>
+      <button class="action-btn" bindtap="copyPath">{{labels.copy}}</button>
+    </view>
+  </view>
+</view>

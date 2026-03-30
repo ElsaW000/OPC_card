@@ -1,113 +1,161 @@
-// home.js
+const { getWorkbenchAsync } = require('../../services/workbenchService')
+const { bootstrapSessionAsync } = require('../../services/userService')
+
+const TEXT = {
+  workbench: '\u5de5\u4f5c\u53f0',
+  cardManagement: '\u540d\u7247\u7ba1\u7406',
+  visitRecords: '\u6d4f\u89c8\u8bb0\u5f55',
+  exchangeRecords: '\u4ea4\u6362\u8bb0\u5f55',
+  analytics: '\u6570\u636e\u5206\u6790',
+  recentVisitors: '\u6700\u8fd1\u8bbf\u5ba2',
+  starredContacts: '\u91cd\u70b9\u8054\u7cfb\u4eba',
+  viewMore: '\u67e5\u770b\u66f4\u591a',
+  noVisitors: '\u6682\u65e0\u8bbf\u5ba2\u8bb0\u5f55',
+  noContacts: '\u6682\u65e0\u91cd\u70b9\u8054\u7cfb\u4eba',
+  defaultBadge: '\u9ed8\u8ba4',
+  defaultRole: '\u8bf7\u5148\u521b\u5efa\u4e00\u5f20\u9ed8\u8ba4\u540d\u7247',
+  defaultName: '\u672a\u547d\u540d\u540d\u7247',
+  weeklyViews: '\u672c\u5468\u8bbf\u5ba2',
+  visitorsUnit: '\u4eba',
+  loadFailed: '\u5de5\u4f5c\u53f0\u52a0\u8f7d\u5931\u8d25',
+  newVisitor: '\u65b0\u8bbf\u5ba2',
+  justNow: '\u521a\u521a',
+  qrCode: 'QR',
+  opcWorkbench: 'OPC WORKBENCH'
+}
+
+function toText(value, fallback = '') {
+  return value === undefined || value === null ? fallback : String(value)
+}
+
+function firstChar(name) {
+  const text = toText(name).trim()
+  return text ? text.slice(0, 1) : '\u8bbf'
+}
+
+function buildQuickActions() {
+  return [
+    { key: 'cards', label: TEXT.cardManagement, iconText: '\u540d', action: 'goToMyCards' },
+    { key: 'visitors', label: TEXT.visitRecords, iconText: '\u8bbf', action: 'goToVisitors' },
+    { key: 'contacts', label: TEXT.exchangeRecords, iconText: '\u4ea4', action: 'goToContacts' },
+    { key: 'analytics', label: TEXT.analytics, iconText: '\u6570', action: 'goToAnalytics' }
+  ]
+}
+
 Page({
   data: {
-    currentIndex: 0,
-    timeRange: 'day',
-    cardCount: 3,
-    maxValue: 100,
-    chartData: [
-      { label: '周一', value: 45, height: 45 },
-      { label: '周二', value: 78, height: 78 },
-      { label: '周三', value: 32, height: 32 },
-      { label: '周四', value: 95, height: 95 },
-      { label: '周五', value: 67, height: 67 },
-      { label: '周六', value: 23, height: 23 },
-      { label: '周日', value: 18, height: 18 }
-    ]
+    labels: TEXT,
+    defaultCard: null,
+    displayCardName: TEXT.defaultName,
+    displayCardRole: TEXT.defaultRole,
+    displayCardCompany: '',
+    quickActions: buildQuickActions(),
+    recentVisitors: [],
+    starredContacts: [],
+    personaTags: [],
+    weeklyViews: 0,
+    visitorCount: 0
   },
 
   onLoad() {
-    const systemInfo = wx.getSystemInfoSync()
-    const cardWidth = systemInfo.windowWidth - 48
-    this.setData({ cardWidth })
+    this.loadWorkbench()
   },
 
-  onScroll(e) {
-    const scrollLeft = e.detail.scrollLeft
-    const cardWidth = this.data.cardWidth || (wx.getSystemInfoSync().windowWidth - 48)
-    const cardGap = 20
-    const totalWidth = cardWidth + cardGap
-    const currentIndex = Math.round(scrollLeft / totalWidth)
-    if (currentIndex !== this.data.currentIndex && currentIndex >= 0 && currentIndex < this.data.cardCount) {
-      this.setData({ currentIndex })
+  onShow() {
+    this.loadWorkbench()
+  },
+
+  async loadWorkbench() {
+    try {
+      await bootstrapSessionAsync()
+      const result = await getWorkbenchAsync()
+      const defaultCard = result.defaultCard || null
+      const recentVisitors = Array.isArray(result.recentVisitors)
+        ? result.recentVisitors.slice(0, 3).map((item) => ({
+            id: toText(item._id || item.id),
+            name: toText(item.name, TEXT.newVisitor),
+            time: toText(item.visitTimeText || item.time, TEXT.justNow),
+            avatarText: firstChar(item.name)
+          }))
+        : []
+      const starredContacts = Array.isArray(result.starredContacts)
+        ? result.starredContacts.slice(0, 3).map((item) => ({
+            id: toText(item._id || item.id),
+            name: toText(item.name, '\u8054\u7cfb\u4eba'),
+            role: [toText(item.role), toText(item.company)].filter(Boolean).join(' / '),
+            avatarUrl: toText(item.avatarUrl),
+            avatarText: firstChar(item.name)
+          }))
+        : []
+
+      this.setData({
+        defaultCard,
+        displayCardName: defaultCard ? toText(defaultCard.name, TEXT.defaultName) : TEXT.defaultName,
+        displayCardRole: defaultCard ? toText(defaultCard.role, TEXT.defaultRole) : TEXT.defaultRole,
+        displayCardCompany: defaultCard ? toText(defaultCard.company) : '',
+        weeklyViews: Number(result.weeklyViews || 0),
+        visitorCount: Number(result.visitorCount || 0),
+        personaTags: Array.isArray(result.personaTags) ? result.personaTags : [],
+        starredContacts,
+        recentVisitors,
+        quickActions: buildQuickActions()
+      })
+    } catch (error) {
+      console.error('load workbench failed:', error)
+      this.setData({
+        defaultCard: null,
+        displayCardName: TEXT.defaultName,
+        displayCardRole: TEXT.defaultRole,
+        displayCardCompany: '',
+        quickActions: buildQuickActions(),
+        recentVisitors: [],
+        starredContacts: [],
+        personaTags: [],
+        weeklyViews: 0,
+        visitorCount: 0
+      })
+      wx.showToast({
+        title: error && error.message ? error.message : TEXT.loadFailed,
+        icon: 'none'
+      })
     }
   },
 
-  setTimeRange(e) {
-    const range = e.currentTarget.dataset.range
-    let chartData = []
-    let maxValue = 100
-    
-    if (range === 'day') {
-      chartData = [
-        { label: '8时', value: 12, height: 12 },
-        { label: '10时', value: 28, height: 28 },
-        { label: '12时', value: 45, height: 45 },
-        { label: '14时', value: 68, height: 68 },
-        { label: '16时', value: 52, height: 52 },
-        { label: '18时', value: 35, height: 35 },
-        { label: '20时', value: 18, height: 18 }
-      ]
-      maxValue = 100
-    } else if (range === 'week') {
-      chartData = [
-        { label: '周一', value: 45, height: 45 },
-        { label: '周二', value: 78, height: 78 },
-        { label: '周三', value: 32, height: 32 },
-        { label: '周四', value: 95, height: 95 },
-        { label: '周五', value: 67, height: 67 },
-        { label: '周六', value: 23, height: 23 },
-        { label: '周日', value: 18, height: 18 }
-      ]
-      maxValue = 100
-    } else if (range === 'month') {
-      chartData = [
-        { label: '第1周', value: 320, height: 80 },
-        { label: '第2周', value: 280, height: 70 },
-        { label: '第3周', value: 400, height: 100 },
-        { label: '第4周', value: 350, height: 87 }
-      ]
-      maxValue = 400
+  handleQuickAction(e) {
+    const action = e.currentTarget.dataset.action
+    if (action && typeof this[action] === 'function') {
+      this[action]()
     }
-    
-    this.setData({ 
-      timeRange: range,
-      chartData,
-      maxValue
-    })
   },
 
-  setAsDefault(e) {
-    const index = e.currentTarget.dataset.index
-    this.setData({ currentIndex: index })
-    wx.showToast({ title: '已设为默认', icon: 'success' })
+  editDefaultCard() {
+    const id = this.data.defaultCard && (this.data.defaultCard.id || this.data.defaultCard._id)
+      ? (this.data.defaultCard.id || this.data.defaultCard._id)
+      : ''
+    wx.navigateTo({ url: `/pages/edit/edit${id ? `?id=${id}` : ''}` })
   },
 
-  showQR() {
-    wx.navigateTo({ url: '/pages/qrcode/qrcode' })
+  showQR(e) {
+    if (e && e.stopPropagation) e.stopPropagation()
+    const id = this.data.defaultCard && (this.data.defaultCard.id || this.data.defaultCard._id)
+      ? (this.data.defaultCard.id || this.data.defaultCard._id)
+      : ''
+    wx.navigateTo({ url: `/pages/qrcode/qrcode${id ? `?id=${id}` : ''}` })
   },
 
-  editCard() {
-    wx.navigateTo({ url: '/pages/edit/edit' })
+  goToMyCards() {
+    wx.switchTab({ url: '/pages/mycards/mycards' })
   },
 
-  shareCard() {
-    wx.showShareMenu({ withShareTicket: true })
+  goToVisitors() {
+    wx.navigateTo({ url: '/pages/visitor/visitor' })
   },
 
-  goToCreate() {
-    wx.navigateTo({ url: '/pages/edit/edit' })
-  },
-
-  goToStarred() {
+  goToContacts() {
     wx.switchTab({ url: '/pages/contacts/contacts' })
   },
 
   goToAnalytics() {
     wx.navigateTo({ url: '/pages/analytics/analytics' })
-  },
-
-  goToSettings() {
-    wx.switchTab({ url: '/pages/management/management' })
   }
 })

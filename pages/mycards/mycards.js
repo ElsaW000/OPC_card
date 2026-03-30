@@ -6,6 +6,16 @@ const {
 const { bootstrapSessionAsync } = require('../../services/userService')
 
 const TEXT = {
+  title: '\u6211\u7684\u540d\u7247',
+  subtitle: 'MULTI-IDENTITY MANAGEMENT',
+  defaultBadge: '\u9ed8\u8ba4',
+  currentDefault: '\u5f53\u524d\u9ed8\u8ba4',
+  setDefault: '\u8bbe\u4e3a\u9ed8\u8ba4',
+  edit: '\u7f16\u8f91',
+  share: '\u5206\u4eab',
+  addIdentity: '\u521b\u5efa\u65b0\u8eab\u4efd',
+  shareTitleFallback: '\u6211\u7684 OPC \u540d\u7247',
+  sharePathFallback: '/pages/mycards/mycards',
   defaultSaved: '\u5df2\u8bbe\u4e3a\u9ed8\u8ba4',
   keepOne: '\u81f3\u5c11\u4fdd\u7559\u4e00\u5f20',
   deleteTitle: '\u786e\u8ba4\u5220\u9664',
@@ -19,6 +29,7 @@ const TEXT = {
 Page({
   data: {
     cards: [],
+    labels: TEXT,
   },
 
   onLoad() {
@@ -33,9 +44,18 @@ Page({
     try {
       await bootstrapSessionAsync()
       const result = await getCardsAsync()
-      this.setData({
-        cards: Array.isArray(result.data) ? result.data : [],
-      })
+      const cards = Array.isArray(result.data)
+        ? result.data.map((item) => ({
+            ...item,
+            typeIcon: item.typeIcon || 'card',
+            title: item.title || TEXT.shareTitleFallback,
+            role: item.role || '',
+            company: item.company || '',
+            bannerUrl: item.bannerUrl || '',
+            avatarUrl: item.avatarUrl || '',
+          }))
+        : []
+      this.setData({ cards })
     } catch (error) {
       console.error('load cards failed:', error)
       wx.showToast({
@@ -78,8 +98,22 @@ Page({
     }
   },
 
-  shareCard() {
-    wx.showShareMenu({ withShareTicket: true })
+  prepareShareCard(e) {
+    const id = e && e.currentTarget && e.currentTarget.dataset ? e.currentTarget.dataset.id : ''
+    const card = (this.data.cards || []).find((item) => String(item.id) === String(id))
+    this.currentShareCard = card || null
+  },
+
+  onShareAppMessage() {
+    const card = this.currentShareCard || (this.data.cards || []).find((item) => item.isDefault) || (this.data.cards || [])[0]
+    const cardId = card && card.id ? card.id : ''
+    const title = card && card.name
+      ? `${card.name} - ${card.role || TEXT.shareTitleFallback}`
+      : TEXT.shareTitleFallback
+    return {
+      title,
+      path: cardId ? `/pages/cardDetail/cardDetail?id=${cardId}` : TEXT.sharePathFallback,
+    }
   },
 
   deleteCard(e) {

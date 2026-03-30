@@ -1,4 +1,4 @@
-// edit.js - 按照 Figma 设计重构
+// edit.js - æŒ‰ç…§ Figma è®¾è®¡é‡æž„
 
 const app = getApp()
 const { saveCardAsync, getCardViewAsync } = require('../../services/cardService')
@@ -44,91 +44,91 @@ function normalizeEditCustomCard(item = {}, index = 0) {
   }
 }
 
-// 模板配置
+// æ¨¡æ¿é…ç½®
 const TEMPLATES = {
   universal: {
     id: 'universal',
-    name: '通用',
+    name: 'é€šç”¨',
     fields: ['name', 'role', 'location', 'bio', 'phone', 'email', 'githubUrl', 'twitterUrl']
   },
   developer: {
     id: 'developer',
-    name: '程序员',
+    name: 'ç¨‹åºå‘˜',
     fields: ['name', 'role', 'location', 'bio', 'years', 'techStack', 'projects', 'githubUrl', 'phone', 'email']
   },
   designer: {
     id: 'designer',
-    name: '设计师',
+    name: 'è®¾è®¡å¸ˆ',
     fields: ['name', 'role', 'location', 'bio', 'portfolio', 'styles', 'experience', 'phone', 'email', 'twitterUrl']
   },
   boss: {
     id: 'boss',
-    name: '老板',
+    name: 'è€æ¿',
     fields: ['name', 'role', 'company', 'business', 'cooperation', 'bio', 'phone', 'email', 'wechat']
   }
 }
 
 Page({
   data: {
-    // 模板选择
+    // æ¨¡æ¿é€‰æ‹©
     currentTemplate: 'universal',
     templates: TEMPLATES,
     
-    // AI 输入
+    // AI è¾“å…¥
     aiInput: '',
     
-    // 自定义卡片
+    // è‡ªå®šä¹‰å¡ç‰‡
     customCards: [],
     
-    // Banner & 头像
+    // Banner & å¤´åƒ
     bannerUrl: 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080',
     avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200',
     
-    // 基本信息
+    // åŸºæœ¬ä¿¡æ¯
     name: '',
-    nameEn: '', // 英文名
-    locationCountry: '', // 国家
-    locationCity: '', // 省市
+    nameEn: '', // è‹±æ–‡å
+    locationCountry: '', // å›½å®¶
+    locationCity: '', // çœå¸‚
     bio: '',
     
-    // 程序员字段
+    // ç¨‹åºå‘˜å­—æ®µ
     years: '',
     techStack: '',
     
-    // 设计师字段
+    // è®¾è®¡å¸ˆå­—æ®µ
     portfolio: '',
     styles: '',
     experience: '',
     
-    // 老板字段
+    // è€æ¿å­—æ®µ
     company: '',
     business: '',
     cooperation: '',
     wechat: '',
     
-    // 社交链接
+    // ç¤¾äº¤é“¾æŽ¥
     githubUrl: '',
     twitterUrl: '',
     
-    // 数据统计
+    // æ•°æ®ç»Ÿè®¡
     products: '',
     users: '',
     
-    // 联系方式
+    // è”ç³»æ–¹å¼
     phone: '',
     email: '',
     
-    // 产品/项目
+    // äº§å“/é¡¹ç›®
     projects: [],
     
-    // 视频/短视频
+    // è§†é¢‘/çŸ­è§†é¢‘
     videos: [],
     
-    // 底部自定义联系模块
-    footerTitle: '联系我',
-    footerDesc: '如有合作意向，欢迎通过以下方式联系',
+    // åº•éƒ¨è‡ªå®šä¹‰è”ç³»æ¨¡å—
+    footerTitle: 'è”ç³»æˆ‘',
+    footerDesc: 'å¦‚æœ‰åˆä½œæ„å‘ï¼Œæ¬¢è¿Žé€šè¿‡ä»¥ä¸‹æ–¹å¼è”ç³»',
     
-    // AI 推荐标签
+    // AI æŽ¨èæ ‡ç­¾
     suggestedTags: []
   },
 
@@ -196,10 +196,10 @@ Page({
     return {
       bannerUrl: 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080',
       avatarUrl: 'https://images.unsplash.com/photo-1701463387028-3947648f1337?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200',
-      name: '陈小独立',
-      role: 'OPC 创始人 / 全栈工程师',
-      location: '中国，深圳',
-      bio: '一名专注于构建 AI 工具与效率应用的独立开发者...',
+      name: 'é™ˆå°ç‹¬ç«‹',
+      role: 'OPC åˆ›å§‹äºº / å…¨æ ˆå·¥ç¨‹å¸ˆ',
+      location: 'ä¸­å›½ï¼Œæ·±åœ³',
+      bio: 'ä¸€åä¸“æ³¨äºŽæž„å»º AI å·¥å…·ä¸Žæ•ˆçŽ‡åº”ç”¨çš„ç‹¬ç«‹å¼€å‘è€…...',
       githubUrl: 'https://github.com/example',
       twitterUrl: 'https://twitter.com/example',
       years: '8+',
@@ -211,13 +211,47 @@ Page({
         {
           id: '1',
           title: 'CodeFlow AI',
-          description: '一个帮助独立开发者通过自然语言直接生成 React 组件的 AI 工作流。',
+          description: 'ä¸€ä¸ªå¸®åŠ©ç‹¬ç«‹å¼€å‘è€…é€šè¿‡è‡ªç„¶è¯­è¨€ç›´æŽ¥ç”Ÿæˆ React ç»„ä»¶çš„ AI å·¥ä½œæµã€‚',
           thumbnail: '',
           link: 'https://codeflow.example.com',
           github: 'https://github.com/example/codeflow',
           tags: 'AI, React, SaaS'
         }
       ]
+    };
+  },
+
+  getEmptyData() {
+    return {
+      bannerUrl: this.data.bannerUrl,
+      avatarUrl: this.data.avatarUrl,
+      name: '',
+      nameEn: '',
+      role: '',
+      locationCountry: '',
+      locationCity: '',
+      bio: '',
+      githubUrl: '',
+      twitterUrl: '',
+      years: '',
+      products: '',
+      users: '',
+      phone: '',
+      email: '',
+      projects: [],
+      videos: [],
+      customCards: [],
+      company: '',
+      business: '',
+      cooperation: '',
+      wechat: '',
+      techStack: '',
+      portfolio: '',
+      styles: '',
+      experience: '',
+      footerTitle: '\u8054\u7cfb\u6211',
+      footerDesc: '\u5982\u6709\u5408\u4f5c\u610f\u5411\uff0c\u6b22\u8fce\u901a\u8fc7\u4ee5\u4e0b\u65b9\u5f0f\u8054\u7cfb',
+      suggestedTags: []
     };
   },
 
@@ -288,7 +322,7 @@ Page({
     };
   },
 
-  // 输入框变化
+  // è¾“å…¥æ¡†å˜åŒ–
   onInputChange(e) {
     const field = e.currentTarget.dataset.field;
     this.setData({
@@ -296,7 +330,7 @@ Page({
     });
   },
 
-  // 选择图片
+  // é€‰æ‹©å›¾ç‰‡
   chooseBanner() {
     wx.chooseImage({
       count: 1,
@@ -319,7 +353,7 @@ Page({
     });
   },
 
-  // 添加产品
+  // æ·»åŠ äº§å“
   addProject() {
     const projects = this.data.projects;
     const newId = Date.now().toString();
@@ -335,7 +369,7 @@ Page({
     this.setData({ projects });
   },
 
-  // 删除产品
+  // åˆ é™¤äº§å“
   removeProject(e) {
     const index = e.currentTarget.dataset.index;
     const projects = this.data.projects;
@@ -343,7 +377,7 @@ Page({
     this.setData({ projects });
   },
 
-  // 产品输入变化
+  // äº§å“è¾“å…¥å˜åŒ–
   onProjectChange(e) {
     const index = e.currentTarget.dataset.index;
     const field = e.currentTarget.dataset.field;
@@ -352,7 +386,7 @@ Page({
     this.setData({ projects });
   },
 
-  // 选择模板
+  // é€‰æ‹©æ¨¡æ¿
   selectTemplate(e) {
     const templateId = e.currentTarget.dataset.id;
     this.setData({
@@ -360,7 +394,7 @@ Page({
     });
   },
 
-  // 添加自定义卡片
+  // æ·»åŠ è‡ªå®šä¹‰å¡ç‰‡
   addCustomCard() {
     const customCards = this.data.customCards;
     customCards.push({
@@ -371,7 +405,7 @@ Page({
     this.setData({ customCards });
   },
 
-  // 添加视频
+  // æ·»åŠ è§†é¢‘
   addVideo() {
     const videos = this.data.videos;
     videos.push({
@@ -385,7 +419,7 @@ Page({
     this.setData({ videos });
   },
 
-  // 删除视频
+  // åˆ é™¤è§†é¢‘
   removeVideo(e) {
     const index = e.currentTarget.dataset.index;
     const videos = this.data.videos;
@@ -393,7 +427,7 @@ Page({
     this.setData({ videos });
   },
 
-  // 视频输入变化
+  // è§†é¢‘è¾“å…¥å˜åŒ–
   onVideoChange(e) {
     const index = e.currentTarget.dataset.index;
     const field = e.currentTarget.dataset.field;
@@ -402,7 +436,7 @@ Page({
     this.setData({ videos });
   },
 
-  // 删除自定义卡片
+  // åˆ é™¤è‡ªå®šä¹‰å¡ç‰‡
   removeCustomCard(e) {
     const index = e.currentTarget.dataset.index;
     const customCards = this.data.customCards;
@@ -410,7 +444,7 @@ Page({
     this.setData({ customCards });
   },
 
-  // 自定义卡片输入变化
+  // è‡ªå®šä¹‰å¡ç‰‡è¾“å…¥å˜åŒ–
   onCustomCardChange(e) {
     const index = e.currentTarget.dataset.index;
     const field = e.currentTarget.dataset.field;
@@ -419,14 +453,14 @@ Page({
     this.setData({ customCards });
   },
 
-  // AI 一键生成（从文字提取字段）
+  // AI ä¸€é”®ç”Ÿæˆï¼ˆä»Žæ–‡å­—æå–å­—æ®µï¼‰
   async generateFromAI() {
     if (!this.data.aiInput) {
-      wx.showToast({ title: '请先输入一段关于你的介绍', icon: 'none' })
+      wx.showToast({ title: 'è¯·å…ˆè¾“å…¥ä¸€æ®µå…³äºŽä½ çš„ä»‹ç»', icon: 'none' })
       return
     }
 
-    wx.showLoading({ title: 'AI 识别中...' })
+    wx.showLoading({ title: 'AI è¯†åˆ«ä¸­...' })
 
     try {
       const res = await generateAI('extract', { text: this.data.aiInput })
@@ -442,22 +476,22 @@ Page({
           years: extracted.years || this.data.years,
           techStack: extracted.techStack || this.data.techStack,
           projects: Array.isArray(extracted.projects) ? extracted.projects : this.data.projects,
-          'customCards[0].title': extracted.tags ? '标签' : '',
+          'customCards[0].title': extracted.tags ? 'æ ‡ç­¾' : '',
           'customCards[0].content': extracted.tags ? extracted.tags.join(', ') : ''
         })
-        wx.showToast({ title: 'AI 填充成功', icon: 'success' })
+        wx.showToast({ title: 'AI å¡«å……æˆåŠŸ', icon: 'success' })
       } else {
-        wx.showToast({ title: 'AI 识别失败', icon: 'none' })
+        wx.showToast({ title: 'AI è¯†åˆ«å¤±è´¥', icon: 'none' })
       }
     } catch (error) {
       wx.hideLoading()
-      console.error('AI 识别失败', error)
-      wx.showToast({ title: 'AI 识别失败', icon: 'none' })
+      console.error('AI è¯†åˆ«å¤±è´¥', error)
+      wx.showToast({ title: 'AI è¯†åˆ«å¤±è´¥', icon: 'none' })
     }
   },
 
   async generateIntro() {
-    wx.showLoading({ title: 'AI 生成中...' })
+    wx.showLoading({ title: 'AI ç”Ÿæˆä¸­...' })
 
     try {
       const res = await generateAI('generateIntro', {
@@ -471,24 +505,24 @@ Page({
         this.setData({
           bio: intro || this.data.bio
         })
-        wx.showToast({ title: '生成成功', icon: 'success' })
+        wx.showToast({ title: 'ç”ŸæˆæˆåŠŸ', icon: 'success' })
       } else {
-        wx.showToast({ title: '生成失败', icon: 'none' })
+        wx.showToast({ title: 'ç”Ÿæˆå¤±è´¥', icon: 'none' })
       }
     } catch (error) {
       wx.hideLoading()
-      console.error('生成失败', error)
-      wx.showToast({ title: '生成失败', icon: 'none' })
+      console.error('ç”Ÿæˆå¤±è´¥', error)
+      wx.showToast({ title: 'ç”Ÿæˆå¤±è´¥', icon: 'none' })
     }
   },
 
   async optimizeBio() {
     if (!this.data.bio) {
-      wx.showToast({ title: '请先填写简介', icon: 'none' })
+      wx.showToast({ title: 'è¯·å…ˆå¡«å†™ç®€ä»‹', icon: 'none' })
       return
     }
 
-    wx.showLoading({ title: 'AI 优化中...' })
+    wx.showLoading({ title: 'AI ä¼˜åŒ–ä¸­...' })
 
     try {
       const res = await generateAI('optimize', { bio: this.data.bio })
@@ -496,30 +530,30 @@ Page({
       if (res && res.success) {
         const optimizedText = (res.result && res.result.optimizedText) || ''
         wx.showModal({
-          title: 'AI 优化结果',
+          title: 'AI ä¼˜åŒ–ç»“æžœ',
           content: optimizedText,
           showCancel: true,
-          confirmText: '使用',
+          confirmText: 'ä½¿ç”¨',
           success: (modalRes) => {
             if (modalRes.confirm) {
               this.setData({
-                bio: optimizedText.replace('优化后的自我介绍：', '')
+                bio: optimizedText.replace('ä¼˜åŒ–åŽçš„è‡ªæˆ‘ä»‹ç»ï¼š', '')
               })
             }
           }
         })
       } else {
-        wx.showToast({ title: '优化失败', icon: 'none' })
+        wx.showToast({ title: 'ä¼˜åŒ–å¤±è´¥', icon: 'none' })
       }
     } catch (error) {
       wx.hideLoading()
-      console.error('优化失败', error)
-      wx.showToast({ title: '优化失败', icon: 'none' })
+      console.error('ä¼˜åŒ–å¤±è´¥', error)
+      wx.showToast({ title: 'ä¼˜åŒ–å¤±è´¥', icon: 'none' })
     }
   },
 
   async generateTags() {
-    wx.showLoading({ title: 'AI 推荐中...' })
+    wx.showLoading({ title: 'AI æŽ¨èä¸­...' })
 
     try {
       const res = await generateAI('tags', { identity: this.data.role })
@@ -528,38 +562,38 @@ Page({
         this.setData({
           suggestedTags: Array.isArray(res.result) ? res.result : []
         })
-        wx.showToast({ title: '推荐成功', icon: 'success' })
+        wx.showToast({ title: 'æŽ¨èæˆåŠŸ', icon: 'success' })
       } else {
-        wx.showToast({ title: '推荐失败', icon: 'none' })
+        wx.showToast({ title: 'æŽ¨èå¤±è´¥', icon: 'none' })
       }
     } catch (error) {
       wx.hideLoading()
-      console.error('推荐失败', error)
-      wx.showToast({ title: '推荐失败', icon: 'none' })
+      console.error('æŽ¨èå¤±è´¥', error)
+      wx.showToast({ title: 'æŽ¨èå¤±è´¥', icon: 'none' })
     }
   },
 
   addTag(e) {
     const tag = e.currentTarget.dataset.tag
-    // TODO: 将标签添加到对应字段
-    wx.showToast({ title: '已添加: ' + tag, icon: 'none' })
+    // TODO: å°†æ ‡ç­¾æ·»åŠ åˆ°å¯¹åº”å­—æ®µ
+    wx.showToast({ title: 'å·²æ·»åŠ : ' + tag, icon: 'none' })
   },
 
-  // AI 读取 GitHub 项目
+  // AI è¯»å– GitHub é¡¹ç›®
   async fetchGitHubProjects() {
     if (!this.data.githubUrl) {
-      wx.showToast({ title: '请先填写 GitHub 地址', icon: 'none' })
+      wx.showToast({ title: 'è¯·å…ˆå¡«å†™ GitHub åœ°å€', icon: 'none' })
       return
     }
 
     const match = this.data.githubUrl.match(/github\.com\/([^\/]+)/)
     if (!match) {
-      wx.showToast({ title: 'GitHub 地址格式不对', icon: 'none' })
+      wx.showToast({ title: 'GitHub åœ°å€æ ¼å¼ä¸å¯¹', icon: 'none' })
       return
     }
 
     const username = match[1]
-    wx.showLoading({ title: 'AI 读取中...' })
+    wx.showLoading({ title: 'AI è¯»å–ä¸­...' })
 
     try {
       const res = await generateAI('fetchGitHub', { username })
@@ -578,14 +612,14 @@ Page({
         this.setData({
           projects: [...this.data.projects, ...newProjects]
         })
-        wx.showToast({ title: `已添加 ${projects.length} 个项目`, icon: 'success' })
+        wx.showToast({ title: `å·²æ·»åŠ  ${projects.length} ä¸ªé¡¹ç›®`, icon: 'success' })
       } else {
-        wx.showToast({ title: '读取失败', icon: 'none' })
+        wx.showToast({ title: 'è¯»å–å¤±è´¥', icon: 'none' })
       }
     } catch (error) {
       wx.hideLoading()
-      console.error('读取失败', error)
-      wx.showToast({ title: '读取失败', icon: 'none' })
+      console.error('è¯»å–å¤±è´¥', error)
+      wx.showToast({ title: 'è¯»å–å¤±è´¥', icon: 'none' })
     }
   },
 
@@ -594,19 +628,19 @@ Page({
     const project = this.data.projects[index]
 
     if (!project.github) {
-      wx.showToast({ title: '请先填写 GitHub 链接', icon: 'none' })
+      wx.showToast({ title: 'è¯·å…ˆå¡«å†™ GitHub é“¾æŽ¥', icon: 'none' })
       return
     }
 
     const match = project.github.match(/github\.com\/([^\/]+)\/([^\/]+)/)
     if (!match) {
-      wx.showToast({ title: 'GitHub 链接格式不对', icon: 'none' })
+      wx.showToast({ title: 'GitHub é“¾æŽ¥æ ¼å¼ä¸å¯¹', icon: 'none' })
       return
     }
 
     const owner = match[1]
     const repo = match[2]
-    wx.showLoading({ title: 'AI 读取中...' })
+    wx.showLoading({ title: 'AI è¯»å–ä¸­...' })
 
     try {
       const res = await generateAI('fetchProjectReadme', { owner, repo })
@@ -621,20 +655,20 @@ Page({
           tags: info.topics ? info.topics.join(', ') : projects[index].tags
         }
         this.setData({ projects })
-        wx.showToast({ title: '已完善项目信息', icon: 'success' })
+        wx.showToast({ title: 'å·²å®Œå–„é¡¹ç›®ä¿¡æ¯', icon: 'success' })
       } else {
-        wx.showToast({ title: '读取失败', icon: 'none' })
+        wx.showToast({ title: 'è¯»å–å¤±è´¥', icon: 'none' })
       }
     } catch (error) {
       wx.hideLoading()
-      console.error('读取失败', error)
-      wx.showToast({ title: '读取失败', icon: 'none' })
+      console.error('è¯»å–å¤±è´¥', error)
+      wx.showToast({ title: 'è¯»å–å¤±è´¥', icon: 'none' })
     }
   },
 
   // ??????????????????????
   async saveCard() {
-    wx.showLoading({ title: '保存中...' });
+    wx.showLoading({ title: 'ä¿å­˜ä¸­...' });
 
     const cardData = this.buildCardPayload();
 
@@ -652,7 +686,7 @@ Page({
 
       wx.hideLoading();
       wx.showToast({
-        title: '保存成功',
+        title: 'ä¿å­˜æˆåŠŸ',
         icon: 'success'
       });
 
@@ -661,9 +695,9 @@ Page({
       }, 1500);
     } catch (error) {
       wx.hideLoading();
-      console.error('保存失败', error);
+      console.error('ä¿å­˜å¤±è´¥', error);
       wx.showToast({
-        title: error && error.message ? error.message : '保存失败',
+        title: error && error.message ? error.message : 'ä¿å­˜å¤±è´¥',
         icon: 'none'
       });
     }

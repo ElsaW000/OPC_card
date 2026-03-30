@@ -1,166 +1,97 @@
-<!--home.wxml - Workbench v3.0 -->
 <view class="container">
-  
-  <!-- ID Card Section -->
-  <view class="id-section">
-    <scroll-view class="card-scroll" scroll-x="true" enhanced="true" show-scrollbar="false" bindscroll="onScroll">
-      <view class="card-wrapper">
-        
-        <!-- Card 1 -->
-        <view class="id-card">
-          <image class="card-bg" src="https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=800" mode="aspectFill"></image>
-          <view class="card-overlay"></view>
-          <view class="card-content">
-            <view class="card-top">
-              <view class="id-badge">默认</view>
-              <view class="id-qr" bindtap="showQR">▦</view>
-            </view>
-            <view class="card-middle">
-              <view class="id-info">
-                <text class="id-name">陈小独立</text>
-                <text class="id-role">全栈开发工程师</text>
-              </view>
-              <view class="id-avatar"><image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image></view>
-            </view>
-            <view class="card-bottom">
-              <view class="id-action"><text>编辑</text></view>
-              <view class="id-action" bindtap="setAsDefault" data-index="0"><text>设为默认</text></view>
-            </view>
-          </view>
-        </view>
-        
-        <!-- Card 2 -->
-        <view class="id-card">
-          <image class="card-bg" src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800" mode="aspectFill"></image>
-          <view class="card-overlay"></view>
-          <view class="card-content">
-            <view class="card-top">
-              <view class="id-badge">商务</view>
-              <view class="id-qr" bindtap="showQR">▦</view>
-            </view>
-            <view class="card-middle">
-              <view class="id-info">
-                <text class="id-name">Independent Chen</text>
-                <text class="id-role">Founder & CEO</text>
-              </view>
-              <view class="id-avatar"><image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image></view>
-            </view>
-            <view class="card-bottom">
-              <view class="id-action"><text>编辑</text></view>
-              <view class="id-action" bindtap="setAsDefault" data-index="1"><text>设为默认</text></view>
-            </view>
-          </view>
-        </view>
-        
-        <!-- Card 3 -->
-        <view class="id-card">
-          <image class="card-bg" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800" mode="aspectFill"></image>
-          <view class="card-overlay"></view>
-          <view class="card-content">
-            <view class="card-top">
-              <view class="id-badge">社交</view>
-              <view class="id-qr" bindtap="showQR">▦</view>
-            </view>
-            <view class="card-middle">
-              <view class="id-info">
-                <text class="id-name">阿力</text>
-                <text class="id-role">摄影爱好者</text>
-              </view>
-              <view class="id-avatar"><image src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" mode="aspectFill"></image></view>
-            </view>
-            <view class="card-bottom">
-              <view class="id-action"><text>编辑</text></view>
-              <view class="id-action" bindtap="setAsDefault" data-index="2"><text>设为默认</text></view>
-            </view>
-          </view>
-        </view>
-        
-      </view>
-    </scroll-view>
-    
-    <view class="dots">
-      <view class="dot {{currentIndex === 0 ? 'active' : ''}}"></view>
-      <view class="dot {{currentIndex === 1 ? 'active' : ''}}"></view>
-      <view class="dot {{currentIndex === 2 ? 'active' : ''}}"></view>
-    </view>
+  <view class="wb-header">
+    <text class="wb-title">{{labels.workbench}}</text>
+    <text class="wb-subtitle">{{labels.opcWorkbench}}</text>
   </view>
 
-  <!-- Quick Actions -->
-  <view class="quick-section">
-    <view class="quick-card">
-      <view class="quick-grid">
-        <view class="quick-item" bindtap="goToCreate">
-          <view class="quick-icon blue">＋</view>
-          <text class="quick-label">创建名片</text>
+  <view class="wb-card" bindtap="editDefaultCard">
+    <image wx:if="{{defaultCard && defaultCard.bannerUrl}}" class="wb-card-bg" src="{{defaultCard.bannerUrl}}" mode="aspectFill"></image>
+    <view class="wb-card-overlay"></view>
+    <view class="wb-card-content">
+      <view class="wb-card-top">
+        <text class="wb-badge">{{labels.defaultBadge}}</text>
+        <view class="wb-qr" catchtap="showQR">{{labels.qrCode}}</view>
+      </view>
+      <view class="wb-card-middle">
+        <view class="wb-card-info">
+          <text class="wb-card-name">{{displayCardName}}</text>
+          <text class="wb-card-role">{{displayCardRole}}</text>
+          <text class="wb-card-company" wx:if="{{displayCardCompany}}">{{displayCardCompany}}</text>
         </view>
-        <view class="quick-item" bindtap="goToStarred">
-          <view class="quick-icon yellow">☆</view>
-          <text class="quick-label">星标联系人</text>
-        </view>
-        <view class="quick-item" bindtap="goToAnalytics">
-          <view class="quick-icon orange">📊</view>
-          <text class="quick-label">数据分析</text>
-        </view>
-        <view class="quick-item" bindtap="goToSettings">
-          <view class="quick-icon gray">⚙</view>
-          <text class="quick-label">系统设置</text>
-        </view>
+        <image wx:if="{{defaultCard && defaultCard.avatarUrl}}" class="wb-card-avatar" src="{{defaultCard.avatarUrl}}" mode="aspectFill"></image>
+        <view wx:else class="wb-card-avatar wb-card-avatar-fallback">OPC</view>
       </view>
     </view>
   </view>
 
-  <!-- Visitor Trend -->
-  <view class="data-section">
-    <view class="trend-card">
-      <view class="trend-header">
-        <text class="trend-title">访客趋势</text>
-        <view class="trend-tabs">
-          <text class="trend-tab {{timeRange === 'day' ? 'active' : ''}}" bindtap="setTimeRange" data-range="day">日</text>
-          <text class="trend-tab {{timeRange === 'week' ? 'active' : ''}}" bindtap="setTimeRange" data-range="week">周</text>
-          <text class="trend-tab {{timeRange === 'month' ? 'active' : ''}}" bindtap="setTimeRange" data-range="month">月</text>
+  <view class="summary-card">
+    <text class="summary-label">{{labels.weeklyViews}}</text>
+    <text class="summary-value">{{weeklyViews}}</text>
+    <text class="summary-unit">{{labels.visitorsUnit}}</text>
+  </view>
+
+  <view class="quick-card">
+    <view class="quick-grid">
+      <block wx:for="{{quickActions}}" wx:key="key">
+        <view class="quick-item" bindtap="handleQuickAction" data-action="{{item.action}}">
+          <view class="quick-icon"><text>{{item.iconText}}</text></view>
+          <text class="quick-label">{{item.label}}</text>
         </view>
-      </view>
-      
-      <view class="trend-chart">
-        <view class="trend-y">
-          <text>{{maxValue}}</text>
-          <text>{{Math.round(maxValue/2)}}</text>
-          <text>0</text>
-        </view>
-        <view class="trend-bars">
-          <block wx:for="{{chartData}}" wx:key="index">
-            <view class="trend-bar-item">
-              <view class="trend-bar" style="height:{{item.height}}%;"></view>
-              <text class="trend-label">{{item.label}}</text>
-            </view>
-          </block>
-        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="persona-card" wx:if="{{personaTags.length}}">
+    <view class="persona-header">
+      <text class="persona-title">AI Persona</text>
+    </view>
+    <view class="persona-tags">
+      <view class="persona-tag" wx:for="{{personaTags}}" wx:key="label" style="width: {{item.size}}rpx; height: {{item.size}}rpx;">
+        <text class="persona-tag-text">{{item.label}}</text>
       </view>
     </view>
   </view>
 
-  <!-- Recent Visitors -->
-  <view class="data-section">
-    <view class="visitor-card">
-      <text class="visitor-title">最近访客</text>
-      <view class="visitor-items">
-        <view class="visitor-row">
-          <view class="visitor-avatar-box">李</view>
+  <view class="visitor-card">
+    <view class="visitor-card-header">
+      <text class="visitor-title">{{labels.recentVisitors}}</text>
+      <text class="visitor-more" bindtap="goToVisitors">{{labels.viewMore}}</text>
+    </view>
+    <view wx:if="{{recentVisitors.length}}" class="visitor-items">
+      <block wx:for="{{recentVisitors}}" wx:key="id">
+        <view class="visitor-row" bindtap="goToVisitors">
+          <view class="visitor-avatar-box">{{item.avatarText}}</view>
           <view class="visitor-detail">
-            <text class="visitor-name">李伟</text>
-            <text class="visitor-time">1分钟前</text>
+            <text class="visitor-name">{{item.name}}</text>
+            <text class="visitor-time">{{item.time}}</text>
           </view>
         </view>
-        <view class="visitor-row">
-          <view class="visitor-avatar-box">王</view>
-          <view class="visitor-detail">
-            <text class="visitor-name">王五</text>
-            <text class="visitor-time">1小时前</text>
-          </view>
-        </view>
-      </view>
+      </block>
+    </view>
+    <view wx:else class="visitor-empty" bindtap="goToVisitors">
+      <text class="visitor-empty-text">{{labels.noVisitors}}</text>
     </view>
   </view>
 
-  <view class="spacer"></view>
+  <view class="contact-card-home">
+    <view class="visitor-card-header">
+      <text class="visitor-title">{{labels.starredContacts}}</text>
+      <text class="visitor-more" bindtap="goToContacts">{{labels.viewMore}}</text>
+    </view>
+    <view wx:if="{{starredContacts.length}}" class="contact-items-home">
+      <block wx:for="{{starredContacts}}" wx:key="id">
+        <view class="contact-row-home" bindtap="goToContacts">
+          <image wx:if="{{item.avatarUrl}}" class="contact-avatar-home" src="{{item.avatarUrl}}" mode="aspectFill"></image>
+          <view wx:else class="contact-avatar-home fallback">{{item.avatarText}}</view>
+          <view class="contact-detail-home">
+            <text class="contact-name-home">{{item.name}}</text>
+            <text class="contact-role-home">{{item.role}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+    <view wx:else class="visitor-empty" bindtap="goToContacts">
+      <text class="visitor-empty-text">{{labels.noContacts}}</text>
+    </view>
+  </view>
 </view>

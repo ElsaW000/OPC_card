@@ -1,5 +1,5 @@
 const app = getApp()
-const { getCardViewAsync } = require('../../services/cardService')
+const { getCardViewAsync, setDefaultCardAsync } = require('../../services/cardService')
 const { bootstrapSessionAsync } = require('../../services/userService')
 
 const DEFAULT_BANNER = 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=1200'
@@ -26,6 +26,17 @@ const TEXT = {
   shareCard: '\u5206\u4eab\u540d\u7247',
   viewQr: '\u67e5\u770b\u4e8c\u7ef4\u7801',
   detailLoadFailed: '\u540d\u7247\u8be6\u60c5\u52a0\u8f7d\u5931\u8d25',
+  projectTitle: '\u7cbe\u9009\u9879\u76ee',
+  projectMore: 'View All',
+  videoTitle: '\u89c6\u9891\u4e0e\u6f14\u793a',
+  videoMore: 'Recent',
+  contactTitle: '\u8054\u7cfb\u6211',
+  contactDesc: '\u6b22\u8fce\u901a\u8fc7\u4ee5\u4e0b\u65b9\u5f0f\u5efa\u7acb\u8fde\u63a5\uff0c\u6211\u4f1a\u5c3d\u5feb\u56de\u590d\u3002',
+  exchangeCard: '\u4ea4\u6362\u540d\u7247',
+  editCard: '\u7f16\u8f91\u540d\u7247',
+  shareTitleFallback: '\u6211\u7684 OPC \u540d\u7247',
+  setDefaultDone: '\u5df2\u8bbe\u4e3a\u9ed8\u8ba4\u540d\u7247',
+  setDefaultFailed: '\u8bbe\u7f6e\u9ed8\u8ba4\u5931\u8d25',
 }
 
 function toStringValue(value, fallback = '') {
@@ -96,6 +107,13 @@ function buildSafeCard(card = {}) {
   const tags = toTagList(card.tags || card.techStack, ['AI', 'React', 'SaaS'])
   const projects = Array.isArray(card.projects) ? card.projects.map(normalizeProject) : []
   const videos = Array.isArray(card.videos) ? card.videos.map(normalizeVideo) : []
+  const customCards = Array.isArray(card.customCards)
+    ? card.customCards.map((item, index) => ({
+        id: toStringValue(item.id, `custom-${index}`),
+        title: toStringValue(item.title),
+        content: toStringValue(item.content)
+      })).filter((item) => item.title || item.content)
+    : []
   const location = [toStringValue(card.locationCountry), toStringValue(card.locationCity)].filter(Boolean).join(' / ')
 
   return {
@@ -112,8 +130,11 @@ function buildSafeCard(card = {}) {
     phone: toStringValue(card.phone, '138 0013 8000'),
     email: toStringValue(card.email, 'chen@example.com'),
     wechat: toStringValue(card.wechat, 'indie-chen'),
+    footerTitle: toStringValue(card.footerTitle, TEXT.contactTitle),
+    footerDesc: toStringValue(card.footerDesc, TEXT.contactDesc),
     stats: buildStats(card),
     tags,
+    customCards,
     projects: projects.length ? projects : [normalizeProject({
       id: 'project-1',
       title: 'CodeFlow AI',
@@ -153,6 +174,11 @@ function getMockCards() {
     email: 'chen@example.com',
     wechat: 'indie-chen',
     techStack: 'AI, React, SaaS',
+    customCards: [{
+      id: 'c1',
+      title: '\u8fd1\u65e5\u9700\u6c42',
+      content: '\u6b63\u5728\u5bfb\u627e AI \u6548\u7387\u5de5\u5177\u3001B \u7aef SaaS \u5408\u4f5c\u4e0e\u72ec\u7acb\u5f00\u53d1\u4ea7\u54c1\u5171\u521b\u673a\u4f1a\u3002'
+    }],
     projects: [{
       id: 'p1',
       title: 'CodeFlow AI',
@@ -175,7 +201,8 @@ function getMockCards() {
 Page({
   data: {
     card: null,
-    contactItems: []
+    contactItems: [],
+    labels: TEXT,
   },
 
   onLoad(options) {
@@ -220,14 +247,43 @@ Page({
     wx.navigateTo({ url: `/pages/edit/edit?id=${cardId}` })
   },
 
-  shareCard() {
-    wx.showShareMenu({ withShareTicket: true })
-    wx.showToast({ title: TEXT.shareOpened, icon: 'none' })
+  prepareShareCard() {
+    this.currentShareCard = this.data.card || null
   },
 
-  setDefaultCard() {
-    const message = this.data.card && this.data.card.isDefault ? TEXT.defaultReady : TEXT.defaultTodo
-    wx.showToast({ title: message, icon: 'none' })
+  onShareAppMessage() {
+    const card = this.currentShareCard || this.data.card
+    const cardId = card && card.id ? card.id : ''
+    return {
+      title: card && card.name ? `${card.name} - ${card.role || TEXT.shareTitleFallback}` : TEXT.shareTitleFallback,
+      path: cardId ? `/pages/cardDetail/cardDetail?id=${cardId}` : '/pages/mycards/mycards',
+    }
+  },
+
+  async setDefaultCard() {
+    if (this.data.card && this.data.card.isDefault) {
+      wx.showToast({ title: TEXT.defaultReady, icon: 'none' })
+      return
+    }
+    try {
+      await bootstrapSessionAsync()
+      await setDefaultCardAsync(this.data.card.id)
+      const nextCard = {
+        ...this.data.card,
+        isDefault: true
+      }
+      this.setData({ card: nextCard })
+      if (app.globalData && app.globalData.cardData) {
+        app.globalData.cardData = {
+          ...app.globalData.cardData,
+          isDefault: true
+        }
+      }
+      wx.showToast({ title: TEXT.setDefaultDone, icon: 'success' })
+    } catch (error) {
+      console.error('set detail default failed:', error)
+      wx.showToast({ title: TEXT.setDefaultFailed, icon: 'none' })
+    }
   },
 
   previewQrcode() {
@@ -240,7 +296,9 @@ Page({
       itemList: [TEXT.shareCard, TEXT.viewQr],
       success: (res) => {
         if (res.tapIndex === 0) {
-          this.shareCard()
+          this.prepareShareCard()
+          wx.showShareMenu({ withShareTicket: true })
+          wx.showToast({ title: TEXT.shareOpened, icon: 'none' })
           return
         }
         this.previewQrcode()

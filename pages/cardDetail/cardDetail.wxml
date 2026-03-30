@@ -1,11 +1,7 @@
 <view class="detail-page" wx:if="{{card}}">
-    <view class="hero">
+  <view class="hero">
     <image class="hero-banner" src="{{card.bannerUrl}}" mode="aspectFill" />
     <view class="hero-overlay"></view>
-    <view class="hero-corner left"></view>
-    <view class="hero-corner right" bindtap="previewQrcode">
-      <image class="hero-corner-icon" src="/images/icons/qr-white.png" mode="aspectFit" />
-    </view>
   </view>
 
   <view class="profile-shell">
@@ -17,10 +13,10 @@
         <view class="circle-action" bindtap="setDefaultCard">
           <image class="circle-action-icon" src="{{card.isDefault ? '/images/icons/default-selected.png' : '/images/icons/default-unselected.png'}}" mode="aspectFit" />
         </view>
-        <view class="circle-action" bindtap="shareCard">
+        <button class="circle-action share-action" open-type="share" bindtap="prepareShareCard">
           <image class="circle-action-icon" src="/images/icons/share.png" mode="aspectFit" />
-        </view>
-        <view class="primary-action" bindtap="editCard">编辑名片</view>
+        </button>
+        <view class="primary-action" bindtap="editCard">{{labels.editCard}}</view>
       </view>
     </view>
 
@@ -49,16 +45,25 @@
     <view class="tag-chip" wx:for="{{card.tags}}" wx:key="index">{{item}}</view>
   </view>
 
+  <view class="section custom-section" wx:if="{{card.customCards && card.customCards.length}}">
+    <view class="custom-list">
+      <view class="custom-card" wx:for="{{card.customCards}}" wx:key="id">
+        <text class="custom-title">{{item.title}}</text>
+        <text class="custom-content">{{item.content}}</text>
+      </view>
+    </view>
+  </view>
+
   <view class="section">
     <view class="section-head">
-      <text class="section-title">精选项目</text>
-      <text class="section-more">View All</text>
+      <text class="section-title">{{labels.projectTitle}}</text>
+      <text class="section-more">{{labels.projectMore}}</text>
     </view>
     <view class="portfolio-list">
       <view class="portfolio-card" wx:for="{{card.projects}}" wx:key="id">
         <view class="portfolio-hero">
           <image class="portfolio-cover" src="{{item.thumbnail}}" mode="aspectFill" />
-          <view class="portfolio-fab" bindtap="shareCard">
+          <view class="portfolio-fab">
             <image class="portfolio-fab-icon" src="/images/icons/share.png" mode="aspectFit" />
           </view>
         </view>
@@ -79,8 +84,8 @@
 
   <view class="section video-section">
     <view class="section-head">
-      <text class="section-title">视频与演示</text>
-      <text class="section-more">Recent</text>
+      <text class="section-title">{{labels.videoTitle}}</text>
+      <text class="section-more">{{labels.videoMore}}</text>
     </view>
     <scroll-view class="video-scroll" scroll-x="true" show-scrollbar="false">
       <view class="video-row">
@@ -94,7 +99,7 @@
           <view class="video-info">
             <text class="video-title">{{item.title}}</text>
             <view class="video-meta">
-              <text class="video-meta-text">播放 {{item.views}}</text>
+              <text class="video-meta-text">{{item.views}}</text>
               <text class="video-meta-text">Share</text>
             </view>
           </view>
@@ -105,9 +110,9 @@
 
   <view class="section contact-block" wx:if="{{contactItems.length}}">
     <view class="section-head compact">
-      <text class="section-title">联系我</text>
+      <text class="section-title">{{card.footerTitle || labels.contactTitle}}</text>
     </view>
-    <text class="contact-desc">欢迎通过以下方式建立连接，我会尽快回复。</text>
+    <text class="contact-desc">{{card.footerDesc || labels.contactDesc}}</text>
     <view class="contact-list">
       <view class="contact-card" wx:for="{{contactItems}}" wx:key="key">
         <view class="contact-left">
@@ -124,7 +129,7 @@
 
   <view class="floating-dock">
     <view class="dock-primary" bindtap="exchangeCard">
-      <text class="dock-primary-label">交换名片</text>
+      <text class="dock-primary-label">{{labels.exchangeCard}}</text>
     </view>
   </view>
 </view>
