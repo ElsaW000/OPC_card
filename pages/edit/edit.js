@@ -1,6 +1,10 @@
-// edit.js - 按照 Figma 设计重构
+﻿// edit.js - 按照 Figma 设计重构
 
 const app = getApp()
+const { saveCardAsync } = require('../../services/cardService')
+const { bootstrapSessionAsync } = require('../../services/userService')
+const { generateAI } = require('../../services/aiService')
+
 
 // 模板配置
 const TEMPLATES = {
@@ -90,9 +94,10 @@ Page({
     suggestedTags: []
   },
 
-  onLoad() {
-    // 从全局数据或存储中加载当前数据
+  onLoad(options) {
+    // ???????????????
     const globalData = app.globalData.cardData || this.getDefaultData();
+    this.editingCardId = (options && options.id) || globalData._id || globalData.id || '';
     this.setData(globalData);
   },
 
@@ -122,6 +127,47 @@ Page({
           tags: 'AI, React, SaaS'
         }
       ]
+    };
+  },
+
+  buildCardPayload() {
+    const projects = this.data.projects.map(p => ({
+      ...p,
+      tags: Array.isArray(p.tags)
+        ? p.tags
+        : (p.tags ? String(p.tags).split(',').map(t => t.trim()).filter(Boolean) : [])
+    }));
+
+    return {
+      template: this.data.currentTemplate,
+      customCards: Array.isArray(this.data.customCards) ? this.data.customCards : [],
+      bannerUrl: this.data.bannerUrl,
+      avatarUrl: this.data.avatarUrl,
+      name: this.data.name,
+      nameEn: this.data.nameEn,
+      locationCountry: this.data.locationCountry,
+      locationCity: this.data.locationCity,
+      role: this.data.role,
+      bio: this.data.bio,
+      years: this.data.years,
+      techStack: this.data.techStack,
+      portfolio: this.data.portfolio,
+      styles: this.data.styles,
+      experience: this.data.experience,
+      company: this.data.company,
+      business: this.data.business,
+      cooperation: this.data.cooperation,
+      wechat: this.data.wechat,
+      githubUrl: this.data.githubUrl,
+      twitterUrl: this.data.twitterUrl,
+      products: this.data.products,
+      users: this.data.users,
+      phone: this.data.phone,
+      email: this.data.email,
+      projects,
+      videos: Array.isArray(this.data.videos) ? this.data.videos : [],
+      footerTitle: this.data.footerTitle,
+      footerDesc: this.data.footerDesc
     };
   },
 
@@ -257,150 +303,125 @@ Page({
   },
 
   // AI 一键生成（从文字提取字段）
-  generateFromAI() {
+  async generateFromAI() {
     if (!this.data.aiInput) {
       wx.showToast({ title: '请先输入一段关于你的介绍', icon: 'none' })
       return
     }
-    
+
     wx.showLoading({ title: 'AI 识别中...' })
-    
-    wx.cloud.callFunction({
-      name: 'aiGenerate',
-      data: { 
-        type: 'extract',
-        data: { text: this.data.aiInput }
-      },
-      success: (res) => {
-        wx.hideLoading()
-        if (res.result && res.result.success) {
-          const extracted = res.result.result
-          
-          // 自动填入各个字段
-          this.setData({
-            name: extracted.name || this.data.name,
-            role: extracted.role || this.data.role,
-            locationCountry: extracted.locationCountry || this.data.locationCountry,
-            locationCity: extracted.locationCity || this.data.locationCity,
-            bio: extracted.bio || this.data.bio,
-            years: extracted.years || this.data.years,
-            techStack: extracted.techStack || this.data.techStack,
-            projects: extracted.projects || this.data.projects,
-            'customCards[0].title': extracted.tags ? '标签' : '',
-            'customCards[0].content': extracted.tags ? extracted.tags.join(', ') : ''
-          })
-          
-          wx.showToast({ title: 'AI 填充成功', icon: 'success' })
-        } else {
-          wx.showToast({ title: 'AI 识别失败', icon: 'none' })
-        }
-      },
-      fail: (err) => {
-        wx.hideLoading()
+
+    try {
+      const res = await generateAI('extract', { text: this.data.aiInput })
+      wx.hideLoading()
+      if (res && res.success) {
+        const extracted = res.result || {}
+        this.setData({
+          name: extracted.name || this.data.name,
+          role: extracted.role || this.data.role,
+          locationCountry: extracted.locationCountry || this.data.locationCountry,
+          locationCity: extracted.locationCity || this.data.locationCity,
+          bio: extracted.bio || this.data.bio,
+          years: extracted.years || this.data.years,
+          techStack: extracted.techStack || this.data.techStack,
+          projects: Array.isArray(extracted.projects) ? extracted.projects : this.data.projects,
+          'customCards[0].title': extracted.tags ? '标签' : '',
+          'customCards[0].content': extracted.tags ? extracted.tags.join(', ') : ''
+        })
+        wx.showToast({ title: 'AI 填充成功', icon: 'success' })
+      } else {
         wx.showToast({ title: 'AI 识别失败', icon: 'none' })
       }
-    })
+    } catch (error) {
+      wx.hideLoading()
+      console.error('AI 识别失败', error)
+      wx.showToast({ title: 'AI 识别失败', icon: 'none' })
+    }
   },
 
-  // AI 生成一句话介绍
-  generateIntro(e) {
+  async generateIntro() {
     wx.showLoading({ title: 'AI 生成中...' })
-    
-    wx.cloud.callFunction({
-      name: 'aiGenerate',
-      data: { 
-        type: 'intro',
-        data: { keywords: this.data.role + ' ' + this.data.location }
-      },
-      success: (res) => {
-        wx.hideLoading()
-        if (res.result && res.result.success) {
-          this.setData({
-            bio: res.result.result
-          })
-          wx.showToast({ title: '生成成功', icon: 'success' })
-        } else {
-          wx.showToast({ title: '生成失败', icon: 'none' })
-        }
-      },
-      fail: (err) => {
-        wx.hideLoading()
+
+    try {
+      const res = await generateAI('generateIntro', {
+        role: this.data.role,
+        locationCity: this.data.locationCity,
+        techStack: this.data.techStack
+      })
+      wx.hideLoading()
+      if (res && res.success) {
+        const intro = (res.result && res.result.intro) || ''
+        this.setData({
+          bio: intro || this.data.bio
+        })
+        wx.showToast({ title: '生成成功', icon: 'success' })
+      } else {
         wx.showToast({ title: '生成失败', icon: 'none' })
       }
-    })
+    } catch (error) {
+      wx.hideLoading()
+      console.error('生成失败', error)
+      wx.showToast({ title: '生成失败', icon: 'none' })
+    }
   },
 
-  // AI 优化介绍文案
-  optimizeBio(e) {
+  async optimizeBio() {
     if (!this.data.bio) {
       wx.showToast({ title: '请先填写简介', icon: 'none' })
       return
     }
-    
+
     wx.showLoading({ title: 'AI 优化中...' })
-    
-    wx.cloud.callFunction({
-      name: 'aiGenerate',
-      data: { 
-        type: 'optimize',
-        data: { bio: this.data.bio }
-      },
-      success: (res) => {
-        wx.hideLoading()
-        if (res.result && res.result.success) {
-          wx.showModal({
-            title: 'AI 优化结果',
-            content: res.result.result,
-            showCancel: true,
-            confirmText: '使用',
-            success: (modalRes) => {
-              if (modalRes.confirm) {
-                this.setData({
-                  bio: res.result.result.replace('优化后的自我介绍：', '')
-                })
-              }
+
+    try {
+      const res = await generateAI('optimize', { bio: this.data.bio })
+      wx.hideLoading()
+      if (res && res.success) {
+        const optimizedText = (res.result && res.result.optimizedText) || ''
+        wx.showModal({
+          title: 'AI 优化结果',
+          content: optimizedText,
+          showCancel: true,
+          confirmText: '使用',
+          success: (modalRes) => {
+            if (modalRes.confirm) {
+              this.setData({
+                bio: optimizedText.replace('优化后的自我介绍：', '')
+              })
             }
-          })
-        } else {
-          wx.showToast({ title: '优化失败', icon: 'none' })
-        }
-      },
-      fail: (err) => {
-        wx.hideLoading()
+          }
+        })
+      } else {
         wx.showToast({ title: '优化失败', icon: 'none' })
       }
-    })
+    } catch (error) {
+      wx.hideLoading()
+      console.error('优化失败', error)
+      wx.showToast({ title: '优化失败', icon: 'none' })
+    }
   },
 
-  // AI 推荐标签
-  generateTags(e) {
+  async generateTags() {
     wx.showLoading({ title: 'AI 推荐中...' })
-    
-    wx.cloud.callFunction({
-      name: 'aiGenerate',
-      data: { 
-        type: 'tags',
-        data: { identity: this.data.role }
-      },
-      success: (res) => {
-        wx.hideLoading()
-        if (res.result && res.result.success) {
-          this.setData({
-            suggestedTags: res.result.result
-          })
-          wx.showToast({ title: '推荐成功', icon: 'success' })
-        } else {
-          wx.showToast({ title: '推荐失败', icon: 'none' })
-        }
-      },
-      fail: (err) => {
-        wx.hideLoading()
+
+    try {
+      const res = await generateAI('tags', { identity: this.data.role })
+      wx.hideLoading()
+      if (res && res.success) {
+        this.setData({
+          suggestedTags: Array.isArray(res.result) ? res.result : []
+        })
+        wx.showToast({ title: '推荐成功', icon: 'success' })
+      } else {
         wx.showToast({ title: '推荐失败', icon: 'none' })
       }
-    })
+    } catch (error) {
+      wx.hideLoading()
+      console.error('推荐失败', error)
+      wx.showToast({ title: '推荐失败', icon: 'none' })
+    }
   },
 
-  // 添加 AI 推荐的标签
   addTag(e) {
     const tag = e.currentTarget.dataset.tag
     // TODO: 将标签添加到对应字段
@@ -408,213 +429,126 @@ Page({
   },
 
   // AI 读取 GitHub 项目
-  fetchGitHubProjects() {
+  async fetchGitHubProjects() {
     if (!this.data.githubUrl) {
       wx.showToast({ title: '请先填写 GitHub 地址', icon: 'none' })
       return
     }
-    
-    // 提取 GitHub 用户名
+
     const match = this.data.githubUrl.match(/github\.com\/([^\/]+)/)
     if (!match) {
       wx.showToast({ title: 'GitHub 地址格式不对', icon: 'none' })
       return
     }
-    
+
     const username = match[1]
     wx.showLoading({ title: 'AI 读取中...' })
-    
-    wx.cloud.callFunction({
-      name: 'aiGenerate',
-      data: { 
-        type: 'fetchGitHub',
-        data: { username: username }
-      },
-      success: (res) => {
-        wx.hideLoading()
-        if (res.result && res.result.success && res.result.result.projects) {
-          const projects = res.result.result.projects
-          
-          // 将获取的项目添加到产品列表
-          const newProjects = projects.map((p, index) => ({
-            id: Date.now().toString() + index,
-            title: p.name,
-            description: p.description || '',
-            thumbnail: '',
-            link: p.url,
-            github: p.url,
-            tags: p.topics || []
-          }))
-          
-          this.setData({
-            projects: [...this.data.projects, ...newProjects]
-          })
-          
-          wx.showToast({ title: `已添加 ${projects.length} 个项目`, icon: 'success' })
-        } else {
-          wx.showToast({ title: '读取失败', icon: 'none' })
-        }
-      },
-      fail: (err) => {
-        wx.hideLoading()
+
+    try {
+      const res = await generateAI('fetchGitHub', { username })
+      wx.hideLoading()
+      if (res && res.success && res.result && Array.isArray(res.result.projects)) {
+        const projects = res.result.projects
+        const newProjects = projects.map((p, index) => ({
+          id: Date.now().toString() + index,
+          title: p.name,
+          description: p.description || '',
+          thumbnail: '',
+          link: p.url,
+          github: p.url,
+          tags: p.topics || []
+        }))
+        this.setData({
+          projects: [...this.data.projects, ...newProjects]
+        })
+        wx.showToast({ title: `已添加 ${projects.length} 个项目`, icon: 'success' })
+      } else {
         wx.showToast({ title: '读取失败', icon: 'none' })
       }
-    })
+    } catch (error) {
+      wx.hideLoading()
+      console.error('读取失败', error)
+      wx.showToast({ title: '读取失败', icon: 'none' })
+    }
   },
 
-  // AI 读取单个项目的 README 并完善信息
-  fetchProjectReadme(e) {
+  async fetchProjectReadme(e) {
     const index = e.currentTarget.dataset.index
     const project = this.data.projects[index]
-    
+
     if (!project.github) {
       wx.showToast({ title: '请先填写 GitHub 链接', icon: 'none' })
       return
     }
-    
-    // 提取 GitHub repo
+
     const match = project.github.match(/github\.com\/([^\/]+)\/([^\/]+)/)
     if (!match) {
       wx.showToast({ title: 'GitHub 链接格式不对', icon: 'none' })
       return
     }
-    
+
     const owner = match[1]
     const repo = match[2]
-    
     wx.showLoading({ title: 'AI 读取中...' })
-    
-    wx.cloud.callFunction({
-      name: 'aiGenerate',
-      data: { 
-        type: 'fetchProjectReadme',
-        data: { owner, repo }
-      },
-      success: (res) => {
-        wx.hideLoading()
-        if (res.result && res.result.success && res.result.result) {
-          const info = res.result.result
-          
-          // 更新该项目的信息
-          const projects = this.data.projects
-          projects[index] = {
-            ...projects[index],
-            title: info.name || projects[index].title,
-            description: info.description || projects[index].description,
-            tags: info.topics ? info.topics.join(', ') : projects[index].tags
-          }
-          
-          this.setData({ projects })
-          wx.showToast({ title: '已完善项目信息', icon: 'success' })
-        } else {
-          wx.showToast({ title: '读取失败', icon: 'none' })
+
+    try {
+      const res = await generateAI('fetchProjectReadme', { owner, repo })
+      wx.hideLoading()
+      if (res && res.success && res.result) {
+        const info = res.result
+        const projects = this.data.projects
+        projects[index] = {
+          ...projects[index],
+          title: info.name || projects[index].title,
+          description: info.description || projects[index].description,
+          tags: info.topics ? info.topics.join(', ') : projects[index].tags
         }
-      },
-      fail: (err) => {
-        wx.hideLoading()
+        this.setData({ projects })
+        wx.showToast({ title: '已完善项目信息', icon: 'success' })
+      } else {
         wx.showToast({ title: '读取失败', icon: 'none' })
       }
-    })
+    } catch (error) {
+      wx.hideLoading()
+      console.error('读取失败', error)
+      wx.showToast({ title: '读取失败', icon: 'none' })
+    }
   },
 
-  // 保存到云端
-  saveCard() {
+  // ??????????????????????
+  async saveCard() {
     wx.showLoading({ title: '保存中...' });
-    
-    // 处理 tags 字符串转数组
-    const projects = this.data.projects.map(p => ({
-      ...p,
-      tags: p.tags ? p.tags.split(',').map(t => t.trim()) : []
-    }));
 
-    const cardData = {
-      // 模板信息
-      template: this.data.currentTemplate,
-      customCards: this.data.customCards,
-      
-      // Banner & 头像
-      bannerUrl: this.data.bannerUrl,
-      avatarUrl: this.data.avatarUrl,
-      
-      // 基本信息
-      name: this.data.name,
-      nameEn: this.data.nameEn,
-      locationCountry: this.data.locationCountry,
-      locationCity: this.data.locationCity,
-      role: this.data.role,
-      bio: this.data.bio,
-      
-      // 程序员字段
-      years: this.data.years,
-      techStack: this.data.techStack,
-      
-      // 设计师字段
-      portfolio: this.data.portfolio,
-      styles: this.data.styles,
-      experience: this.data.experience,
-      
-      // 老板字段
-      company: this.data.company,
-      business: this.data.business,
-      cooperation: this.data.cooperation,
-      wechat: this.data.wechat,
-      
-      // 社交链接
-      githubUrl: this.data.githubUrl,
-      twitterUrl: this.data.twitterUrl,
-      
-      // 数据统计
-      products: this.data.products,
-      users: this.data.users,
-      
-      // 联系方式
-      phone: this.data.phone,
-      email: this.data.email,
-      
-      // 产品/项目
-      projects: projects,
-      
-      // 视频/短视频
-      videos: this.data.videos,
-      
-      // 底部联系模块
-      footerTitle: this.data.footerTitle,
-      footerDesc: this.data.footerDesc
-    };
-    
-    wx.cloud.callFunction({
-      name: 'saveCard',
-      data: { cardData: cardData },
-      success: (res) => {
-        wx.hideLoading();
-        if (res.result && res.result.success) {
-          // 保存到全局
-          app.globalData.cardData = cardData;
-          
-          wx.showToast({
-            title: '保存成功',
-            icon: 'success'
-          });
-          
-          // 返回上一页
-          setTimeout(() => {
-            wx.navigateBack();
-          }, 1500);
-        } else {
-          wx.showToast({
-            title: '保存失败',
-            icon: 'none'
-          });
-        }
-      },
-      fail: (err) => {
-        wx.hideLoading();
-        console.error('保存失败', err);
-        wx.showToast({
-          title: '保存失败',
-          icon: 'none'
-        });
-      }
-    });
+    const cardData = this.buildCardPayload();
+
+    try {
+      await bootstrapSessionAsync();
+      const result = await saveCardAsync(cardData, this.editingCardId);
+      const savedCardId = result && result.cardId ? result.cardId : this.editingCardId;
+
+      app.globalData.cardData = {
+        ...cardData,
+        _id: savedCardId,
+        id: savedCardId
+      };
+      this.editingCardId = savedCardId;
+
+      wx.hideLoading();
+      wx.showToast({
+        title: '保存成功',
+        icon: 'success'
+      });
+
+      setTimeout(() => {
+        wx.navigateBack();
+      }, 1500);
+    } catch (error) {
+      wx.hideLoading();
+      console.error('保存失败', error);
+      wx.showToast({
+        title: error && error.message ? error.message : '保存失败',
+        icon: 'none'
+      });
+    }
   }
 })

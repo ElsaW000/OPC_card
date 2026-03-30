@@ -1,0 +1,9 @@
+{
+  "name": "login",
+  "version": "1.0.0",
+  "description": "微信小程序自动登录并初始化用户会话",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

@@ -1,8 +1,13 @@
 {
-  "description": "项目配置文件",
+  "description": "??????",
   "cloudFunctionRoot": "cloudfunctions/",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "backend"
+      }
+    ],
     "include": []
   },
   "setting": {
@@ -50,15 +55,14 @@
     "disableSWC": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.19.4",
-  "appid": "wx40a92fbb7022133c",
-  "projectname": "OPC名片小程序",
+  "libVersion": "3.15.0",
+  "appid": "wxbe5da72c15a309b9",
+  "projectname": "OPC?????",
   "isGameTourist": false,
   "cloudFunctionTemplate": {},
   "miniprogramRoot": ".",
   "cloudfunctionsRoot": "cloudfunctions/",
   "srcMiniprogramRoot": ".",
-  "cloudFunctionRoot": "cloudfunctions/",
   "templates": {},
   "condition": {
     "search": {
@@ -81,5 +85,6 @@
     }
   },
   "simulatorPluginLibVersion": {},
-  "editorSetting": {}
+  "editorSetting": {},
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
 }

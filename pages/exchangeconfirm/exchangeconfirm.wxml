@@ -1,12 +1,9 @@
-<!--exchangeconfirm.wxml-->
 <view class="container">
-  <!-- 头部 -->
   <view class="header">
     <text class="header-title">交换名片</text>
-    <text class="header-desc">请确认以下信息</text>
+    <text class="header-desc">请确认将向对方发送你的默认名片</text>
   </view>
 
-  <!-- 名片预览 -->
   <view class="card-preview">
     <view class="preview-bg">
       <image src="{{card.bannerUrl}}" mode="aspectFill"></image>
@@ -23,22 +20,20 @@
     </view>
   </view>
 
-  <!-- 交换说明 -->
   <view class="exchange-info">
     <view class="info-item">
-      <text class="info-icon">ℹ️</text>
-      <text class="info-text">交换名片后，对方将可以看到你的联系方式和基本信息</text>
+      <text class="info-icon">提示</text>
+      <text class="info-text">发起交换后，对方会在联系人中收到一条待处理请求。</text>
     </view>
     <view class="info-item">
-      <text class="info-icon">🔒</text>
-      <text class="info-text">你的个人信息将安全存储在对方的名片夹中</text>
+      <text class="info-icon">同步</text>
+      <text class="info-text">当对方同意后，双方都会自动进入联系人列表。</text>
     </view>
   </view>
 
-  <!-- 操作按钮 -->
   <view class="actions">
     <view class="btn-primary" bindtap="confirmExchange">
-      <text>确认交换</text>
+      <text>{{loading ? '发送中...' : '确认交换'}}</text>
     </view>
     <view class="btn-secondary" bindtap="cancelExchange">
       <text>取消</text>

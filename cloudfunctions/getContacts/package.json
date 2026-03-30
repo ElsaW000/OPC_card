@@ -1,0 +1,9 @@
+﻿{
+  "name": "getContacts",
+  "version": "1.0.0",
+  "description": "Get contacts, pending requests, and tags for the current user",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

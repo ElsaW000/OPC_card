@@ -1,0 +1,9 @@
+﻿{
+  "name": "getCardView",
+  "version": "1.0.0",
+  "description": "Read a card for owner or public share view and record visitors",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

@@ -1,0 +1,9 @@
+﻿{
+  "name": "getContactDetail",
+  "version": "1.0.0",
+  "description": "Get detail for a single contact",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

@@ -1,4 +1,4 @@
-<!--index.wxml - 按照 Figma 设计重构 -->
+<!--index.wxml - ÃƒÂ¦Ã…â€™Ã¢â‚¬Â°ÃƒÂ§Ã¢â‚¬Â¦Ã‚Â§ Figma ÃƒÂ¨Ã‚Â®Ã‚Â¾ÃƒÂ¨Ã‚Â®Ã‚Â¡ÃƒÂ©Ã¢â‚¬Â¡Ã‚ÂÃƒÂ¦Ã…Â¾Ã¢â‚¬Å¾ -->
 <view class="container">
   <!-- Banner -->
   <view class="banner">
@@ -6,7 +6,7 @@
     <view class="banner-overlay"></view>
   </view>
 
-  <!-- 个人信息区域 -->
+  <!-- ÃƒÂ¤Ã‚Â¸Ã‚ÂªÃƒÂ¤Ã‚ÂºÃ‚ÂºÃƒÂ¤Ã‚Â¿Ã‚Â¡ÃƒÂ¦Ã‚ÂÃ‚Â¯ÃƒÂ¥Ã…â€™Ã‚ÂºÃƒÂ¥Ã…Â¸Ã…Â¸ -->
   <view class="profile-section">
     <view class="profile-header">
       <view class="avatar-wrapper">
@@ -19,7 +19,7 @@
         <button class="social-btn twitter" bindtap="openLink" data-link="{{twitterUrl}}">
           <text class="iconfont icon-twitter"></text>
         </button>
-        <button class="follow-btn" bindtap="saveContact">保存</button>
+        <button class="follow-btn" bindtap="saveContact">ÃƒÂ¤Ã‚Â¿Ã‚ÂÃƒÂ¥Ã‚Â­Ã‹Å“</button>
       </view>
     </view>
 
@@ -31,72 +31,72 @@
       <view class="role-location">
         <text class="role">{{role}}</text>
         <text class="separator">|</text>
-        <text class="location">{{locationCountry}}，{{locationCity}}</text>
+        <text class="location">{{locationCountry}}ÃƒÂ¯Ã‚Â¼Ã…â€™{{locationCity}}</text>
       </view>
       
       <view class="quick-contact">
         <view class="contact-btn phone" bindtap="callPhone">
-          <text class="contact-icon">📞</text>
-          <text class="contact-text">{{phone || '添加电话'}}</text>
+          <text class="contact-icon">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã…Â¾</text>
+          <text class="contact-text">{{phone || 'ÃƒÂ¦Ã‚Â·Ã‚Â»ÃƒÂ¥Ã…Â Ã‚Â ÃƒÂ§Ã¢â‚¬ÂÃ‚ÂµÃƒÂ¨Ã‚Â¯Ã‚Â'}}</text>
         </view>
         <view class="contact-btn wechat" bindtap="copyWechat" wx:if="{{wechat}}">
-          <text class="contact-icon">💬</text>
+          <text class="contact-icon">ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¬</text>
           <text class="contact-text">{{wechat}}</text>
         </view>
         <view class="contact-btn email" bindtap="copyEmail" data-text="{{email}}">
-          <text class="contact-icon">✉️</text>
-          <text class="contact-text">{{email || '添加邮箱'}}</text>
+          <text class="contact-icon">ÃƒÂ¢Ã…â€œÃ¢â‚¬Â°ÃƒÂ¯Ã‚Â¸Ã‚Â</text>
+          <text class="contact-text">{{email || 'ÃƒÂ¦Ã‚Â·Ã‚Â»ÃƒÂ¥Ã…Â Ã‚Â ÃƒÂ©Ã¢â‚¬Å¡Ã‚Â®ÃƒÂ§Ã‚Â®Ã‚Â±'}}</text>
         </view>
       </view>
       
       <text class="bio">{{bio}}</text>
     </view>
 
-    <!-- 程序员专属信息 -->
+    <!-- ÃƒÂ§Ã‚Â¨Ã¢â‚¬Â¹ÃƒÂ¥Ã‚ÂºÃ‚ÂÃƒÂ¥Ã¢â‚¬ËœÃ‹Å“ÃƒÂ¤Ã‚Â¸Ã¢â‚¬Å“ÃƒÂ¥Ã‚Â±Ã…Â¾ÃƒÂ¤Ã‚Â¿Ã‚Â¡ÃƒÂ¦Ã‚ÂÃ‚Â¯ -->
     <view class="template-info" wx:if="{{currentTemplate === 'developer'}}">
       <view class="info-item">
-        <text class="info-label">工作年限</text>
+        <text class="info-label">ÃƒÂ¥Ã‚Â·Ã‚Â¥ÃƒÂ¤Ã‚Â½Ã…â€œÃƒÂ¥Ã‚Â¹Ã‚Â´ÃƒÂ©Ã¢â€žÂ¢Ã‚Â</text>
         <text class="info-value">{{years}}</text>
       </view>
       <view class="info-item">
-        <text class="info-label">技术栈</text>
+        <text class="info-label">ÃƒÂ¦Ã…Â Ã¢â€šÂ¬ÃƒÂ¦Ã…â€œÃ‚Â¯ÃƒÂ¦Ã‚Â Ã‹â€ </text>
         <text class="info-value">{{techStack}}</text>
       </view>
     </view>
 
-    <!-- 设计师专属信息 -->
+    <!-- ÃƒÂ¨Ã‚Â®Ã‚Â¾ÃƒÂ¨Ã‚Â®Ã‚Â¡ÃƒÂ¥Ã‚Â¸Ã‹â€ ÃƒÂ¤Ã‚Â¸Ã¢â‚¬Å“ÃƒÂ¥Ã‚Â±Ã…Â¾ÃƒÂ¤Ã‚Â¿Ã‚Â¡ÃƒÂ¦Ã‚ÂÃ‚Â¯ -->
     <view class="template-info" wx:if="{{currentTemplate === 'designer'}}">
       <view class="info-item">
-        <text class="info-label">作品集</text>
-        <text class="info-value link" bindtap="openLink" data-link="{{portfolio}}">查看作品</text>
+        <text class="info-label">ÃƒÂ¤Ã‚Â½Ã…â€œÃƒÂ¥Ã¢â‚¬Å“Ã‚ÂÃƒÂ©Ã¢â‚¬ÂºÃ¢â‚¬Â </text>
+        <text class="info-value link" bindtap="openLink" data-link="{{portfolio}}">ÃƒÂ¦Ã…Â¸Ã‚Â¥ÃƒÂ§Ã…â€œÃ¢â‚¬Â¹ÃƒÂ¤Ã‚Â½Ã…â€œÃƒÂ¥Ã¢â‚¬Å“Ã‚Â</text>
       </view>
       <view class="info-item">
-        <text class="info-label">擅长风格</text>
+        <text class="info-label">ÃƒÂ¦Ã¢â‚¬Å“Ã¢â‚¬Â¦ÃƒÂ©Ã¢â‚¬Â¢Ã‚Â¿ÃƒÂ©Ã‚Â£Ã…Â½ÃƒÂ¦Ã‚Â Ã‚Â¼</text>
         <text class="info-value">{{styles}}</text>
       </view>
       <view class="info-item">
-        <text class="info-label">从业年限</text>
+        <text class="info-label">ÃƒÂ¤Ã‚Â»Ã…Â½ÃƒÂ¤Ã‚Â¸Ã…Â¡ÃƒÂ¥Ã‚Â¹Ã‚Â´ÃƒÂ©Ã¢â€žÂ¢Ã‚Â</text>
         <text class="info-value">{{experience}}</text>
       </view>
     </view>
 
-    <!-- 老板专属信息 -->
+    <!-- ÃƒÂ¨Ã¢â€šÂ¬Ã‚ÂÃƒÂ¦Ã‚ÂÃ‚Â¿ÃƒÂ¤Ã‚Â¸Ã¢â‚¬Å“ÃƒÂ¥Ã‚Â±Ã…Â¾ÃƒÂ¤Ã‚Â¿Ã‚Â¡ÃƒÂ¦Ã‚ÂÃ‚Â¯ -->
     <view class="template-info" wx:if="{{currentTemplate === 'boss'}}">
       <view class="info-item">
-        <text class="info-label">公司</text>
+        <text class="info-label">ÃƒÂ¥Ã¢â‚¬Â¦Ã‚Â¬ÃƒÂ¥Ã‚ÂÃ‚Â¸</text>
         <text class="info-value">{{company}}</text>
       </view>
       <view class="info-item">
-        <text class="info-label">业务</text>
+        <text class="info-label">ÃƒÂ¤Ã‚Â¸Ã…Â¡ÃƒÂ¥Ã…Â Ã‚Â¡</text>
         <text class="info-value">{{business}}</text>
       </view>
       <view class="info-item">
-        <text class="info-label">合作方式</text>
+        <text class="info-label">ÃƒÂ¥Ã‚ÂÃ‹â€ ÃƒÂ¤Ã‚Â½Ã…â€œÃƒÂ¦Ã¢â‚¬â€œÃ‚Â¹ÃƒÂ¥Ã‚Â¼Ã‚Â</text>
         <text class="info-value">{{cooperation}}</text>
       </view>
     </view>
 
-    <!-- 自定义卡片 -->
+    <!-- ÃƒÂ¨Ã¢â‚¬Â¡Ã‚ÂªÃƒÂ¥Ã‚Â®Ã…Â¡ÃƒÂ¤Ã‚Â¹Ã¢â‚¬Â°ÃƒÂ¥Ã‚ÂÃ‚Â¡ÃƒÂ§Ã¢â‚¬Â°Ã¢â‚¬Â¡ -->
     <view class="custom-cards" wx:if="{{customCards.length > 0}}">
       <view class="custom-card" wx:for="{{customCards}}" wx:key="id">
         <text class="custom-card-title">{{item.title}}</text>
@@ -104,27 +104,27 @@
       </view>
     </view>
 
-    <!-- 数据卡片 -->
+    <!-- ÃƒÂ¦Ã¢â‚¬Â¢Ã‚Â°ÃƒÂ¦Ã‚ÂÃ‚Â®ÃƒÂ¥Ã‚ÂÃ‚Â¡ÃƒÂ§Ã¢â‚¬Â°Ã¢â‚¬Â¡ -->
     <view class="stats-grid">
       <view class="stat-card">
         <text class="stat-value">{{years}}</text>
-        <text class="stat-label">开发年限</text>
+        <text class="stat-label">ÃƒÂ¥Ã‚Â¼Ã¢â€šÂ¬ÃƒÂ¥Ã‚ÂÃ¢â‚¬ËœÃƒÂ¥Ã‚Â¹Ã‚Â´ÃƒÂ©Ã¢â€žÂ¢Ã‚Â</text>
       </view>
       <view class="stat-card">
         <text class="stat-value">{{products}}</text>
-        <text class="stat-label">上线产品</text>
+        <text class="stat-label">ÃƒÂ¤Ã‚Â¸Ã…Â ÃƒÂ§Ã‚ÂºÃ‚Â¿ÃƒÂ¤Ã‚ÂºÃ‚Â§ÃƒÂ¥Ã¢â‚¬Å“Ã‚Â</text>
       </view>
       <view class="stat-card">
         <text class="stat-value">{{users}}</text>
-        <text class="stat-label">全球用户</text>
+        <text class="stat-label">ÃƒÂ¥Ã¢â‚¬Â¦Ã‚Â¨ÃƒÂ§Ã‚ÂÃ†â€™ÃƒÂ§Ã¢â‚¬ÂÃ‚Â¨ÃƒÂ¦Ã‹â€ Ã‚Â·</text>
       </view>
     </view>
   </view>
 
-  <!-- 产品作品集 -->
+  <!-- ÃƒÂ¤Ã‚ÂºÃ‚Â§ÃƒÂ¥Ã¢â‚¬Å“Ã‚ÂÃƒÂ¤Ã‚Â½Ã…â€œÃƒÂ¥Ã¢â‚¬Å“Ã‚ÂÃƒÂ©Ã¢â‚¬ÂºÃ¢â‚¬Â  -->
   <view class="portfolio-section">
     <view class="section-header">
-      <text class="section-title">产品作品集</text>
+      <text class="section-title">ÃƒÂ¤Ã‚ÂºÃ‚Â§ÃƒÂ¥Ã¢â‚¬Å“Ã‚ÂÃƒÂ¤Ã‚Â½Ã…â€œÃƒÂ¥Ã¢â‚¬Å“Ã‚ÂÃƒÂ©Ã¢â‚¬ÂºÃ¢â‚¬Â </text>
       <text class="view-all">View All</text>
     </view>
     <view class="project-list">
@@ -132,12 +132,12 @@
         <image class="project-thumb" src="{{item.thumbnail}}" mode="aspectFill" />
         <view class="project-info">
           <view class="project-tags">
-            <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+            <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:for-index="tagIndex" wx:key="tagIndex">{{tag}}</text>
           </view>
           <text class="project-title">{{item.title}}</text>
           <text class="project-desc">{{item.description}}</text>
           <view class="project-links">
-            <text class="link-item" wx:if="{{item.link}}">在线地址</text>
+            <text class="link-item" wx:if="{{item.link}}">ÃƒÂ¥Ã…â€œÃ‚Â¨ÃƒÂ§Ã‚ÂºÃ‚Â¿ÃƒÂ¥Ã…â€œÃ‚Â°ÃƒÂ¥Ã‚ÂÃ¢â€šÂ¬</text>
             <text class="link-item" wx:if="{{item.github}}">GitHub</text>
           </view>
         </view>
@@ -145,10 +145,10 @@
     </view>
   </view>
 
-  <!-- 视频/短视频 -->
+  <!-- ÃƒÂ¨Ã‚Â§Ã¢â‚¬Â ÃƒÂ©Ã‚Â¢Ã¢â‚¬Ëœ/ÃƒÂ§Ã…Â¸Ã‚Â­ÃƒÂ¨Ã‚Â§Ã¢â‚¬Â ÃƒÂ©Ã‚Â¢Ã¢â‚¬Ëœ -->
   <view class="video-section" wx:if="{{videos.length > 0}}">
     <view class="section-header">
-      <text class="section-title">产品演示 & 短视频</text>
+      <text class="section-title">ÃƒÂ¤Ã‚ÂºÃ‚Â§ÃƒÂ¥Ã¢â‚¬Å“Ã‚ÂÃƒÂ¦Ã‚Â¼Ã¢â‚¬ÂÃƒÂ§Ã‚Â¤Ã‚Âº & ÃƒÂ§Ã…Â¸Ã‚Â­ÃƒÂ¨Ã‚Â§Ã¢â‚¬Â ÃƒÂ©Ã‚Â¢Ã¢â‚¬Ëœ</text>
       <text class="view-all">Recent</text>
     </view>
     <scroll-view class="video-scroll" scroll-x="true">
@@ -167,31 +167,31 @@
     </scroll-view>
   </view>
 
-  <!-- 底部联系模块 -->
+  <!-- ÃƒÂ¥Ã‚ÂºÃ¢â‚¬Â¢ÃƒÂ©Ã†â€™Ã‚Â¨ÃƒÂ¨Ã‚ÂÃ¢â‚¬ÂÃƒÂ§Ã‚Â³Ã‚Â»ÃƒÂ¦Ã‚Â¨Ã‚Â¡ÃƒÂ¥Ã‚ÂÃ¢â‚¬â€ -->
   <view class="footer-section">
-    <view class="footer-title">{{footerTitle || '联系我'}}</view>
+    <view class="footer-title">{{footerTitle || 'ÃƒÂ¨Ã‚ÂÃ¢â‚¬ÂÃƒÂ§Ã‚Â³Ã‚Â»ÃƒÂ¦Ã‹â€ Ã¢â‚¬Ëœ'}}</view>
     <text class="footer-desc" wx:if="{{footerDesc}}">{{footerDesc}}</text>
     <view class="footer-contact">
       <view class="contact-item-row" bindtap="copyWechat" wx:if="{{wechat}}">
-        <text class="contact-row-icon">💬</text>
+        <text class="contact-row-icon">ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¬</text>
         <view class="contact-row-info">
-          <text class="contact-row-label">微信 (WeChat)</text>
+          <text class="contact-row-label">ÃƒÂ¥Ã‚Â¾Ã‚Â®ÃƒÂ¤Ã‚Â¿Ã‚Â¡ (WeChat)</text>
           <text class="contact-row-value">{{wechat}}</text>
         </view>
       </view>
       <view class="contact-item-row" bindtap="copyEmail" data-text="{{email}}" wx:if="{{email}}">
-        <text class="contact-row-icon">✉️</text>
+        <text class="contact-row-icon">ÃƒÂ¢Ã…â€œÃ¢â‚¬Â°ÃƒÂ¯Ã‚Â¸Ã‚Â</text>
         <view class="contact-row-info">
-          <text class="contact-row-label">邮箱 (Email)</text>
+          <text class="contact-row-label">ÃƒÂ©Ã¢â‚¬Å¡Ã‚Â®ÃƒÂ§Ã‚Â®Ã‚Â± (Email)</text>
           <text class="contact-row-value">{{email}}</text>
         </view>
       </view>
     </view>
   </view>
 
-  <!-- 底部操作 -->
+  <!-- ÃƒÂ¥Ã‚ÂºÃ¢â‚¬Â¢ÃƒÂ©Ã†â€™Ã‚Â¨ÃƒÂ¦Ã¢â‚¬Å“Ã‚ÂÃƒÂ¤Ã‚Â½Ã…â€œ -->
   <view class="action-bar">
-    <button class="action-btn primary" bindtap="editCard">编辑名片</button>
-    <button class="action-btn secondary" bindtap="shareCard">分享名片</button>
+    <button class="action-btn primary" bindtap="editCard">ÃƒÂ§Ã‚Â¼Ã¢â‚¬â€œÃƒÂ¨Ã‚Â¾Ã¢â‚¬ËœÃƒÂ¥Ã‚ÂÃ‚ÂÃƒÂ§Ã¢â‚¬Â°Ã¢â‚¬Â¡</button>
+    <button class="action-btn secondary" bindtap="shareCard">ÃƒÂ¥Ã‹â€ Ã¢â‚¬Â ÃƒÂ¤Ã‚ÂºÃ‚Â«ÃƒÂ¥Ã‚ÂÃ‚ÂÃƒÂ§Ã¢â‚¬Â°Ã¢â‚¬Â¡</button>
   </view>
 </view>

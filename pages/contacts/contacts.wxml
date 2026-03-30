@@ -71,7 +71,7 @@
               </view>
               <text class="contact-role">{{item.role}}</text>
               <view class="contact-tags" wx:if="{{item.tags}}">
-                <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+                <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:for-index="tagIndex" wx:key="tagIndex">{{tag}}</text>
               </view>
             </view>
           </view>

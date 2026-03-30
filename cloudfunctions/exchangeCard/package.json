@@ -1,0 +1,9 @@
+﻿{
+  "name": "exchangeCard",
+  "version": "1.0.0",
+  "description": "Create exchange requests and pending contacts",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
