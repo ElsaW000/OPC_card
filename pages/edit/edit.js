@@ -1,7 +1,7 @@
 ﻿// edit.js - 按照 Figma 设计重构
 
 const app = getApp()
-const { saveCardAsync } = require('../../services/cardService')
+const { saveCardAsync, getCardViewAsync } = require('../../services/cardService')
 const { bootstrapSessionAsync } = require('../../services/userService')
 const { generateAI } = require('../../services/aiService')
 
@@ -94,11 +94,64 @@ Page({
     suggestedTags: []
   },
 
-  onLoad(options) {
-    // ???????????????
+  async onLoad(options) {
     const globalData = app.globalData.cardData || this.getDefaultData();
     this.editingCardId = (options && options.id) || globalData._id || globalData.id || '';
-    this.setData(globalData);
+
+    let sourceData = globalData;
+    if (this.editingCardId) {
+      try {
+        await bootstrapSessionAsync();
+        const result = await getCardViewAsync(this.editingCardId);
+        if (result && result.success && result.data) {
+          sourceData = {
+            ...sourceData,
+            ...result.data,
+          };
+          app.globalData.cardData = sourceData;
+        }
+      } catch (error) {
+        console.error('load edit card failed:', error);
+      }
+    }
+
+    this.setData(this.buildSafeLoadedData(sourceData));
+  },
+
+  buildSafeLoadedData(cardData = {}) {
+    return {
+      currentTemplate: cardData.template || cardData.currentTemplate || this.data.currentTemplate,
+      aiInput: cardData.aiInput || '',
+      customCards: Array.isArray(cardData.customCards) ? cardData.customCards : [],
+      bannerUrl: cardData.bannerUrl || this.data.bannerUrl,
+      avatarUrl: cardData.avatarUrl || this.data.avatarUrl,
+      name: cardData.name || '',
+      nameEn: cardData.nameEn || '',
+      role: cardData.role || '',
+      locationCountry: cardData.locationCountry || '',
+      locationCity: cardData.locationCity || '',
+      bio: cardData.bio || '',
+      years: cardData.years || '',
+      techStack: cardData.techStack || '',
+      portfolio: cardData.portfolio || '',
+      styles: cardData.styles || '',
+      experience: cardData.experience || '',
+      company: cardData.company || '',
+      business: cardData.business || '',
+      cooperation: cardData.cooperation || '',
+      wechat: cardData.wechat || '',
+      githubUrl: cardData.githubUrl || '',
+      twitterUrl: cardData.twitterUrl || '',
+      products: cardData.products || '',
+      users: cardData.users || '',
+      phone: cardData.phone || '',
+      email: cardData.email || '',
+      projects: Array.isArray(cardData.projects) ? cardData.projects : [],
+      videos: Array.isArray(cardData.videos) ? cardData.videos : [],
+      footerTitle: cardData.footerTitle || this.data.footerTitle,
+      footerDesc: cardData.footerDesc || this.data.footerDesc,
+      suggestedTags: Array.isArray(cardData.suggestedTags) ? cardData.suggestedTags : []
+    };
   },
 
   getDefaultData() {
