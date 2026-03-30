@@ -7,7 +7,7 @@
   padding-bottom: 120rpx;
 }
 
-/* AI 一键生成区域 */
+/* AI ä¸€é”®ç”ŸæˆåŒºåŸŸ */
 .ai-section {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
@@ -82,7 +82,7 @@
   margin-bottom: 0;
 }
 
-/* 模板选择 */
+/* æ¨¡æ¿é€‰æ‹© */
 .template-list {
   display: flex;
   gap: 16rpx;
@@ -111,7 +111,7 @@
   color: #fff;
 }
 
-/* AI 按钮 */
+/* AI æŒ‰é’® */
 .ai-buttons {
   display: flex;
   gap: 16rpx;
@@ -127,7 +127,7 @@
   padding: 12rpx 20rpx;
 }
 
-/* AI 推荐标签 */
+/* AI æŽ¨èæ ‡ç­¾ */
 .ai-suggested-tags {
   display: flex;
   flex-wrap: wrap;
@@ -143,7 +143,7 @@
   border: 1rpx solid #fcd34d;
 }
 
-/* 自定义卡片 */
+/* è‡ªå®šä¹‰å¡ç‰‡ */
 .tip-text {
   font-size: 24rpx;
   color: #9ca3af;
@@ -272,18 +272,25 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 24rpx 32rpx;
+  padding: 24rpx 32rpx calc(24rpx + env(safe-area-inset-bottom));
   background-color: #fff;
   box-shadow: 0 -4rpx 12rpx rgba(0, 0, 0, 0.05);
+  z-index: 20;
 }
 
 .save-btn {
   width: 100%;
   height: 96rpx;
+  line-height: 96rpx;
+  padding: 0;
   background-color: #111;
   color: #fff;
   border: none;
   border-radius: 9999rpx;
   font-size: 32rpx;
   font-weight: 500;
+}
+
+.save-btn::after {
+  border: none;
 }
