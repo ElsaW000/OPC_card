@@ -5,6 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from ..database import get_db
+from ..dev_seed import ensure_dev_demo_data
 from ..models import User
 from ..schemas import WechatLoginRequest, WechatLoginResponse
 
@@ -32,6 +33,8 @@ def wechat_login(payload: WechatLoginRequest, db: Session = Depends(get_db)) -> 
         user.last_login_at = datetime.utcnow()
 
     db.commit()
+    db.refresh(user)
+    ensure_dev_demo_data(db, user)
     db.refresh(user)
 
     return WechatLoginResponse(
