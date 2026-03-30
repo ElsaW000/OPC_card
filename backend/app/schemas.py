@@ -1,4 +1,4 @@
-﻿from typing import Literal
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -19,6 +19,31 @@ class WechatLoginResponse(BaseModel):
     openid: str
     session_token: str
     is_new_user: bool
+
+
+class CardProjectPayload(BaseModel):
+    title: str = ""
+    description: str = ""
+    thumbnail_url: str = ""
+    link_url: str = ""
+    github_url: str = ""
+    tags: list[str] = Field(default_factory=list)
+    sort_order: int = 0
+
+
+class CardVideoPayload(BaseModel):
+    title: str = ""
+    thumbnail_url: str = ""
+    link_url: str = ""
+    views_text: str = ""
+    duration_text: str = ""
+    sort_order: int = 0
+
+
+class CardCustomBlockPayload(BaseModel):
+    title: str = ""
+    content: str = ""
+    sort_order: int = 0
 
 
 class CardSummary(BaseModel):
@@ -59,6 +84,9 @@ class CardUpsertRequest(BaseModel):
     users_count: str = ""
     footer_title: str = ""
     footer_desc: str = ""
+    projects: list[CardProjectPayload] = Field(default_factory=list)
+    videos: list[CardVideoPayload] = Field(default_factory=list)
+    custom_cards: list[CardCustomBlockPayload] = Field(default_factory=list)
 
 
 class CardListResponse(BaseModel):
@@ -77,7 +105,7 @@ class ContactItem(BaseModel):
     avatarUrl: str = ""
     bannerUrl: str = ""
     bio: str = ""
-    tags: list[str] = []
+    tags: list[str] = Field(default_factory=list)
     starred: bool = False
     hasUpdate: bool = False
     updateType: str = ""
@@ -103,7 +131,7 @@ class VisitorItem(BaseModel):
     source: str = ""
     location: str = ""
     visitDate: str = ""
-    visitTimeText: str = "刚刚"
+    visitTimeText: str = "??"
     visitCount: int = 1
 
 
@@ -118,9 +146,9 @@ class PersonaTag(BaseModel):
 
 
 class SettingsSummary(BaseModel):
-    aiTone: str = "专业且友好"
+    aiTone: str = "?????"
     publicDynamics: bool = True
-    privacyMode: str = "交换后可见"
+    privacyMode: str = "?????"
     blacklistCount: int = 0
 
 
@@ -130,7 +158,7 @@ class WorkbenchResponse(BaseModel):
     weeklyViews: int
     visitorCount: int
     personaTags: list[PersonaTag]
-    personaSummary: list[str] = []
+    personaSummary: list[str] = Field(default_factory=list)
     starredContacts: list[ContactItem]
     recentVisitors: list[VisitorItem]
     settingsSummary: SettingsSummary

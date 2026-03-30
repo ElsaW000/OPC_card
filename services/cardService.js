@@ -120,6 +120,34 @@ function mapCardPayload(cardData = {}) {
     users_count: cardData.users || '',
     footer_title: cardData.footerTitle || '',
     footer_desc: cardData.footerDesc || '',
+    projects: Array.isArray(cardData.projects)
+      ? cardData.projects.map((item, index) => ({
+          title: item.title || '',
+          description: item.description || '',
+          thumbnail_url: item.thumbnail || item.thumbnailUrl || '',
+          link_url: item.linkUrl || item.link || '',
+          github_url: item.githubUrl || '',
+          tags: Array.isArray(item.tags) ? item.tags.filter(Boolean) : [],
+          sort_order: Number(item.sortOrder ?? index) || 0,
+        }))
+      : [],
+    videos: Array.isArray(cardData.videos)
+      ? cardData.videos.map((item, index) => ({
+          title: item.title || '',
+          thumbnail_url: item.thumbnail || item.thumbnailUrl || '',
+          link_url: item.linkUrl || item.link || '',
+          views_text: item.views || item.viewsText || '',
+          duration_text: item.duration || item.durationText || '',
+          sort_order: Number(item.sortOrder ?? index) || 0,
+        }))
+      : [],
+    custom_cards: Array.isArray(cardData.customCards)
+      ? cardData.customCards.map((item, index) => ({
+          title: item.title || '',
+          content: item.content || '',
+          sort_order: Number(item.sortOrder ?? index) || 0,
+        }))
+      : [],
   }
 }
 

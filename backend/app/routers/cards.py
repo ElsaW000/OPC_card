@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, Header, HTTPException
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from ..database import get_db
-from ..models import Card, User
+from ..models import Card, CardCustomBlock, CardProject, CardProjectTag, CardVideo, User
 from ..schemas import CardListResponse, CardSummary, CardUpsertRequest
 
 router = APIRouter(prefix="/cards", tags=["cards"])
@@ -32,6 +32,125 @@ def to_summary(card: Card) -> CardSummary:
     )
 
 
+def apply_card_fields(card: Card, payload: CardUpsertRequest) -> None:
+    for field in [
+        "template", "title", "name", "name_en", "role", "bio", "company", "business",
+        "cooperation", "location_country", "location_city", "wechat", "phone", "email",
+        "github_url", "twitter_url", "banner_url", "avatar_url", "years", "tech_stack",
+        "products_count", "users_count", "footer_title", "footer_desc",
+    ]:
+        setattr(card, field, getattr(payload, field))
+
+
+def sync_projects(card: Card, payload: CardUpsertRequest) -> None:
+    card.projects = [
+        CardProject(
+            title=item.title,
+            description=item.description,
+            thumbnail_url=item.thumbnail_url,
+            link_url=item.link_url,
+            github_url=item.github_url,
+            sort_order=index,
+            tags=[CardProjectTag(tag_name=tag) for tag in item.tags if tag],
+        )
+        for index, item in enumerate(payload.projects)
+    ]
+
+
+def sync_videos(card: Card, payload: CardUpsertRequest) -> None:
+    card.videos = [
+        CardVideo(
+            title=item.title,
+            thumbnail_url=item.thumbnail_url,
+            link_url=item.link_url,
+            views_text=item.views_text,
+            duration_text=item.duration_text,
+            sort_order=index,
+        )
+        for index, item in enumerate(payload.videos)
+    ]
+
+
+def sync_custom_blocks(card: Card, payload: CardUpsertRequest) -> None:
+    card.custom_blocks = [
+        CardCustomBlock(
+            title=item.title,
+            content=item.content,
+            sort_order=index,
+        )
+        for index, item in enumerate(payload.custom_cards)
+    ]
+
+
+def sync_related(card: Card, payload: CardUpsertRequest) -> None:
+    sync_projects(card, payload)
+    sync_videos(card, payload)
+    sync_custom_blocks(card, payload)
+
+
+def build_card_detail(card: Card) -> dict:
+    return {
+        "_id": card.id,
+        "id": card.id,
+        "template": card.template,
+        "title": card.title,
+        "isDefault": card.is_default,
+        "name": card.name,
+        "nameEn": card.name_en,
+        "role": card.role,
+        "bio": card.bio,
+        "company": card.company,
+        "business": card.business,
+        "cooperation": card.cooperation,
+        "locationCountry": card.location_country,
+        "locationCity": card.location_city,
+        "wechat": card.wechat,
+        "phone": card.phone,
+        "email": card.email,
+        "githubUrl": card.github_url,
+        "twitterUrl": card.twitter_url,
+        "bannerUrl": card.banner_url,
+        "avatarUrl": card.avatar_url,
+        "years": card.years,
+        "techStack": card.tech_stack,
+        "products": card.products_count,
+        "users": card.users_count,
+        "footerTitle": card.footer_title,
+        "footerDesc": card.footer_desc,
+        "projects": [
+            {
+                "id": project.id,
+                "title": project.title,
+                "description": project.description,
+                "thumbnail": project.thumbnail_url,
+                "linkUrl": project.link_url,
+                "githubUrl": project.github_url,
+                "tags": [tag.tag_name for tag in project.tags],
+            }
+            for project in sorted(card.projects, key=lambda item: (item.sort_order, item.created_at))
+        ],
+        "videos": [
+            {
+                "id": video.id,
+                "title": video.title,
+                "thumbnail": video.thumbnail_url,
+                "linkUrl": video.link_url,
+                "views": video.views_text,
+                "duration": video.duration_text,
+            }
+            for video in sorted(card.videos, key=lambda item: (item.sort_order, item.created_at))
+        ],
+        "customCards": [
+            {
+                "id": block.id,
+                "title": block.title,
+                "content": block.content,
+            }
+            for block in sorted(card.custom_blocks, key=lambda item: (item.sort_order, item.created_at))
+        ],
+    }
+
+
 @router.get("", response_model=CardListResponse)
 def list_cards(
     x_user_id: str | None = Header(default=None, alias="X-User-Id"),
@@ -53,32 +172,11 @@ def create_card(
     has_default = db.scalar(select(Card).where(Card.user_id == x_user_id, Card.is_default.is_(True)))
     card = Card(
         user_id=x_user_id,
-        template=payload.template,
-        title=payload.title,
         is_default=payload.is_default or not bool(has_default),
-        name=payload.name,
-        name_en=payload.name_en,
-        role=payload.role,
-        bio=payload.bio,
-        company=payload.company,
-        business=payload.business,
-        cooperation=payload.cooperation,
-        location_country=payload.location_country,
-        location_city=payload.location_city,
-        wechat=payload.wechat,
-        phone=payload.phone,
-        email=payload.email,
-        github_url=payload.github_url,
-        twitter_url=payload.twitter_url,
-        banner_url=payload.banner_url,
-        avatar_url=payload.avatar_url,
-        years=payload.years,
-        tech_stack=payload.tech_stack,
-        products_count=payload.products_count,
-        users_count=payload.users_count,
-        footer_title=payload.footer_title,
-        footer_desc=payload.footer_desc,
     )
+    apply_card_fields(card, payload)
+    sync_related(card, payload)
+
     if card.is_default:
         for item in db.scalars(select(Card).where(Card.user_id == x_user_id)).all():
             item.is_default = False
@@ -96,23 +194,26 @@ def update_card(
     db: Session = Depends(get_db),
 ) -> dict:
     require_user(x_user_id, db)
-    card = db.scalar(select(Card).where(Card.id == card_id, Card.user_id == x_user_id))
+    card = db.scalar(
+        select(Card)
+        .options(
+            selectinload(Card.projects).selectinload(CardProject.tags),
+            selectinload(Card.videos),
+            selectinload(Card.custom_blocks),
+        )
+        .where(Card.id == card_id, Card.user_id == x_user_id)
+    )
     if not card:
         raise HTTPException(status_code=404, detail="Card not found")
 
-    for field in [
-        "template", "title", "name", "name_en", "role", "bio", "company", "business",
-        "cooperation", "location_country", "location_city", "wechat", "phone", "email",
-        "github_url", "twitter_url", "banner_url", "avatar_url", "years", "tech_stack",
-        "products_count", "users_count", "footer_title", "footer_desc",
-    ]:
-        setattr(card, field, getattr(payload, field))
+    apply_card_fields(card, payload)
 
     if payload.is_default:
         for item in db.scalars(select(Card).where(Card.user_id == x_user_id)).all():
             item.is_default = False
         card.is_default = True
 
+    sync_related(card, payload)
     db.commit()
     return {"success": True, "card_id": card.id}
 
@@ -167,40 +268,18 @@ def set_default_card(
 
 @router.get("/{card_id}/view", response_model=dict)
 def view_card(card_id: str, db: Session = Depends(get_db)) -> dict:
-    card = db.get(Card, card_id)
+    card = db.scalar(
+        select(Card)
+        .options(
+            selectinload(Card.projects).selectinload(CardProject.tags),
+            selectinload(Card.videos),
+            selectinload(Card.custom_blocks),
+        )
+        .where(Card.id == card_id)
+    )
     if not card:
         raise HTTPException(status_code=404, detail="Card not found")
     return {
         "success": True,
-        "data": {
-            "_id": card.id,
-            "template": card.template,
-            "title": card.title,
-            "isDefault": card.is_default,
-            "name": card.name,
-            "nameEn": card.name_en,
-            "role": card.role,
-            "bio": card.bio,
-            "company": card.company,
-            "business": card.business,
-            "cooperation": card.cooperation,
-            "locationCountry": card.location_country,
-            "locationCity": card.location_city,
-            "wechat": card.wechat,
-            "phone": card.phone,
-            "email": card.email,
-            "githubUrl": card.github_url,
-            "twitterUrl": card.twitter_url,
-            "bannerUrl": card.banner_url,
-            "avatarUrl": card.avatar_url,
-            "years": card.years,
-            "techStack": card.tech_stack,
-            "products": card.products_count,
-            "users": card.users_count,
-            "footerTitle": card.footer_title,
-            "footerDesc": card.footer_desc,
-            "projects": [],
-            "videos": [],
-            "customCards": [],
-        },
+        "data": build_card_detail(card),
     }
