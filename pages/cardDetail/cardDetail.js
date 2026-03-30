@@ -50,9 +50,9 @@ function normalizeProject(project = {}, index = 0) {
     id: toStringValue(project.id, `project-${index}`),
     title: toStringValue(project.title, TEXT.unnamedProject),
     description: toStringValue(project.description, TEXT.pendingProject),
-    thumbnail: toStringValue(project.thumbnail || project.cover, DEFAULT_PROJECT_COVER),
-    link: toStringValue(project.link),
-    github: toStringValue(project.github),
+    thumbnail: toStringValue(project.thumbnail || project.thumbnailUrl || project.cover, DEFAULT_PROJECT_COVER),
+    link: toStringValue(project.link || project.linkUrl),
+    github: toStringValue(project.github || project.githubUrl),
     tags: toTagList(project.tags, ['AI', 'React', 'SaaS'])
   }
 }
@@ -61,9 +61,10 @@ function normalizeVideo(video = {}, index = 0) {
   return {
     id: toStringValue(video.id, `video-${index}`),
     title: toStringValue(video.title, TEXT.demoVideo),
-    thumbnail: toStringValue(video.thumbnail || video.cover, DEFAULT_VIDEO_COVER),
-    views: toStringValue(video.views, '12k'),
-    duration: toStringValue(video.duration, '01:45')
+    thumbnail: toStringValue(video.thumbnail || video.thumbnailUrl || video.cover, DEFAULT_VIDEO_COVER),
+    link: toStringValue(video.link || video.linkUrl),
+    views: toStringValue(video.views || video.viewsText, '12k'),
+    duration: toStringValue(video.duration || video.durationText, '01:45')
   }
 }
 
@@ -95,7 +96,7 @@ function buildSafeCard(card = {}) {
   const tags = toTagList(card.tags || card.techStack, ['AI', 'React', 'SaaS'])
   const projects = Array.isArray(card.projects) ? card.projects.map(normalizeProject) : []
   const videos = Array.isArray(card.videos) ? card.videos.map(normalizeVideo) : []
-  const location = [toStringValue(card.locationCountry), toStringValue(card.locationCity)].filter(Boolean).join(' ? ')
+  const location = [toStringValue(card.locationCountry), toStringValue(card.locationCity)].filter(Boolean).join(' / ')
 
   return {
     id: toStringValue(card.id || card._id),

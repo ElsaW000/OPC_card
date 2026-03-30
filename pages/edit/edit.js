@@ -1,10 +1,48 @@
-﻿// edit.js - 按照 Figma 设计重构
+// edit.js - 按照 Figma 设计重构
 
 const app = getApp()
 const { saveCardAsync, getCardViewAsync } = require('../../services/cardService')
 const { bootstrapSessionAsync } = require('../../services/userService')
 const { generateAI } = require('../../services/aiService')
 
+function toStringValue(value, fallback = '') {
+  return value === undefined || value === null ? fallback : String(value)
+}
+
+function normalizeEditProject(project = {}, index = 0) {
+  const tags = Array.isArray(project.tags)
+    ? project.tags.join(', ')
+    : toStringValue(project.tags)
+
+  return {
+    id: toStringValue(project.id || project._id, `project-${index}`),
+    title: toStringValue(project.title),
+    description: toStringValue(project.description),
+    thumbnail: toStringValue(project.thumbnail || project.thumbnailUrl),
+    link: toStringValue(project.link || project.linkUrl),
+    github: toStringValue(project.github || project.githubUrl),
+    tags,
+  }
+}
+
+function normalizeEditVideo(video = {}, index = 0) {
+  return {
+    id: toStringValue(video.id || video._id, `video-${index}`),
+    title: toStringValue(video.title),
+    thumbnail: toStringValue(video.thumbnail || video.thumbnailUrl),
+    link: toStringValue(video.link || video.linkUrl),
+    views: toStringValue(video.views || video.viewsText),
+    duration: toStringValue(video.duration || video.durationText),
+  }
+}
+
+function normalizeEditCustomCard(item = {}, index = 0) {
+  return {
+    id: toStringValue(item.id || item._id, `custom-${index}`),
+    title: toStringValue(item.title),
+    content: toStringValue(item.content),
+  }
+}
 
 // 模板配置
 const TEMPLATES = {
@@ -121,36 +159,36 @@ Page({
   buildSafeLoadedData(cardData = {}) {
     return {
       currentTemplate: cardData.template || cardData.currentTemplate || this.data.currentTemplate,
-      aiInput: cardData.aiInput || '',
-      customCards: Array.isArray(cardData.customCards) ? cardData.customCards : [],
-      bannerUrl: cardData.bannerUrl || this.data.bannerUrl,
-      avatarUrl: cardData.avatarUrl || this.data.avatarUrl,
-      name: cardData.name || '',
-      nameEn: cardData.nameEn || '',
-      role: cardData.role || '',
-      locationCountry: cardData.locationCountry || '',
-      locationCity: cardData.locationCity || '',
-      bio: cardData.bio || '',
-      years: cardData.years || '',
-      techStack: cardData.techStack || '',
-      portfolio: cardData.portfolio || '',
-      styles: cardData.styles || '',
-      experience: cardData.experience || '',
-      company: cardData.company || '',
-      business: cardData.business || '',
-      cooperation: cardData.cooperation || '',
-      wechat: cardData.wechat || '',
-      githubUrl: cardData.githubUrl || '',
-      twitterUrl: cardData.twitterUrl || '',
-      products: cardData.products || '',
-      users: cardData.users || '',
-      phone: cardData.phone || '',
-      email: cardData.email || '',
-      projects: Array.isArray(cardData.projects) ? cardData.projects : [],
-      videos: Array.isArray(cardData.videos) ? cardData.videos : [],
-      footerTitle: cardData.footerTitle || this.data.footerTitle,
-      footerDesc: cardData.footerDesc || this.data.footerDesc,
-      suggestedTags: Array.isArray(cardData.suggestedTags) ? cardData.suggestedTags : []
+      aiInput: toStringValue(cardData.aiInput),
+      customCards: Array.isArray(cardData.customCards) ? cardData.customCards.map(normalizeEditCustomCard) : [],
+      bannerUrl: toStringValue(cardData.bannerUrl, this.data.bannerUrl),
+      avatarUrl: toStringValue(cardData.avatarUrl, this.data.avatarUrl),
+      name: toStringValue(cardData.name),
+      nameEn: toStringValue(cardData.nameEn),
+      role: toStringValue(cardData.role),
+      locationCountry: toStringValue(cardData.locationCountry),
+      locationCity: toStringValue(cardData.locationCity),
+      bio: toStringValue(cardData.bio),
+      years: toStringValue(cardData.years),
+      techStack: toStringValue(cardData.techStack),
+      portfolio: toStringValue(cardData.portfolio),
+      styles: toStringValue(cardData.styles),
+      experience: toStringValue(cardData.experience),
+      company: toStringValue(cardData.company),
+      business: toStringValue(cardData.business),
+      cooperation: toStringValue(cardData.cooperation),
+      wechat: toStringValue(cardData.wechat),
+      githubUrl: toStringValue(cardData.githubUrl),
+      twitterUrl: toStringValue(cardData.twitterUrl),
+      products: toStringValue(cardData.products),
+      users: toStringValue(cardData.users),
+      phone: toStringValue(cardData.phone),
+      email: toStringValue(cardData.email),
+      projects: Array.isArray(cardData.projects) ? cardData.projects.map(normalizeEditProject) : [],
+      videos: Array.isArray(cardData.videos) ? cardData.videos.map(normalizeEditVideo) : [],
+      footerTitle: toStringValue(cardData.footerTitle, this.data.footerTitle),
+      footerDesc: toStringValue(cardData.footerDesc, this.data.footerDesc),
+      suggestedTags: Array.isArray(cardData.suggestedTags) ? cardData.suggestedTags.map((tag) => toStringValue(tag)).filter(Boolean) : []
     };
   },
 
@@ -184,16 +222,42 @@ Page({
   },
 
   buildCardPayload() {
-    const projects = this.data.projects.map(p => ({
-      ...p,
-      tags: Array.isArray(p.tags)
-        ? p.tags
-        : (p.tags ? String(p.tags).split(',').map(t => t.trim()).filter(Boolean) : [])
-    }));
+    const projects = Array.isArray(this.data.projects)
+      ? this.data.projects.map((project, index) => ({
+          id: project.id || `project-${index}`,
+          title: toStringValue(project.title),
+          description: toStringValue(project.description),
+          thumbnail: toStringValue(project.thumbnail || project.thumbnailUrl),
+          link: toStringValue(project.link || project.linkUrl),
+          github: toStringValue(project.github || project.githubUrl),
+          tags: Array.isArray(project.tags)
+            ? project.tags
+            : (project.tags ? String(project.tags).split(',').map((tag) => tag.trim()).filter(Boolean) : [])
+        }))
+      : []
+
+    const videos = Array.isArray(this.data.videos)
+      ? this.data.videos.map((video, index) => ({
+          id: video.id || `video-${index}`,
+          title: toStringValue(video.title),
+          thumbnail: toStringValue(video.thumbnail || video.thumbnailUrl),
+          link: toStringValue(video.link || video.linkUrl),
+          views: toStringValue(video.views || video.viewsText),
+          duration: toStringValue(video.duration || video.durationText)
+        }))
+      : []
+
+    const customCards = Array.isArray(this.data.customCards)
+      ? this.data.customCards.map((item, index) => ({
+          id: item.id || `custom-${index}`,
+          title: toStringValue(item.title),
+          content: toStringValue(item.content)
+        }))
+      : []
 
     return {
       template: this.data.currentTemplate,
-      customCards: Array.isArray(this.data.customCards) ? this.data.customCards : [],
+      customCards,
       bannerUrl: this.data.bannerUrl,
       avatarUrl: this.data.avatarUrl,
       name: this.data.name,
@@ -218,7 +282,7 @@ Page({
       phone: this.data.phone,
       email: this.data.email,
       projects,
-      videos: Array.isArray(this.data.videos) ? this.data.videos : [],
+      videos,
       footerTitle: this.data.footerTitle,
       footerDesc: this.data.footerDesc
     };
