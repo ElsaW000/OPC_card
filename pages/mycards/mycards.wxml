@@ -47,10 +47,10 @@
           <image class="op-icon" src="/images/icons/edit.png" mode="aspectFit" />
           <text class="op-text">{{labels.edit}}</text>
         </view>
-        <button class="op-btn share-btn" open-type="share" bindtap="prepareShareCard" data-id="{{item.id}}">
-          <image class="op-icon" src="/images/icons/share.png" mode="aspectFit" />
+        <view class="op-btn share-btn" bindtap="showQRCode" data-id="{{item.id}}">
+          <image class="op-icon" src="/images/icons/qr.png" mode="aspectFit" />
           <text class="op-text">{{labels.share}}</text>
-        </button>
+        </view>
       </view>
     </block>
   </view>

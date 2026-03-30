@@ -23,7 +23,7 @@ const TEXT = {
   defaultReady: '\u5f53\u524d\u5df2\u662f\u9ed8\u8ba4\u540d\u7247',
   defaultTodo: '\u9ed8\u8ba4\u540d\u7247\u529f\u80fd\u5f85\u63a5\u771f\u5b9e\u63a5\u53e3',
   shareOpened: '\u5df2\u6253\u5f00\u5206\u4eab\u9762\u677f',
-  shareCard: '\u5206\u4eab\u540d\u7247',
+  shareCard: '\u4e8c\u7ef4\u7801',
   viewQr: '\u67e5\u770b\u4e8c\u7ef4\u7801',
   detailLoadFailed: '\u540d\u7247\u8be6\u60c5\u52a0\u8f7d\u5931\u8d25',
   projectTitle: '\u7cbe\u9009\u9879\u76ee',
@@ -122,7 +122,10 @@ function buildSafeCard(card = {}) {
     nameEn: toStringValue(card.nameEn, 'Independent Chen'),
     role: toStringValue(card.role, TEXT.defaultRole),
     company: toStringValue(card.company, 'OPC'),
-    bio: toStringValue(card.bio, TEXT.defaultBio),
+    bio: (() => {
+      const rawBio = toStringValue(card.bio)
+      return rawBio && !/[.]{3}$|…$/.test(rawBio) ? rawBio : TEXT.defaultBio
+    })(),
     bannerUrl: toStringValue(card.bannerUrl, DEFAULT_BANNER),
     avatarUrl: toStringValue(card.avatarUrl, DEFAULT_AVATAR),
     isDefault: !!card.isDefault,
@@ -203,11 +206,14 @@ Page({
     card: null,
     contactItems: [],
     labels: TEXT,
+    isPublicView: false,
   },
 
   onLoad(options) {
     const cardId = options && options.id ? options.id : ''
+    const isPublicView = !!(options && options.view === 'public')
     this.cardId = cardId
+    this.setData({ isPublicView })
     this.loadCard(cardId)
   },
 
@@ -293,14 +299,8 @@ Page({
 
   showMoreActions() {
     wx.showActionSheet({
-      itemList: [TEXT.shareCard, TEXT.viewQr],
-      success: (res) => {
-        if (res.tapIndex === 0) {
-          this.prepareShareCard()
-          wx.showShareMenu({ withShareTicket: true })
-          wx.showToast({ title: TEXT.shareOpened, icon: 'none' })
-          return
-        }
+      itemList: [TEXT.viewQr],
+      success: () => {
         this.previewQrcode()
       }
     })

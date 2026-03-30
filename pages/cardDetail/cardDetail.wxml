@@ -9,13 +9,13 @@
       <view class="avatar-wrap">
         <image class="avatar" src="{{card.avatarUrl}}" mode="aspectFill" />
       </view>
-      <view class="hero-actions">
+      <view class="hero-actions" wx:if="{{!isPublicView}}">
         <view class="circle-action" bindtap="setDefaultCard">
           <image class="circle-action-icon" src="{{card.isDefault ? '/images/icons/default-selected.png' : '/images/icons/default-unselected.png'}}" mode="aspectFit" />
         </view>
-        <button class="circle-action share-action" open-type="share" bindtap="prepareShareCard">
-          <image class="circle-action-icon" src="/images/icons/share.png" mode="aspectFit" />
-        </button>
+        <view class="circle-action share-action" bindtap="previewQrcode">
+          <image class="circle-action-icon" src="/images/icons/qr.png" mode="aspectFit" />
+        </view>
         <view class="primary-action" bindtap="editCard">{{labels.editCard}}</view>
       </view>
     </view>
@@ -64,7 +64,7 @@
         <view class="portfolio-hero">
           <image class="portfolio-cover" src="{{item.thumbnail}}" mode="aspectFill" />
           <view class="portfolio-fab">
-            <image class="portfolio-fab-icon" src="/images/icons/share.png" mode="aspectFit" />
+            <image class="portfolio-fab-icon" src="/images/icons/qr.png" mode="aspectFit" />
           </view>
         </view>
         <view class="portfolio-body">
@@ -100,7 +100,7 @@
             <text class="video-title">{{item.title}}</text>
             <view class="video-meta">
               <text class="video-meta-text">{{item.views}}</text>
-              <text class="video-meta-text">Share</text>
+              <text class="video-meta-text">QR</text>
             </view>
           </view>
         </view>
@@ -127,7 +127,7 @@
     </view>
   </view>
 
-  <view class="floating-dock">
+  <view class="floating-dock" wx:if="{{!isPublicView}}">
     <view class="dock-primary" bindtap="exchangeCard">
       <text class="dock-primary-label">{{labels.exchangeCard}}</text>
     </view>
