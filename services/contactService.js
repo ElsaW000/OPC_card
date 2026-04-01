@@ -24,6 +24,7 @@ function normalizeTagList(contacts) {
 function normalizeRemoteContact(contact = {}) {
   return {
     _id: contact._id,
+    cardId: contact.cardId || contact.card_id || '',
     name: contact.name || '联系人',
     role: contact.role || '',
     company: contact.company || '',
@@ -86,9 +87,32 @@ function getContactDetail(contactId) {
   const contact = db.contacts.find((item) => item._id === contactId && item.ownerUserId === user.userId)
   return {
     success: !!contact,
-    data: contact || null,
+    data: contact ? {
+      ...contact,
+      cardId: contact.cardId || contact.target_card_id || contact.targetCardId || contact.source_card_id || contact.sourceCardId || ''
+    } : null,
     error: contact ? '' : TEXT.missingContact,
     mode: 'local-storage'
+  }
+}
+
+async function getContactDetailAsync(contactId) {
+  if (!isRemoteApiEnabled()) {
+    return getContactDetail(contactId)
+  }
+
+  const result = await getContactsAsync()
+  const allContacts = []
+    .concat(Array.isArray(result.contacts) ? result.contacts : [])
+    .concat(Array.isArray(result.pendingRequests) ? result.pendingRequests : [])
+    .concat(Array.isArray(result.updatedTips) ? result.updatedTips : [])
+
+  const contact = allContacts.find((item) => item && item._id === contactId)
+  return {
+    success: !!contact,
+    data: contact || null,
+    error: contact ? '' : TEXT.missingContact,
+    mode: 'remote-api'
   }
 }
 
@@ -132,24 +156,24 @@ async function updateContactAsync(contactId, action, note = '') {
   return { success: false, error: '该操作的远程接口尚未接通', mode: 'remote-api' }
 }
 
-function createExchangeRequest(targetCard) {
+function createExchangeRequest(targetCardId) {
   const user = getCurrentUser()
   updateDatabase((db) => {
     db.contacts.unshift({
       _id: uid('contact'),
       ownerUserId: user.userId,
-      contactUserId: `pending_${targetCard._id}`,
-      cardId: targetCard._id,
-      name: targetCard.name,
-      role: targetCard.role,
-      company: targetCard.company || '',
-      phone: targetCard.phone || '',
-      email: targetCard.email || '',
-      wechat: targetCard.wechat || '',
-      avatarUrl: targetCard.avatarUrl || '',
-      bannerUrl: targetCard.bannerUrl || '',
-      bio: targetCard.bio || '',
-      tags: targetCard.customCards ? targetCard.customCards.map((item) => item.title).filter(Boolean).slice(0, 3) : [],
+      contactUserId: `pending_${targetCardId}`,
+      cardId: targetCardId,
+      name: '\u5f85\u786e\u8ba4',
+      role: '',
+      company: '',
+      phone: '',
+      email: '',
+      wechat: '',
+      avatarUrl: '',
+      bannerUrl: '',
+      bio: '',
+      tags: [],
       starred: false,
       hasUpdate: false,
       updateType: '',
@@ -164,11 +188,47 @@ function createExchangeRequest(targetCard) {
   return { success: true, mode: 'local-storage' }
 }
 
+async function createExchangeRequestAsync(targetCardId) {
+  if (!isRemoteApiEnabled()) {
+    return createExchangeRequest(targetCardId)
+  }
+  const user = getCurrentUser()
+  const result = await request({
+    url: '/contacts/exchange-request',
+    method: 'POST',
+    userId: user.userId,
+    data: { target_card_id: targetCardId }
+  })
+  return { success: true, data: result, mode: 'remote-api' }
+}
+
+async function approveContactAsync(contactId) {
+  if (!isRemoteApiEnabled()) {
+    return updateContact(contactId, 'approveRequest')
+  }
+  const user = getCurrentUser()
+  await request({ url: `/contacts/${contactId}/approve`, method: 'POST', userId: user.userId })
+  return { success: true, mode: 'remote-api' }
+}
+
+async function rejectContactAsync(contactId) {
+  if (!isRemoteApiEnabled()) {
+    return updateContact(contactId, 'rejectRequest')
+  }
+  const user = getCurrentUser()
+  await request({ url: `/contacts/${contactId}/reject`, method: 'POST', userId: user.userId })
+  return { success: true, mode: 'remote-api' }
+}
+
 module.exports = {
   getContacts,
   getContactsAsync,
   getContactDetail,
+  getContactDetailAsync,
   updateContact,
   updateContactAsync,
-  createExchangeRequest
+  createExchangeRequest,
+  createExchangeRequestAsync,
+  approveContactAsync,
+  rejectContactAsync
 }

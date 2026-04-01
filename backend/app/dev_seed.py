@@ -243,9 +243,14 @@ def _ensure_settings(db: Session, user_id: str) -> None:
 
 
 def _ensure_contacts(db: Session, owner_user_id: str, owner_card: Card, sample_cards: list[Card]) -> None:
-    contact_count = db.scalar(select(func.count()).select_from(Contact).where(Contact.owner_user_id == owner_user_id)) or 0
-    if contact_count:
-        return
+    stale_self_contacts = db.scalars(
+        select(Contact).where(
+            Contact.owner_user_id == owner_user_id,
+            Contact.contact_user_id == owner_user_id,
+        )
+    ).all()
+    for item in stale_self_contacts:
+        db.delete(item)
 
     samples = [
         {
@@ -281,21 +286,28 @@ def _ensure_contacts(db: Session, owner_user_id: str, owner_card: Card, sample_c
     ]
 
     for item in samples:
-        db.add(
-            Contact(
-                owner_user_id=owner_user_id,
-                contact_user_id=item["card"].user_id,
-                source_card_id=owner_card.id,
-                target_card_id=item["card"].id,
-                status=item["status"],
-                starred=item["starred"],
-                has_update=item["has_update"],
-                update_type=item["update_type"],
-                update_message=item["update_message"],
-                latest_interaction_text=item["latest"],
-                tags=[ContactTag(tag_name=tag) for tag in item["tags"]],
+        contact = db.scalar(
+            select(Contact).where(
+                Contact.owner_user_id == owner_user_id,
+                Contact.contact_user_id == item["card"].user_id,
             )
         )
+        if contact is None:
+            contact = Contact(
+                owner_user_id=owner_user_id,
+                contact_user_id=item["card"].user_id,
+            )
+            db.add(contact)
+
+        contact.source_card_id = owner_card.id
+        contact.target_card_id = item["card"].id
+        contact.status = item["status"]
+        contact.starred = item["starred"]
+        contact.has_update = item["has_update"]
+        contact.update_type = item["update_type"]
+        contact.update_message = item["update_message"]
+        contact.latest_interaction_text = item["latest"]
+        contact.tags = [ContactTag(tag_name=tag) for tag in item["tags"]]
     db.flush()
 
 
@@ -347,12 +359,6 @@ def _ensure_exchange_records(db: Session, owner_user_id: str, owner_card: Card, 
 
 
 def ensure_dev_demo_data(db: Session, user: User) -> None:
-    owner_card_count = db.scalar(select(func.count()).select_from(Card).where(Card.user_id == user.id)) or 0
-    if owner_card_count:
-        _ensure_settings(db, user.id)
-        db.commit()
-        return
-
     owner_card = _get_or_create_card(
         db,
         user_id=user.id,

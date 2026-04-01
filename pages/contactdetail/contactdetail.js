@@ -1,4 +1,5 @@
-const contactService = require('../../services/contactService')
+const { getContactDetailAsync } = require('../../services/contactService')
+const { bootstrapSessionAsync } = require('../../services/userService')
 const { getErrorMessage } = require('../../services/errorUtils')
 
 function normalizeText(value, fallback = '') {
@@ -28,14 +29,21 @@ Page({
     contact: buildSafeContactData()
   },
 
-  onLoad(options) {
+  async onLoad(options) {
     if (options.id) {
-      this.loadContact(options.id)
+      await this.loadContact(options.id)
     }
   },
 
-  loadContact(id) {
-    const result = contactService.getContactDetail(id)
+  async loadContact(id) {
+    try {
+      await bootstrapSessionAsync()
+    } catch (error) {
+      wx.showToast({ title: getErrorMessage(error, '\u52a0\u8f7d\u5931\u8d25').slice(0, 20), icon: 'none' })
+      return
+    }
+
+    const result = await getContactDetailAsync(id)
     if (result.success) {
       this.setData({ contact: buildSafeContactData(result.data) })
       return

@@ -1,2 +1,83 @@
-<!--pages/aiFeatures/aiFeatures.wxml-->
-<text>pages/aiFeatures/aiFeatures.wxml</text>
+<view class="chat-page">
+  <view class="chat-header">
+    <text class="chat-title">AI 助手</text>
+    <text class="chat-subtitle">eSeat 智能名片顾问</text>
+    <view class="trace-panel" wx:if="{{perfInfo}}">
+      <text class="trace-title">最近一次链路耗时</text>
+      <text class="trace-source">{{replySourceText}}</text>
+      <text class="trace-line">前端点击发送：{{perfInfo.frontendClickedAtLabel}}</text>
+      <text class="trace-line">后端收到请求：{{perfInfo.backendReceivedAtLabel}}</text>
+      <text class="trace-line">后端开始请求模型：{{perfInfo.modelRequestStartedAtLabel}}</text>
+      <text class="trace-line">后端收到模型首包：{{perfInfo.modelFirstByteAtLabel}}</text>
+      <text class="trace-line">后端返回前端：{{perfInfo.backendReturnedAtLabel}}</text>
+      <text class="trace-line">前端渲染完成：{{perfInfo.frontendRenderedAtLabel}}</text>
+      <text class="trace-line" wx:if="{{!perfInfo.backendTraceAvailable}}">提示：本次未拿到后端埋点，通常表示走了本地兜底。</text>
+      <text class="trace-summary">前端到后端 {{perfInfo.frontendToBackendMs || '--'}}ms · 后端准备 {{perfInfo.backendPrepareMs || '--'}}ms · 模型首包 {{perfInfo.modelFirstByteMs || '--'}}ms · 后端回传 {{perfInfo.backendReturnMs || '--'}}ms · 前端渲染 {{perfInfo.frontendRenderMs || '--'}}ms</text>
+    </view>
+  </view>
+
+  <scroll-view class="chat-body" scroll-y="true" scroll-into-view="{{scrollTarget}}" scroll-with-animation="true">
+    <view class="message-list">
+      <view class="quick-actions" wx:if="{{messages.length === 0}}">
+        <text class="quick-hint">你可以问我：</text>
+        <view class="quick-btn" wx:for="{{quickPrompts}}" wx:key="index" bindtap="onQuickPrompt" data-text="{{item}}">
+          <text class="quick-btn-text">{{item}}</text>
+        </view>
+      </view>
+
+      <block wx:for="{{messages}}" wx:key="id">
+        <view class="msg-row {{item.role === 'user' ? 'msg-right' : 'msg-left'}}">
+          <view class="msg-avatar" wx:if="{{item.role === 'assistant'}}">
+            <text class="msg-avatar-text">AI</text>
+          </view>
+          <view class="msg-bubble {{item.role === 'user' ? 'bubble-user' : 'bubble-ai'}}">
+            <text class="msg-text">{{item.content}}</text>
+            <text class="msg-time">{{item.time}}</text>
+          </view>
+        </view>
+      </block>
+
+      <view class="msg-row msg-left" wx:if="{{loading}}">
+        <view class="msg-avatar">
+          <text class="msg-avatar-text">AI</text>
+        </view>
+        <view class="msg-bubble bubble-ai bubble-loading">
+          <view class="loading-dots">
+            <view class="dot dot1"></view>
+            <view class="dot dot2"></view>
+            <view class="dot dot3"></view>
+          </view>
+          <text class="loading-status">{{loadingStatusText}}</text>
+          <text class="loading-hint" wx:if="{{slowHintVisible}}">你可以稍后重试，或先参考本地建议。</text>
+        </view>
+      </view>
+
+      <view id="chat-bottom"></view>
+    </view>
+  </scroll-view>
+
+  <view class="chat-footer">
+    <view class="footer-model-row">
+      <text class="footer-model-label">模型选择</text>
+      <view class="provider-row">
+        <view class="provider-pill {{aiProvider === item.value ? 'provider-pill-active' : ''}}" wx:for="{{providerOptions}}" wx:key="value" data-provider="{{item.value}}" bindtap="onProviderSelect">
+          <text class="provider-pill-text {{aiProvider === item.value ? 'provider-pill-text-active' : ''}}">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="footer-input-row">
+      <input
+        class="chat-input"
+        value="{{inputText}}"
+        placeholder="问点什么，或说说你的情况…"
+        confirm-type="send"
+        bindinput="onInput"
+        bindconfirm="sendMessage"
+        adjust-position="true"
+      />
+      <view class="send-btn {{inputText ? 'send-active' : ''}}" bindtap="sendMessage">
+        <text class="send-icon">↑</text>
+      </view>
+    </view>
+  </view>
+</view>

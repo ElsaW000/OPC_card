@@ -72,6 +72,7 @@ def get_workbench(
         starred_payload.append(
             ContactItem(
                 _id=contact.id,
+                cardId=(source_card.id if source_card else "") or "",
                 name=(source_card.name if source_card else "联系人") or "联系人",
                 role=(source_card.role if source_card else "") or "",
                 company=(source_card.company if source_card else "") or "",

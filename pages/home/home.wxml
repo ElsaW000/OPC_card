@@ -1,97 +1,113 @@
-<view class="container">
-  <view class="wb-header">
-    <text class="wb-title">{{labels.workbench}}</text>
-    <text class="wb-subtitle">{{labels.opcWorkbench}}</text>
+<view class="home-page">
+  <view class="assistant-card section-card">
+    <text class="section-label">{{labels.aiTitle}}</text>
+    <view class="assistant-input-row {{aiInputFocused ? 'focused' : ''}}">
+      <input class="assistant-input" value="{{aiInput}}" bindinput="onAiInputChange" bindfocus="onAiInputFocus" bindblur="onAiInputBlur" placeholder="{{labels.aiPlaceholder}}" placeholder-class="assistant-placeholder" confirm-type="send" bindconfirm="openAiChat" />
+    </view>
+    <view class="assistant-prompt" bindtap="useAiPrompt" data-prompt="{{aiPrompt}}">
+      <text class="assistant-prompt-text">{{aiPrompt}}</text>
+    </view>
+    <view class="assistant-pills">
+      <view class="assistant-pill assistant-pill-{{item.tone}}" wx:for="{{modelPills}}" wx:key="index">
+        <text class="assistant-pill-text assistant-pill-text-{{item.tone}}">{{item.text}}</text>
+      </view>
+    </view>
   </view>
 
-  <view class="wb-card" bindtap="editDefaultCard">
-    <image wx:if="{{defaultCard && defaultCard.bannerUrl}}" class="wb-card-bg" src="{{defaultCard.bannerUrl}}" mode="aspectFill"></image>
-    <view class="wb-card-overlay"></view>
-    <view class="wb-card-content">
-      <view class="wb-card-top">
-        <text class="wb-badge">{{labels.defaultBadge}}</text>
-        <view class="wb-qr" catchtap="showQR">{{labels.qrCode}}</view>
+  <view class="data-card section-card">
+    <view class="data-header">
+      <view>
+        <text class="section-label">{{labels.dataTitle}}</text>
+        <text class="data-subtitle">{{labels.weeklyViews}}</text>
       </view>
-      <view class="wb-card-middle">
-        <view class="wb-card-info">
-          <text class="wb-card-name">{{displayCardName}}</text>
-          <text class="wb-card-role">{{displayCardRole}}</text>
-          <text class="wb-card-company" wx:if="{{displayCardCompany}}">{{displayCardCompany}}</text>
+      <view class="data-link" bindtap="openAnalytics"></view>
+    </view>
+    <view class="data-body">
+      <view class="data-value-block">
+        <text class="data-value">{{weeklyViews}}</text>
+      </view>
+      <view class="bubble-cloud" hover-class="bubble-cloud-active" hover-stay-time="120">
+        <view class="bubble bubble-tone-{{item.tone}} bubble-{{item.emphasis}}" hover-class="bubble-hover" hover-stay-time="120" wx:for="{{personaTags}}" wx:key="id" style="width: {{item.size}}rpx; height: {{item.size}}rpx;">
+          <text class="bubble-text">{{item.label}}</text>
         </view>
-        <image wx:if="{{defaultCard && defaultCard.avatarUrl}}" class="wb-card-avatar" src="{{defaultCard.avatarUrl}}" mode="aspectFill"></image>
-        <view wx:else class="wb-card-avatar wb-card-avatar-fallback">OPC</view>
       </view>
     </view>
   </view>
 
-  <view class="summary-card">
-    <text class="summary-label">{{labels.weeklyViews}}</text>
-    <text class="summary-value">{{weeklyViews}}</text>
-    <text class="summary-unit">{{labels.visitorsUnit}}</text>
-  </view>
-
-  <view class="quick-card">
-    <view class="quick-grid">
-      <block wx:for="{{quickActions}}" wx:key="key">
-        <view class="quick-item" bindtap="handleQuickAction" data-action="{{item.action}}">
-          <view class="quick-icon"><text>{{item.iconText}}</text></view>
-          <text class="quick-label">{{item.label}}</text>
-        </view>
-      </block>
+  <view class="contacts-card section-card">
+    <view class="contacts-header">
+      <text class="section-label">{{labels.starredTitle}}</text>
+      <view class="contacts-more" bindtap="openStarredContacts"></view>
     </view>
-  </view>
-
-  <view class="persona-card" wx:if="{{personaTags.length}}">
-    <view class="persona-header">
-      <text class="persona-title">AI Persona</text>
-    </view>
-    <view class="persona-tags">
-      <view class="persona-tag" wx:for="{{personaTags}}" wx:key="label" style="width: {{item.size}}rpx; height: {{item.size}}rpx;">
-        <text class="persona-tag-text">{{item.label}}</text>
-      </view>
-    </view>
-  </view>
-
-  <view class="visitor-card">
-    <view class="visitor-card-header">
-      <text class="visitor-title">{{labels.recentVisitors}}</text>
-      <text class="visitor-more" bindtap="goToVisitors">{{labels.viewMore}}</text>
-    </view>
-    <view wx:if="{{recentVisitors.length}}" class="visitor-items">
-      <block wx:for="{{recentVisitors}}" wx:key="id">
-        <view class="visitor-row" bindtap="goToVisitors">
-          <view class="visitor-avatar-box">{{item.avatarText}}</view>
-          <view class="visitor-detail">
-            <text class="visitor-name">{{item.name}}</text>
-            <text class="visitor-time">{{item.time}}</text>
+    <scroll-view scroll-x="true" class="contacts-scroll" enhanced="true" show-scrollbar="false">
+      <view class="contacts-row" wx:if="{{starredContacts.length}}">
+        <view class="contact-pill" hover-class="contact-pill-hover" hover-stay-time="120" wx:for="{{starredContacts}}" wx:key="id" bindtap="openContactDetail" data-id="{{item.id}}" data-card-id="{{item.cardId}}">
+          <image wx:if="{{item.avatarUrl}}" class="contact-avatar" src="{{item.avatarUrl}}" mode="aspectFill"></image>
+          <view wx:else class="contact-avatar contact-avatar-fallback">{{item.avatarText}}</view>
+          <view class="contact-main">
+            <view class="contact-name-row">
+              <text class="contact-name">{{item.name}}</text>
+              <view class="contact-red-dot" wx:if="{{item.hasUpdate}}"></view>
+            </view>
+            <text class="contact-role">{{item.role}}</text>
+            <text class="contact-update">{{item.updateText}}</text>
           </view>
         </view>
-      </block>
+      </view>
+      <view wx:else class="contacts-empty">
+        <text class="contacts-empty-text">{{labels.noContacts}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="settings-card section-card">
+    <text class="section-label">{{labels.settingsTitle}}</text>
+    <view class="setting-item" hover-class="setting-item-hover" hover-stay-time="80" bindtap="cycleAiTone">
+      <view class="setting-left">
+        <text class="setting-title">{{labels.aiTone}}</text>
+      </view>
+      <view class="setting-right">
+        <text class="setting-value">{{settingsSummary.aiTone}}</text>
+        <text class="setting-arrow">></text>
+      </view>
     </view>
-    <view wx:else class="visitor-empty" bindtap="goToVisitors">
-      <text class="visitor-empty-text">{{labels.noVisitors}}</text>
+    <view class="setting-item" hover-class="setting-item-hover" hover-stay-time="80" bindtap="togglePublicDynamics">
+      <view class="setting-left">
+        <text class="setting-title">{{labels.publicDynamics}}</text>
+      </view>
+      <view class="setting-right">
+        <text class="setting-value">{{settingsSummary.publicDynamics ? 'ON' : 'OFF'}}</text>
+        <text class="setting-arrow">></text>
+      </view>
+    </view>
+    <view class="setting-item last" hover-class="setting-item-hover" hover-stay-time="80" bindtap="openBlacklist">
+      <view class="setting-left">
+        <text class="setting-title">{{labels.blacklist}}</text>
+      </view>
+      <view class="setting-right">
+        <text class="setting-value">{{settingsSummary.blacklistCount}}</text>
+        <text class="setting-arrow">></text>
+      </view>
     </view>
   </view>
 
-  <view class="contact-card-home">
-    <view class="visitor-card-header">
-      <text class="visitor-title">{{labels.starredContacts}}</text>
-      <text class="visitor-more" bindtap="goToContacts">{{labels.viewMore}}</text>
+  <view class="bottom-links">
+    <view class="bottom-link" bindtap="openMember">
+      <text class="bottom-link-text">{{labels.membership}}</text>
     </view>
-    <view wx:if="{{starredContacts.length}}" class="contact-items-home">
-      <block wx:for="{{starredContacts}}" wx:key="id">
-        <view class="contact-row-home" bindtap="goToContacts">
-          <image wx:if="{{item.avatarUrl}}" class="contact-avatar-home" src="{{item.avatarUrl}}" mode="aspectFill"></image>
-          <view wx:else class="contact-avatar-home fallback">{{item.avatarText}}</view>
-          <view class="contact-detail-home">
-            <text class="contact-name-home">{{item.name}}</text>
-            <text class="contact-role-home">{{item.role}}</text>
-          </view>
-        </view>
-      </block>
+    <view class="bottom-link" bindtap="openSuggestionForm">
+      <text class="bottom-link-text">{{labels.contactUs}}</text>
     </view>
-    <view wx:else class="visitor-empty" bindtap="goToContacts">
-      <text class="visitor-empty-text">{{labels.noContacts}}</text>
+  </view>
+
+  <view class="sheet-mask" wx:if="{{showSuggestionForm}}" bindtap="closeSuggestionForm"></view>
+  <view class="sheet-panel" wx:if="{{showSuggestionForm}}">
+    <text class="sheet-title">{{labels.contactUs}}</text>
+    <textarea class="sheet-textarea" value="{{suggestionContent}}" bindinput="onSuggestionContentInput" placeholder="{{labels.suggestionPlaceholder}}" placeholder-class="assistant-placeholder"></textarea>
+    <input class="sheet-input" value="{{suggestionContact}}" bindinput="onSuggestionContactInput" placeholder="{{labels.contactPlaceholder}}" placeholder-class="assistant-placeholder" />
+    <view class="sheet-actions">
+      <view class="sheet-btn secondary" bindtap="closeSuggestionForm">{{labels.cancel}}</view>
+      <view class="sheet-btn primary" bindtap="submitSuggestion">{{labels.submit}}</view>
     </view>
   </view>
 </view>

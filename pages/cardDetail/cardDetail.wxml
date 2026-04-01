@@ -9,7 +9,7 @@
       <view class="avatar-wrap">
         <image class="avatar" src="{{card.avatarUrl}}" mode="aspectFill" />
       </view>
-      <view class="hero-actions" wx:if="{{!isPublicView}}">
+      <view class="hero-actions" wx:if="{{!isPublicView && !isVisitorMode}}">
         <view class="circle-action" bindtap="setDefaultCard">
           <image class="circle-action-icon" src="{{card.isDefault ? '/images/icons/default-selected.png' : '/images/icons/default-unselected.png'}}" mode="aspectFit" />
         </view>
@@ -26,14 +26,14 @@
         <text class="profile-name-en" wx:if="{{card.nameEn}}">({{card.nameEn}})</text>
       </view>
       <view class="meta-row">
-        <text class="profile-role">{{card.role}}</text>
+        <text class="profile-role" wx:if="{{card.role}}">{{card.role}}</text>
         <text class="profile-location" wx:if="{{card.location}}">{{card.location}}</text>
       </view>
       <text class="profile-company" wx:if="{{card.company}}">{{card.company}}</text>
-      <text class="profile-bio">{{card.bio}}</text>
+      <text class="profile-bio" wx:if="{{card.bio}}">{{card.bio}}</text>
     </view>
 
-    <view class="stats-grid">
+    <view class="stats-grid" wx:if="{{card.stats && card.stats.length}}">
       <view class="stat-pill" wx:for="{{card.stats}}" wx:key="key">
         <text class="stat-value">{{item.value}}</text>
         <text class="stat-label">{{item.label}}</text>
@@ -54,13 +54,13 @@
     </view>
   </view>
 
-  <view class="section">
+  <view class="section" wx:if="{{card.projects && card.projects.length}}">
     <view class="section-head">
       <text class="section-title">{{labels.projectTitle}}</text>
       <text class="section-more">{{labels.projectMore}}</text>
     </view>
     <view class="portfolio-list">
-      <view class="portfolio-card" wx:for="{{card.projects}}" wx:key="id">
+      <view class="portfolio-card" hover-class="lift-card" hover-stay-time="120" wx:for="{{card.projects}}" wx:key="id">
         <view class="portfolio-hero">
           <image class="portfolio-cover" src="{{item.thumbnail}}" mode="aspectFill" />
           <view class="portfolio-fab">
@@ -82,14 +82,14 @@
     </view>
   </view>
 
-  <view class="section video-section">
+  <view class="section video-section" wx:if="{{card.videos && card.videos.length}}">
     <view class="section-head">
       <text class="section-title">{{labels.videoTitle}}</text>
       <text class="section-more">{{labels.videoMore}}</text>
     </view>
     <scroll-view class="video-scroll" scroll-x="true" show-scrollbar="false">
       <view class="video-row">
-        <view class="video-card" wx:for="{{card.videos}}" wx:key="id">
+        <view class="video-card" hover-class="lift-card" hover-stay-time="120" wx:for="{{card.videos}}" wx:key="id">
           <image class="video-cover" src="{{item.thumbnail}}" mode="aspectFill" />
           <view class="video-overlay"></view>
           <view class="video-duration">
@@ -127,7 +127,13 @@
     </view>
   </view>
 
-  <view class="floating-dock" wx:if="{{!isPublicView}}">
+  <view class="floating-dock" wx:if="{{isVisitorMode}}">
+    <view class="dock-primary" bindtap="exchangeCard">
+      <text class="dock-primary-label">{{labels.exchangeCard}}</text>
+    </view>
+  </view>
+
+  <view class="floating-dock" wx:elif="{{!isPublicView && !isVisitorMode}}">
     <view class="dock-primary" bindtap="exchangeCard">
       <text class="dock-primary-label">{{labels.exchangeCard}}</text>
     </view>

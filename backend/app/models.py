@@ -195,9 +195,9 @@ class Setting(Base):
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=lambda: gen_id("setting"))
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), unique=True, index=True)
-    ai_tone: Mapped[str] = mapped_column(String(64), default="ä¸“ä¸šä¸”å‹å¥½")
+    ai_tone: Mapped[str] = mapped_column(String(64), default="专业友好")
     public_dynamics: Mapped[bool] = mapped_column(Boolean, default=True)
-    privacy_mode: Mapped[str] = mapped_column(String(64), default="äº¤æ¢åŽå¯è§")
+    privacy_mode: Mapped[str] = mapped_column(String(64), default="交换后可见")
     blacklist_json: Mapped[str] = mapped_column(Text, default="[]")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

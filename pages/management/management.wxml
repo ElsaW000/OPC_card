@@ -1,61 +1,101 @@
 <!--management.wxml-->
 <view class="container">
+
+  <!-- Profile header -->
   <view class="profile-card">
-    <image class="profile-avatar" src="https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400" />
+    <image wx:if="{{profile.avatarUrl}}" class="profile-avatar" src="{{profile.avatarUrl}}" mode="aspectFill" />
+    <view wx:else class="profile-avatar avatar-placeholder">
+      <text class="avatar-initial">{{profile.name.slice(0,1)}}</text>
+    </view>
     <view class="profile-info">
-      <text class="profile-name">陈小独立</text>
-      <text class="profile-phone">138****8000</text>
+      <text class="profile-name">{{profile.name || '我的名片'}}</text>
+      <text class="profile-phone">{{profile.phone || '---'}}</text>
+      <text wx:if="{{profile.wechat}}" class="profile-wechat">微信：{{profile.wechat}}</text>
     </view>
   </view>
 
+  <view class="group-label">基本信息</view>
+  <view class="menu-list info-list">
+    <view class="menu-item" wx:for="{{basicInfo}}" wx:key="label">
+      <text class="menu-text">{{item.label}}</text>
+      <text class="info-value">{{item.value}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{showAccountInfo}}" class="group-label">账号资料</view>
+  <view wx:if="{{showAccountInfo}}" class="menu-list info-list">
+    <view class="menu-item" wx:for="{{accountInfo}}" wx:key="label">
+      <text class="menu-text">{{item.label}}</text>
+      <text class="info-value">{{item.value}}</text>
+    </view>
+  </view>
+
+  <!-- Group 1: 名片 -->
+  <view class="group-label">名片</view>
   <view class="menu-list">
     <view class="menu-item" bindtap="goToQRCode">
       <text class="menu-text">我的二维码</text>
-      <text class="menu-arrow">></text>
-    </view>
-    <view class="menu-item">
-      <text class="menu-text">账号管理</text>
-      <text class="menu-arrow">></text>
-    </view>
-    <view class="menu-item">
-      <text class="menu-text">绑定手机号</text>
-      <text class="menu-arrow">></text>
-    </view>
-    <view class="menu-item">
-      <text class="menu-text">绑定微信</text>
-      <text class="menu-arrow">></text>
-    </view>
-    <view class="menu-item">
-      <text class="menu-text">隐私设置</text>
-      <text class="menu-arrow">></text>
-    </view>
-    <view class="menu-item">
-      <text class="menu-text">通知设置</text>
-      <text class="menu-arrow">></text>
+      <text class="menu-arrow">›</text>
     </view>
     <view class="menu-item" bindtap="goToMember">
-      <text class="menu-text">PRO会员</text>
-      <text class="menu-tag">开通</text>
-    </view>
-    <view class="menu-item">
-      <text class="menu-text">常见问题</text>
-      <text class="menu-arrow">></text>
-    </view>
-    <view class="menu-item">
-      <text class="menu-text">服务协议</text>
-      <text class="menu-arrow">></text>
-    </view>
-    <view class="menu-item">
-      <text class="menu-text">隐私政策</text>
-      <text class="menu-arrow">></text>
-    </view>
-    <view class="menu-item">
-      <text class="menu-text">关于我们</text>
-      <text class="menu-arrow">></text>
+      <text class="menu-text">PRO 会员</text>
+      <view class="menu-tag">开通</view>
     </view>
   </view>
 
-  <view class="logout-btn">
+  <!-- Group 2: 隐私设置 -->
+  <view class="group-label">隐私设置</view>
+  <view class="menu-list">
+    <view class="menu-item">
+      <text class="menu-text">公开动态通知</text>
+      <switch checked="{{settings.public_dynamics}}" bindchange="onPublicDynamicsChange" color="#2563EB" style="transform:scale(0.85)" />
+    </view>
+    <view class="menu-item">
+      <text class="menu-text">允许 AI 使用联系人摘要</text>
+      <switch checked="{{aiContactsContextEnabled}}" bindchange="onAiContactsContextChange" color="#2563EB" style="transform:scale(0.85)" />
+    </view>
+  </view>
+
+  <!-- Group 3: 开发者设置 -->
+  <view wx:if="{{isDev}}" class="group-label">开发者设置</view>
+  <view wx:if="{{isDev}}" class="menu-list">
+    <view class="menu-item">
+      <text class="menu-text">远程 API 模式</text>
+      <switch checked="{{useRemoteApi}}" bindchange="onRemoteApiChange" color="#2563EB" style="transform:scale(0.85)" />
+    </view>
+    <view class="menu-item" bindtap="toggleApiEditing">
+      <text class="menu-text">API 地址</text>
+      <text class="api-url-preview">{{apiUrl}}</text>
+    </view>
+    <view class="api-edit-row" wx:if="{{apiEditing}}">
+      <input class="api-input" value="{{apiUrlInput}}" bindinput="onApiUrlInput" placeholder="http://127.0.0.1:8001/api/v1" />
+      <view class="api-save-btn" bindtap="saveApiUrl">保存</view>
+    </view>
+  </view>
+
+  <!-- Group 4: 关于 -->
+  <view class="group-label">关于</view>
+  <view class="menu-list">
+    <view class="menu-item">
+      <text class="menu-text">常见问题</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item">
+      <text class="menu-text">服务协议</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item">
+      <text class="menu-text">隐私政策</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="tapVersion">
+      <text class="menu-text">关于壹席 eSeat</text>
+      <text class="menu-version">v1.0</text>
+    </view>
+  </view>
+
+  <view class="logout-btn" bindtap="logout">
     <text>退出登录</text>
   </view>
+
 </view>

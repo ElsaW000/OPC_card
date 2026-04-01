@@ -28,7 +28,22 @@ async function getVisitorsAsync() {
   }
 }
 
+async function recordVisitorAsync(cardId, source) {
+  if (!isRemoteApiEnabled()) {
+    return { success: true, mode: 'local-storage' }
+  }
+  const user = getCurrentUser()
+  const result = await request({
+    url: '/visitors/record',
+    method: 'POST',
+    userId: user.userId,
+    data: { card_id: cardId, source: source || '名片分享' }
+  })
+  return { success: true, visitor_id: result.visitor_id, mode: 'remote-api' }
+}
+
 module.exports = {
   getVisitors,
-  getVisitorsAsync
+  getVisitorsAsync,
+  recordVisitorAsync
 }

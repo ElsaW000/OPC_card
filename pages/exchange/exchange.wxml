@@ -1,45 +1,72 @@
-<!--exchange.wxml - 交换名片 -->
 <view class="container">
-  <!-- 顶部切换 -->
   <view class="tab-switcher">
-    <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0">
-      <text>我要递出</text>
+    <view class="tab-item {{giveTabClass}}" bindtap="switchTab" data-index="0">
+      <text>{{labels.giveTab}}</text>
     </view>
-    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1">
-      <text>我要接收</text>
+    <view class="tab-item {{receiveTabClass}}" bindtap="switchTab" data-index="1">
+      <text>{{labels.receiveTab}}</text>
     </view>
   </view>
 
-  <!-- 当前名片预览 -->
   <view class="card-preview">
     <view class="card-header">
-      <text class="card-title">当前使用名片</text>
-      <text class="card-action" bindtap="changeCard">换一张 ›</text>
+      <view>
+        <text class="card-title">{{labels.currentCard}}</text>
+        <text class="card-sub">{{labels.helperDesc}}</text>
+      </view>
+      <view class="card-action" bindtap="changeCard">{{labels.changeCard}}</view>
     </view>
-    <view class="card-info">
-      <text class="card-name">{{currentCard.name}}</text>
-      <text class="card-role">{{currentCard.role}}</text>
-      <text class="card-company">{{currentCard.company}}</text>
+    <view class="card-shell">
+      <image wx:if="{{currentCard.bannerUrl}}" class="card-bg" src="{{currentCard.bannerUrl}}" mode="aspectFill"></image>
+      <view class="card-overlay"></view>
+      <view class="card-info">
+        <view>
+          <text class="card-name">{{currentCard.name}}</text>
+          <text class="card-role">{{currentCard.role}}</text>
+          <text class="card-company" wx:if="{{currentCard.company}}">{{currentCard.company}}</text>
+        </view>
+        <image wx:if="{{currentCard.avatarUrl}}" class="card-avatar" src="{{currentCard.avatarUrl}}" mode="aspectFill"></image>
+        <view wx:else class="card-avatar fallback">eS</view>
+      </view>
     </view>
   </view>
 
-  <!-- 扫码区域 -->
-  <view class="scan-section">
-    <view class="scan-frame">
-      <view class="scan-line"></view>
+  <view class="give-panel" wx:if="{{showGivePanel}}">
+    <view class="qrcode-card">
+      <view class="section-head">
+        <text class="section-title">{{labels.qrcodeTitle}}</text>
+        <text class="section-sub">{{labels.qrcodeHint}}</text>
+      </view>
+      <view class="qr-board">
+        <view class="qr-grid">
+          <view class="qr-cell {{item.active ? 'active' : ''}}" wx:for="{{currentCard.qrCells}}" wx:key="id"></view>
+        </view>
+      </view>
     </view>
-    <text class="scan-hint">将二维码/条形码放入框内，即可自动扫描</text>
+    <view class="action-list">
+      <button class="action-btn primary" open-type="share">
+        <text>{{labels.shareToWechat}}</text>
+      </button>
+      <view class="action-btn secondary" bindtap="saveQrcode">
+        <text>{{labels.saveQrcode}}</text>
+      </view>
+      <view class="action-btn ghost" bindtap="changeCard">
+        <text>{{labels.changeCard}}</text>
+      </view>
+    </view>
   </view>
 
-  <!-- 底部按钮 -->
-  <view class="bottom-buttons">
-    <button class="btn btn-secondary" bindtap="searchManual">
-      <text class="btn-icon">🔍</text>
-      <text>搜索交换</text>
-    </button>
-    <button class="btn btn-primary" bindtap="startScan">
-      <text class="btn-icon">📷</text>
-      <text>开始扫描</text>
-    </button>
+  <view class="receive-panel" wx:if="{{showReceivePanel}}">
+    <view class="receive-card">
+      <text class="section-title">{{labels.receiveTitle}}</text>
+      <text class="receive-desc">{{labels.receiveDesc}}</text>
+      <view class="receive-actions">
+        <view class="scan-btn" bindtap="startScan">{{labels.startScan}}</view>
+      </view>
+      <view class="code-box">
+        <input class="code-input" value="{{exchangeCode}}" bindinput="onExchangeCodeInput" placeholder="{{labels.codePlaceholder}}" placeholder-class="code-placeholder" />
+        <view class="code-submit" bindtap="submitExchangeCode">{{labels.inputCode}}</view>
+      </view>
+    </view>
   </view>
 </view>

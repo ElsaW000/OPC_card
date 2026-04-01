@@ -16,7 +16,8 @@ App({
     // Do something when hide.
   },
   onError (msg) {
-    console.log(msg)
+    // 避免在框架销毁期间调用 console 导致 __global 循环报错
+    try { console.error('[App Error]', msg) } catch (e) {}
   },
   globalData: {
     cardData: null,

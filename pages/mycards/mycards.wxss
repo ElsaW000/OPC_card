@@ -44,3 +44,26 @@ page { background-color: #f8fafc; }
 .card-item:nth-child(3){animation-delay:200ms}
 @keyframes slideUp{from{opacity:0;transform:translateY(40rpx)}to{opacity:1;transform:translateY(0)}}
 @media (max-width:375px){.header,.card-list,.add-card-btn{padding-left:20rpx;padding-right:20rpx}}
+/* ===== 交换名片悬浮按钮 ===== */
+.exchange-fab {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 120rpx);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2563EB;
+  color: #fff;
+  border-radius: 9999rpx;
+  padding: 28rpx 72rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 16rpx 48rpx rgba(37,99,235,0.45);
+  z-index: 100;
+  white-space: nowrap;
+}
+
+.exchange-fab-text {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+}

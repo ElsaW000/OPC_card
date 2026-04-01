@@ -14,7 +14,7 @@ function buildDefaultCard(openid, db) {
     nameEn: 'Independent Chen',
     locationCountry: '中国',
     locationCity: '深圳',
-    role: 'OPC 创始人 / 全栈工程师',
+    role: 'eSeat 创始人 / 全栈工程师',
     bio: '专注 AI 工具、自动化和产品体验的独立开发者，正在构建更轻、更快的个人连接方式。',
     years: '8+',
     techStack: 'React, Python, AI',

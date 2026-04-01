@@ -12,10 +12,13 @@
     "pages/qrcode/qrcode",
     "pages/exchange/exchange",
     "pages/edit/edit",
-    "pages/webview/webview"
+    "pages/webview/webview",
+    "pages/exchangeconfirm/exchangeconfirm",
+    "pages/contactdetail/contactdetail",
+    "pages/blacklist/blacklist"
   ],
   "window": {
-    "navigationBarTitleText": "OPC名片",
+    "navigationBarTitleText": "壹席 eSeat",
     "navigationBarBackgroundColor": "#ffffff",
     "backgroundColor": "#f8f9fa",
     "backgroundTextStyle": "light",

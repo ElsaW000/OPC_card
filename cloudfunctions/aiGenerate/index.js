@@ -208,7 +208,7 @@ async function fetchGitHubProjects(username) {
       path: `/users/${username}/repos?sort=updated&per_page=10`,
       method: 'GET',
       headers: {
-        'User-Agent': 'OPC-Card-MiniApp'
+        'User-Agent': 'eSeat-MiniApp'
       }
     }
     
@@ -251,7 +251,7 @@ async function fetchProjectReadme(owner, repo) {
       path: `/repos/${owner}/${repo}`,
       method: 'GET',
       headers: {
-        'User-Agent': 'OPC-Card-MiniApp'
+        'User-Agent': 'eSeat-MiniApp'
       }
     }
     

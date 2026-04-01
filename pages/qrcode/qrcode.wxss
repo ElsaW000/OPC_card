@@ -73,10 +73,47 @@ page {
   color: #64748b;
 }
 
-.fake-qr {
+.qr-area {
   width: 420rpx;
   height: 420rpx;
   margin: 36rpx auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-image {
+  width: 420rpx;
+  height: 420rpx;
+  border-radius: 16rpx;
+}
+
+.qr-loading {
+  width: 420rpx;
+  height: 420rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border-radius: 28rpx;
+}
+
+.qr-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid #e2e8f0;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.fake-qr {
+  width: 420rpx;
+  height: 420rpx;
   padding: 24rpx;
   border-radius: 28rpx;
   background: #f8fafc;
@@ -134,4 +171,24 @@ page {
 .action-btn.primary {
   background: linear-gradient(135deg, #2f65ee 0%, #2563eb 100%);
   color: #ffffff;
+}
+
+.action-row-2 {
+  margin-top: 16rpx;
+}
+
+.action-btn-save {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 999rpx;
+  border: none;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.action-btn-save::after {
+  border: none;
 }

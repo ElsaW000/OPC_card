@@ -96,6 +96,7 @@ class CardListResponse(BaseModel):
 
 class ContactItem(BaseModel):
     _id: str
+    cardId: str = ""
     name: str
     role: str = ""
     company: str = ""
@@ -140,15 +141,25 @@ class VisitorListResponse(BaseModel):
     visitors: list[VisitorItem]
 
 
+class VisitorRecordRequest(BaseModel):
+    card_id: str
+    source: str = "名片分享"
+
+
+class VisitorRecordResponse(BaseModel):
+    success: bool = True
+    visitor_id: str
+
+
 class PersonaTag(BaseModel):
     label: str
     size: int
 
 
 class SettingsSummary(BaseModel):
-    aiTone: str = "?????"
+    aiTone: str = "专业且友好"
     publicDynamics: bool = True
-    privacyMode: str = "?????"
+    privacyMode: str = "交换后可见"
     blacklistCount: int = 0
 
 

@@ -19,7 +19,7 @@ function buildSafeIndexData(source = {}) {
     role: normalizeText(source.role || source.position, '\u524d\u7aef\u5f00\u53d1\u8005'),
     locationCountry: normalizeText(source.locationCountry),
     locationCity: normalizeText(source.locationCity),
-    company: normalizeText(source.company, 'OPC\u5c0f\u516c\u53f8'),
+    company: normalizeText(source.company, 'eSeat'),
     phone: normalizeText(source.phone, '13800138000'),
     email: normalizeText(source.email, 'zhangsan@opc.com'),
     wechat: normalizeText(source.wechat),

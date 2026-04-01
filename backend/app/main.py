@@ -3,7 +3,7 @@
 from .config import settings
 from .database import Base, engine
 from . import models  # noqa: F401
-from .routers import ai_router, auth_router, cards_router, contacts_router, health_router, visitors_router, workbench_router
+from .routers import ai_router, auth_router, cards_router, contacts_router, health_router, qrcode_router, visitors_router, workbench_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -14,6 +14,7 @@ app.include_router(ai_router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(cards_router, prefix="/api/v1")
 app.include_router(contacts_router, prefix="/api/v1")
+app.include_router(qrcode_router, prefix="/api/v1")
 app.include_router(visitors_router, prefix="/api/v1")
 app.include_router(workbench_router, prefix="/api/v1")
 

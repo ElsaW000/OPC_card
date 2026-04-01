@@ -1,0 +1,25 @@
+<view class="blacklist-page">
+  <view wx:if="{{list.length === 0}}" class="empty-state">
+    <text class="empty-icon">🚫</text>
+    <text class="empty-text">暂无黑名单用户</text>
+    <text class="empty-hint">对名片访客设置黑名单后，对方将无法再查看你的名片</text>
+  </view>
+
+  <view wx:else class="list-container">
+    <view class="list-item" wx:for="{{list}}" wx:key="id">
+      <view class="item-avatar">
+        <image wx:if="{{item.avatarUrl}}" class="avatar-img" src="{{item.avatarUrl}}" mode="aspectFill" />
+        <view wx:else class="avatar-fallback">
+          <text class="avatar-text">{{item.name.slice(0,1)}}</text>
+        </view>
+      </view>
+      <view class="item-info">
+        <text class="item-name">{{item.name}}</text>
+        <text class="item-desc">{{item.blockedAt}}</text>
+      </view>
+      <view class="remove-btn" bindtap="removeFromBlacklist" data-id="{{item.id}}">
+        <text class="remove-text">移除</text>
+      </view>
+    </view>
+  </view>
+</view>

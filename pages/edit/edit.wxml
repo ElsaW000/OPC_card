@@ -179,7 +179,13 @@
 
   <!-- 数据统计 -->
   <view class="form-section">
-    <text class="section-title">数据统计</text>
+    <view class="section-header">
+      <text class="section-title">数据统计</text>
+      <view class="privacy-toggle">
+        <text class="privacy-label">{{privacy.stats ? '公开' : '隐藏'}}</text>
+        <switch checked="{{privacy.stats}}" data-key="stats" bindchange="onPrivacyToggle" color="#2563EB" style="transform:scale(0.75)" />
+      </view>
+    </view>
     
     <view class="form-item">
       <text class="label">上线产品</text>
@@ -194,7 +200,13 @@
 
   <!-- 联系方式 -->
   <view class="form-section">
-    <text class="section-title">联系方式</text>
+    <view class="section-header">
+      <text class="section-title">联系方式</text>
+      <view class="privacy-toggle">
+        <text class="privacy-label">{{privacy.contact ? '公开' : '交换后可见'}}</text>
+        <switch checked="{{privacy.contact}}" data-key="contact" bindchange="onPrivacyToggle" color="#2563EB" style="transform:scale(0.75)" />
+      </view>
+    </view>
     
     <view class="form-item">
       <text class="label">电话</text>
@@ -211,7 +223,13 @@
   <view class="form-section">
     <view class="section-header">
       <text class="section-title">自定义卡片</text>
-      <button class="add-btn" bindtap="addCustomCard">添加卡片</button>
+      <view class="section-header-right">
+        <view class="privacy-toggle">
+          <text class="privacy-label">{{privacy.custom ? '公开' : '隐藏'}}</text>
+          <switch checked="{{privacy.custom}}" data-key="custom" bindchange="onPrivacyToggle" color="#2563EB" style="transform:scale(0.75)" />
+        </view>
+        <button class="add-btn" bindtap="addCustomCard">添加卡片</button>
+      </view>
     </view>
     <view class="tip-text">如：MBTI、音乐创作、兴趣爱好等</view>
     
@@ -232,7 +250,13 @@
   
   <!-- 底部联系模块 -->
   <view class="form-section">
-    <text class="section-title">底部联系模块</text>
+    <view class="section-header">
+      <text class="section-title">底部联系模块</text>
+      <view class="privacy-toggle">
+        <text class="privacy-label">{{privacy.footer ? '公开' : '隐藏'}}</text>
+        <switch checked="{{privacy.footer}}" data-key="footer" bindchange="onPrivacyToggle" color="#2563EB" style="transform:scale(0.75)" />
+      </view>
+    </view>
     
     <view class="form-item">
       <text class="label">标题</text>
@@ -249,7 +273,13 @@
   <view class="form-section">
     <view class="section-header">
       <text class="section-title">产品演示 & 短视频</text>
-      <button class="add-btn" bindtap="addVideo">添加视频</button>
+      <view class="section-header-right">
+        <view class="privacy-toggle">
+          <text class="privacy-label">{{privacy.videos ? '公开' : '隐藏'}}</text>
+          <switch checked="{{privacy.videos}}" data-key="videos" bindchange="onPrivacyToggle" color="#2563EB" style="transform:scale(0.75)" />
+        </view>
+        <button class="add-btn" bindtap="addVideo">添加视频</button>
+      </view>
     </view>
     
     <view class="project-item" wx:for="{{videos}}" wx:key="id">
@@ -283,7 +313,13 @@
   <view class="form-section">
     <view class="section-header">
       <text class="section-title">产品/项目</text>
-      <button class="add-btn" bindtap="addProject">+ 添加产品</button>
+      <view class="section-header-right">
+        <view class="privacy-toggle">
+          <text class="privacy-label">{{privacy.projects ? '公开' : '隐藏'}}</text>
+          <switch checked="{{privacy.projects}}" data-key="projects" bindchange="onPrivacyToggle" color="#2563EB" style="transform:scale(0.75)" />
+        </view>
+        <button class="add-btn" bindtap="addProject">+ 添加产品</button>
+      </view>
     </view>
     
     <view class="project-item" wx:for="{{projects}}" wx:key="id">

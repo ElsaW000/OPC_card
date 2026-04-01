@@ -23,7 +23,7 @@ function buildDefaultCard(userId) {
     nameEn: 'Independent Chen',
     locationCountry: '\u4e2d\u56fd',
     locationCity: '\u6df1\u5733',
-    role: 'OPC \u521b\u59cb\u4eba / \u5168\u6808\u5de5\u7a0b\u5e08',
+    role: 'eSeat \u521b\u59cb\u4eba / \u5168\u6808\u5de5\u7a0b\u5e08',
     bio: '\u4e00\u4e2a\u4e13\u6ce8\u4e8e\u6784\u5efa AI \u5de5\u5177\u4e0e\u6548\u7387\u5e94\u7528\u7684\u72ec\u7acb\u5f00\u53d1\u8005\uff0c\u559c\u6b22\u628a\u590d\u6742\u7684\u903b\u8f91\u7b80\u5316\u4e3a\u76f4\u89c2\u7684\u4f53\u9a8c\u3002',
     years: '8+',
     techStack: 'React, Python, AI',
@@ -88,7 +88,7 @@ function buildSeed(userId) {
       userId,
       openid: `mock_${userId}`,
       appid: 'wx-local-dev',
-      nickname: 'OPC \u6d4b\u8bd5\u7528\u6237',
+      nickname: 'eSeat \u6d4b\u8bd5\u7528\u6237',
       createdAt: nowIso(),
       updatedAt: nowIso()
     },

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models import Card, User, Visitor
-from ..schemas import VisitorItem, VisitorListResponse
+from ..schemas import VisitorItem, VisitorListResponse, VisitorRecordRequest, VisitorRecordResponse
 
 router = APIRouter(prefix="/visitors", tags=["visitors"])
 
@@ -66,3 +66,42 @@ def list_visitors(
         )
 
     return VisitorListResponse(visitors=items)
+
+
+@router.post("/record", response_model=VisitorRecordResponse)
+def record_visitor(
+    body: VisitorRecordRequest,
+    x_user_id: str | None = Header(default=None, alias="X-User-Id"),
+    db: Session = Depends(get_db),
+) -> VisitorRecordResponse:
+    # Card must exist
+    card = db.get(Card, body.card_id)
+    if not card:
+        raise HTTPException(status_code=404, detail="Card not found")
+
+    # visitor_user_id may be None if the viewer is not logged in
+    viewer_user_id = x_user_id if x_user_id else None
+
+    # Upsert: same viewer + same card => increment visit_count
+    existing = db.scalar(
+        select(Visitor).where(
+            Visitor.card_id == body.card_id,
+            Visitor.visitor_user_id == viewer_user_id,
+        )
+    )
+    if existing:
+        existing.visit_count += 1
+        existing.last_visit_at = datetime.utcnow()
+        existing.source = body.source or existing.source
+        db.commit()
+        return VisitorRecordResponse(visitor_id=existing.id)
+
+    visitor = Visitor(
+        owner_user_id=card.user_id,
+        visitor_user_id=viewer_user_id,
+        card_id=body.card_id,
+        source=body.source,
+    )
+    db.add(visitor)
+    db.commit()
+    return VisitorRecordResponse(visitor_id=visitor.id)

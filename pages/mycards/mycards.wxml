@@ -61,4 +61,8 @@
     </view>
     <text class="add-text">{{labels.addIdentity}}</text>
   </view>
+
+  <view class="exchange-fab" bindtap="goToExchange">
+    <text class="exchange-fab-text">{{labels.exchangeBtn}}</text>
+  </view>
 </view>

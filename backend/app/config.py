@@ -17,8 +17,14 @@ class Settings(BaseSettings):
     wechat_app_id: str = ""
     wechat_app_secret: str = ""
     jwt_secret: str = ""
+    ai_provider: str = "qwen"
+    anthropic_base_url: str = "https://api.minimaxi.com/anthropic"
+    anthropic_api_key: str = ""
     minimax_api_key: str = ""
-    minimax_model: str = "abab6.5s-chat"
+    minimax_model: str = "MiniMax-M2.5"
+    dashscope_base_url: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    dashscope_api_key: str = ""
+    qwen_model: str = "qwen3-max"
 
     model_config = SettingsConfigDict(
         env_file=str(ENV_PATH),
@@ -27,4 +33,4 @@ class Settings(BaseSettings):
     )
 
 
-settings = Settings()
+settings = Settings(_env_file=str(ENV_PATH))

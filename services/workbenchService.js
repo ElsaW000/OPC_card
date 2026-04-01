@@ -39,6 +39,7 @@ function normalizeContact(contact = {}) {
   return {
     _id: contact._id || contact.id || '',
     id: contact.id || contact._id || '',
+    cardId: contact.cardId || contact.card_id || '',
     name: contact.name || '\u8054\u7cfb\u4eba',
     role: contact.role || '',
     company: contact.company || '',

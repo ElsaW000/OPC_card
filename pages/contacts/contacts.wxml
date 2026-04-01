@@ -22,6 +22,34 @@
     </scroll-view>
   </view>
 
+  <view class="pending-section" wx:if="{{pendingRequests.length}}">
+    <view class="section-header">
+      <text class="section-title">{{labels.pendingSection}}</text>
+      <text class="section-count">{{pendingRequests.length}}</text>
+    </view>
+    <view class="contact-list">
+      <block wx:for="{{pendingRequests}}" wx:key="id">
+        <view class="contact-card pending-card">
+          <view class="card-left">
+            <image class="contact-avatar" src="{{item.avatar}}" />
+            <view class="contact-info">
+              <view class="contact-top">
+                <text class="contact-name">{{item.name}}</text>
+              </view>
+              <text class="contact-role">{{item.role}}</text>
+            </view>
+          </view>
+          <view class="card-right">
+            <view class="action-buttons">
+              <view class="action-btn approve-btn" bindtap="approveRequest" data-id="{{item.id}}">{{labels.approve}}</view>
+              <view class="action-btn reject-btn" bindtap="rejectRequest" data-id="{{item.id}}">{{labels.reject}}</view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
   <view class="section" wx:if="{{recentContacts.length}}">
     <view class="section-header">
       <text class="section-title">{{labels.recentSection}}</text>
@@ -29,7 +57,7 @@
     <view class="contact-list">
       <block wx:for="{{recentContacts}}" wx:key="id">
         <view class="contact-card">
-          <view class="card-left">
+          <view class="card-left" bindtap="openContactCard" data-id="{{item.id}}" data-card-id="{{item.cardId}}">
             <image class="contact-avatar" src="{{item.avatar}}" />
             <view class="contact-info">
               <view class="contact-top">
@@ -57,7 +85,7 @@
     <view class="contact-list">
       <block wx:for="{{filteredContacts}}" wx:key="id">
         <view class="contact-card">
-          <view class="card-left">
+          <view class="card-left" bindtap="openContactCard" data-id="{{item.id}}" data-card-id="{{item.cardId}}">
             <image class="contact-avatar" src="{{item.avatar}}" />
             <view class="contact-info">
               <view class="contact-top">

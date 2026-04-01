@@ -14,9 +14,15 @@
       </view>
     </view>
 
-    <view class="fake-qr">
-      <view class="fake-qr-grid">
-        <view class="fake-qr-cell {{item.active ? 'active' : ''}}" wx:for="{{qrCells}}" wx:key="id"></view>
+    <view class="qr-area">
+      <image wx:if="{{qrImagePath}}" class="qr-image" src="{{qrImagePath}}" mode="aspectFit" />
+      <view wx:elif="{{qrLoading}}" class="qr-loading">
+        <view class="qr-spinner"></view>
+      </view>
+      <view wx:else class="fake-qr">
+        <view class="fake-qr-grid">
+          <view class="fake-qr-cell {{item.active ? 'active' : ''}}" wx:for="{{qrCells}}" wx:key="id"></view>
+        </view>
       </view>
     </view>
 
@@ -25,6 +31,9 @@
     <view class="action-row">
       <button class="action-btn primary" open-type="share">{{labels.share}}</button>
       <button class="action-btn" bindtap="copyPath">{{labels.copy}}</button>
+    </view>
+    <view class="action-row-2" wx:if="{{qrImagePath}}">
+      <button class="action-btn-save" bindtap="saveQrImage">{{labels.saveImg}}</button>
     </view>
   </view>
 </view>

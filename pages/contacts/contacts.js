@@ -1,19 +1,23 @@
-const { getContactsAsync, updateContactAsync } = require('../../services/contactService')
+const { getContactsAsync, updateContactAsync, approveContactAsync, rejectContactAsync } = require('../../services/contactService')
 const { bootstrapSessionAsync } = require('../../services/userService')
 
 const TEXT = {
   all: '\u5168\u90e8',
   title: '\u8054\u7cfb\u4eba',
   searchPlaceholder: '\u641c\u7d22\u8054\u7cfb\u4eba...',
+  pendingSection: '\u5f85\u5904\u7406\u8bf7\u6c42',
   recentSection: '\u6700\u8fd1\u4ea4\u6362',
   allSection: '\u5168\u90e8\u8054\u7cfb\u4eba',
   loadFailed: '\u8054\u7cfb\u4eba\u52a0\u8f7d\u5931\u8d25',
   starFailed: '\u661f\u6807\u66f4\u65b0\u5931\u8d25',
+  approveFailed: '\u64cd\u4f5c\u5931\u8d25',
   fallbackName: '\u8054\u7cfb\u4eba',
   fallbackTime: '\u6700\u8fd1\u66f4\u65b0',
   starred: '\u2605',
   unstarred: '\u2606',
-  searchIcon: '\u641c'
+  searchIcon: '\u641c',
+  approve: '\u540c\u610f',
+  reject: '\u62d2\u7edd'
 }
 
 function toText(value, fallback = '') {
@@ -24,6 +28,7 @@ function normalizeContact(item = {}) {
   const starred = !!item.starred
   return {
     id: toText(item._id || item.id),
+    cardId: toText(item.cardId || item.card_id),
     name: toText(item.name, TEXT.fallbackName),
     role: [toText(item.role), toText(item.company)].filter(Boolean).join(' / ') || toText(item.role),
     avatar: toText(item.avatarUrl || item.avatar),
@@ -40,10 +45,14 @@ Page({
       title: TEXT.title,
       searchPlaceholder: TEXT.searchPlaceholder,
       searchIcon: TEXT.searchIcon,
+      pendingSection: TEXT.pendingSection,
       recentSection: TEXT.recentSection,
-      allSection: TEXT.allSection
+      allSection: TEXT.allSection,
+      approve: TEXT.approve,
+      reject: TEXT.reject
     },
     contacts: [],
+    pendingRequests: [],
     filteredContacts: [],
     recentContacts: [],
     filterTags: [TEXT.all],
@@ -52,7 +61,11 @@ Page({
     totalCount: 0
   },
 
-  onLoad() {
+  onLoad(options) {
+    const storedFilter = wx.getStorageSync('contacts_initial_filter')
+    if (storedFilter) wx.removeStorageSync('contacts_initial_filter')
+    const initialFilter = storedFilter === 'starred' || (options && options.filter === 'starred') ? TEXT.starred : TEXT.all
+    this.setData({ activeTag: initialFilter })
     this.loadContacts()
   },
 
@@ -65,13 +78,15 @@ Page({
       await bootstrapSessionAsync()
       const result = await getContactsAsync()
       const contacts = (result.contacts || []).map(normalizeContact)
+      const pendingRequests = (result.pendingRequests || []).map(normalizeContact)
       const remoteTags = Array.isArray(result.tags)
         ? result.tags.map((tag) => toText(tag)).filter(Boolean)
         : []
-      const filterTags = remoteTags.length ? [TEXT.all, ...remoteTags.filter((tag) => tag !== TEXT.all)] : [TEXT.all]
+      const filterTags = remoteTags.length ? [TEXT.all, TEXT.starred].concat(remoteTags.filter((tag) => tag !== TEXT.all && tag !== TEXT.starred)) : [TEXT.all, TEXT.starred]
 
       this.setData({
         contacts,
+        pendingRequests,
         recentContacts: contacts.slice(0, 1),
         filterTags,
         totalCount: contacts.length
@@ -103,7 +118,7 @@ Page({
     const allContacts = Array.isArray(this.data.contacts) ? this.data.contacts : []
     const filtered = allContacts.filter((item) => {
       const matchKeyword = !keyword || [item.name, item.role, ...(item.tags || [])].join(' ').toLowerCase().includes(keyword)
-      const matchTag = activeTag === TEXT.all || (item.tags || []).includes(activeTag)
+      const matchTag = activeTag === TEXT.all || (activeTag === TEXT.starred ? item.starred : (item.tags || []).includes(activeTag))
       return matchKeyword && matchTag
     })
 
@@ -128,6 +143,46 @@ Page({
         title: error && error.message ? error.message : TEXT.starFailed,
         icon: 'none'
       })
+    }
+  },
+
+  async approveRequest(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    try {
+      await bootstrapSessionAsync()
+      await approveContactAsync(id)
+      wx.showToast({ title: '\u5df2\u540c\u610f', icon: 'success' })
+      await this.loadContacts()
+    } catch (error) {
+      console.error('approve request failed:', error)
+      wx.showToast({ title: TEXT.approveFailed, icon: 'none' })
+    }
+  },
+
+  async rejectRequest(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    try {
+      await bootstrapSessionAsync()
+      await rejectContactAsync(id)
+      wx.showToast({ title: '\u5df2\u62d2\u7edd', icon: 'none' })
+      await this.loadContacts()
+    } catch (error) {
+      console.error('reject request failed:', error)
+      wx.showToast({ title: TEXT.approveFailed, icon: 'none' })
+    }
+  },
+
+  openContactCard(e) {
+    const cardId = e.currentTarget.dataset.cardId || ''
+    const contactId = e.currentTarget.dataset.id || ''
+    if (cardId) {
+      wx.navigateTo({ url: `/pages/cardDetail/cardDetail?id=${cardId}&visitor=1` })
+      return
+    }
+    if (contactId) {
+      wx.navigateTo({ url: `/pages/contactdetail/contactdetail?id=${contactId}` })
     }
   }
 })

@@ -32,6 +32,7 @@
   padding: 20rpx;
   font-size: 28rpx;
   line-height: 1.5;
+  color: #1f2937;
   box-sizing: border-box;
   margin-bottom: 16rpx;
 }
@@ -80,6 +81,32 @@
 
 .section-header .section-title {
   margin-bottom: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.section-header-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+  flex-shrink: 0;
+  margin-left: 12rpx;
+}
+
+.privacy-toggle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.privacy-label {
+  font-size: 22rpx;
+  color: #999;
 }
 
 /* æ¨¡æ¿é€‰æ‹© */

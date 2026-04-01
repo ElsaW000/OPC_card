@@ -1,28 +1,50 @@
 const { getWorkbenchAsync } = require('../../services/workbenchService')
 const { bootstrapSessionAsync } = require('../../services/userService')
+const { updateSettings, addSuggestion, readSettings } = require('../../services/settingsService')
+const { isRemoteApiEnabled, setRemoteApiEnabled } = require('../../services/apiConfig')
 
 const TEXT = {
-  workbench: '\u5de5\u4f5c\u53f0',
-  cardManagement: '\u540d\u7247\u7ba1\u7406',
-  visitRecords: '\u6d4f\u89c8\u8bb0\u5f55',
-  exchangeRecords: '\u4ea4\u6362\u8bb0\u5f55',
-  analytics: '\u6570\u636e\u5206\u6790',
-  recentVisitors: '\u6700\u8fd1\u8bbf\u5ba2',
-  starredContacts: '\u91cd\u70b9\u8054\u7cfb\u4eba',
-  viewMore: '\u67e5\u770b\u66f4\u591a',
-  noVisitors: '\u6682\u65e0\u8bbf\u5ba2\u8bb0\u5f55',
-  noContacts: '\u6682\u65e0\u91cd\u70b9\u8054\u7cfb\u4eba',
-  defaultBadge: '\u9ed8\u8ba4',
-  defaultRole: '\u8bf7\u5148\u521b\u5efa\u4e00\u5f20\u9ed8\u8ba4\u540d\u7247',
-  defaultName: '\u672a\u547d\u540d\u540d\u7247',
-  weeklyViews: '\u672c\u5468\u8bbf\u5ba2',
-  visitorsUnit: '\u4eba',
-  loadFailed: '\u5de5\u4f5c\u53f0\u52a0\u8f7d\u5931\u8d25',
-  newVisitor: '\u65b0\u8bbf\u5ba2',
-  justNow: '\u521a\u521a',
-  qrCode: 'QR',
-  opcWorkbench: 'OPC WORKBENCH'
+  aiTitle: 'AI 社交助理',
+  aiPlaceholder: '您有什么需求？',
+  aiPrompt: '看下最近圈子里有什么新鲜事？',
+  modelFree: '标准模型（免费）',
+  modelPaid: '增强模型（付费）',
+  dataTitle: '数据模块',
+  weeklyViews: '每周访问总数字',
+  starredTitle: '星标联系人',
+  updatedProducts: '更新了新产品',
+  updatedVideos: '发布了新视频',
+  noContacts: '暂无星标联系人',
+  settingsTitle: '系统设置',
+  aiTone: 'AI 语聊',
+  publicDynamics: '公开动态通知',
+  privacySettings: '隐私设置',
+  blacklist: '黑名单',
+  membership: '会员权益',
+  contactUs: '联系我们',
+  submit: '提交',
+  cancel: '取消',
+  suggestionPlaceholder: '输入你的建议或遇到的问题',
+  contactPlaceholder: '留下你的联系方式（可选）',
+  noPrompt: '请先输入内容',
+  saved: '建议已提交',
+  saveFailed: '提交失败',
+  fallbackContact: '联系人',
+  fallbackRole: '暂无标签信息',
+  loadFailed: '工作台加载失败'
 }
+
+const AI_TONES = [
+  '专业且友好',
+  '简洁直接',
+  '温暖陪伴'
+]
+
+const PRIVACY_OPTIONS = [
+  '公开可见',
+  '交换后可见',
+  '仅自己可见'
+]
 
 function toText(value, fallback = '') {
   return value === undefined || value === null ? fallback : String(value)
@@ -30,31 +52,79 @@ function toText(value, fallback = '') {
 
 function firstChar(name) {
   const text = toText(name).trim()
-  return text ? text.slice(0, 1) : '\u8bbf'
+  return text ? text.slice(0, 1) : '联'
 }
 
-function buildQuickActions() {
-  return [
-    { key: 'cards', label: TEXT.cardManagement, iconText: '\u540d', action: 'goToMyCards' },
-    { key: 'visitors', label: TEXT.visitRecords, iconText: '\u8bbf', action: 'goToVisitors' },
-    { key: 'contacts', label: TEXT.exchangeRecords, iconText: '\u4ea4', action: 'goToContacts' },
-    { key: 'analytics', label: TEXT.analytics, iconText: '\u6570', action: 'goToAnalytics' }
+function normalizeSettings(settings = {}) {
+  return {
+    aiTone: toText(settings.aiTone, AI_TONES[0]),
+    publicDynamics: settings.publicDynamics !== false,
+    privacyMode: toText(settings.privacyMode, PRIVACY_OPTIONS[1]),
+    blacklistCount: Number(settings.blacklistCount || (Array.isArray(settings.blacklist) ? settings.blacklist.length : 0) || 0)
+  }
+}
+
+function normalizePersonaTags(tags = []) {
+  const fallback = [
+    { label: 'AI', size: 188, emphasis: 'primary' },
+    { label: '产品', size: 124, emphasis: 'secondary' },
+    { label: 'React', size: 116, emphasis: 'secondary' },
+    { label: '潜在客户', size: 94, emphasis: 'normal' },
+    { label: '微信好友', size: 86, emphasis: 'normal' },
+    { label: '新增访客', size: 82, emphasis: 'normal' }
   ]
+  const source = Array.isArray(tags) && tags.length ? tags : fallback
+
+  return source.slice(0, 6).map((item, index) => {
+    const label = toText(item.label || item.name || item, 'AI')
+    const isAI = /ai/i.test(label)
+    const fallbackSize = index === 0 ? 188 : index === 1 ? 124 : index === 2 ? 116 : 88
+
+    return {
+      id: `bubble-${index}`,
+      label,
+      size: Math.max(Number(item.size || 0), isAI ? 188 : fallbackSize),
+      tone: index % 4,
+      emphasis: isAI ? 'primary' : (index < 3 ? 'secondary' : 'normal')
+    }
+  })
+}
+
+function normalizeStarredContacts(items = []) {
+  return (Array.isArray(items) ? items : []).slice(0, 8).map((item, index) => ({
+    id: toText(item._id || item.id, `contact-${index}`),
+    cardId: toText(item.cardId || item.card_id),
+    name: toText(item.name, TEXT.fallbackContact),
+    role: [toText(item.role), toText(item.company)].filter(Boolean).join(' / ') || TEXT.fallbackRole,
+    avatarUrl: toText(item.avatarUrl),
+    avatarText: firstChar(item.name),
+    hasUpdate: !!(item.hasUpdate || item.updated || item.updateType),
+    updateText: toText(item.updateMessage, item.updateType === 'videos' ? TEXT.updatedVideos : TEXT.updatedProducts)
+  }))
+}
+
+function isTimeoutError(error) {
+  const text = [error && error.message, error && error.errMsg].filter(Boolean).join(' ')
+  return /timeout/i.test(text)
 }
 
 Page({
   data: {
     labels: TEXT,
-    defaultCard: null,
-    displayCardName: TEXT.defaultName,
-    displayCardRole: TEXT.defaultRole,
-    displayCardCompany: '',
-    quickActions: buildQuickActions(),
-    recentVisitors: [],
-    starredContacts: [],
-    personaTags: [],
+    aiInput: '',
+    aiPrompt: TEXT.aiPrompt,
+    modelPills: [
+      { text: TEXT.modelFree, tone: 'light' },
+      { text: TEXT.modelPaid, tone: 'accent' }
+    ],
     weeklyViews: 0,
-    visitorCount: 0
+    personaTags: normalizePersonaTags(),
+    starredContacts: [],
+    settingsSummary: normalizeSettings(readSettings()),
+    showSuggestionForm: false,
+    suggestionContent: '',
+    suggestionContact: '',
+    aiInputFocused: false
   },
 
   onLoad() {
@@ -69,50 +139,25 @@ Page({
     try {
       await bootstrapSessionAsync()
       const result = await getWorkbenchAsync()
-      const defaultCard = result.defaultCard || null
-      const recentVisitors = Array.isArray(result.recentVisitors)
-        ? result.recentVisitors.slice(0, 3).map((item) => ({
-            id: toText(item._id || item.id),
-            name: toText(item.name, TEXT.newVisitor),
-            time: toText(item.visitTimeText || item.time, TEXT.justNow),
-            avatarText: firstChar(item.name)
-          }))
-        : []
-      const starredContacts = Array.isArray(result.starredContacts)
-        ? result.starredContacts.slice(0, 3).map((item) => ({
-            id: toText(item._id || item.id),
-            name: toText(item.name, '\u8054\u7cfb\u4eba'),
-            role: [toText(item.role), toText(item.company)].filter(Boolean).join(' / '),
-            avatarUrl: toText(item.avatarUrl),
-            avatarText: firstChar(item.name)
-          }))
-        : []
-
-      this.setData({
-        defaultCard,
-        displayCardName: defaultCard ? toText(defaultCard.name, TEXT.defaultName) : TEXT.defaultName,
-        displayCardRole: defaultCard ? toText(defaultCard.role, TEXT.defaultRole) : TEXT.defaultRole,
-        displayCardCompany: defaultCard ? toText(defaultCard.company) : '',
-        weeklyViews: Number(result.weeklyViews || 0),
-        visitorCount: Number(result.visitorCount || 0),
-        personaTags: Array.isArray(result.personaTags) ? result.personaTags : [],
-        starredContacts,
-        recentVisitors,
-        quickActions: buildQuickActions()
-      })
+      this.applyWorkbenchResult(result)
     } catch (error) {
-      console.error('load workbench failed:', error)
+      if (isRemoteApiEnabled() && isTimeoutError(error)) {
+        setRemoteApiEnabled(false)
+        try {
+          const result = await getWorkbenchAsync()
+          this.applyWorkbenchResult(result)
+          wx.showToast({ title: '远程超时，已切换本地模式', icon: 'none' })
+          return
+        } catch (fallbackError) {
+          console.warn('workbench fallback failed:', fallbackError)
+        }
+      }
+      console.warn('load workbench failed:', error)
       this.setData({
-        defaultCard: null,
-        displayCardName: TEXT.defaultName,
-        displayCardRole: TEXT.defaultRole,
-        displayCardCompany: '',
-        quickActions: buildQuickActions(),
-        recentVisitors: [],
-        starredContacts: [],
-        personaTags: [],
         weeklyViews: 0,
-        visitorCount: 0
+        personaTags: normalizePersonaTags(),
+        starredContacts: [],
+        settingsSummary: normalizeSettings(readSettings())
       })
       wx.showToast({
         title: error && error.message ? error.message : TEXT.loadFailed,
@@ -121,41 +166,110 @@ Page({
     }
   },
 
-  handleQuickAction(e) {
-    const action = e.currentTarget.dataset.action
-    if (action && typeof this[action] === 'function') {
-      this[action]()
+  applyWorkbenchResult(result = {}) {
+    this.setData({
+      weeklyViews: Number(result.weeklyViews || 0),
+      personaTags: normalizePersonaTags(result.personaTags),
+      starredContacts: normalizeStarredContacts(result.starredContacts),
+      settingsSummary: normalizeSettings(result.settingsSummary || readSettings())
+    })
+  },
+
+  onAiInputChange(e) {
+    this.setData({ aiInput: toText(e.detail.value) })
+  },
+
+  onAiInputFocus() {
+    this.setData({ aiInputFocused: true })
+  },
+
+  onAiInputBlur() {
+    this.setData({ aiInputFocused: false })
+  },
+
+  openAiChat(prompt) {
+    const source = typeof prompt === 'string' ? prompt : this.data.aiInput
+    const next = encodeURIComponent(toText(source).trim())
+    if (!next) {
+      wx.showToast({ title: TEXT.noPrompt, icon: 'none' })
+      return
     }
+    wx.navigateTo({ url: `/pages/aiFeatures/aiFeatures?prompt=${next}` })
   },
 
-  editDefaultCard() {
-    const id = this.data.defaultCard && (this.data.defaultCard.id || this.data.defaultCard._id)
-      ? (this.data.defaultCard.id || this.data.defaultCard._id)
-      : ''
-    wx.navigateTo({ url: `/pages/edit/edit${id ? `?id=${id}` : ''}` })
+  useAiPrompt(e) {
+    this.openAiChat(e.currentTarget.dataset.prompt || '')
   },
 
-  showQR(e) {
-    if (e && e.stopPropagation) e.stopPropagation()
-    const id = this.data.defaultCard && (this.data.defaultCard.id || this.data.defaultCard._id)
-      ? (this.data.defaultCard.id || this.data.defaultCard._id)
-      : ''
-    wx.navigateTo({ url: `/pages/qrcode/qrcode${id ? `?id=${id}` : ''}` })
+  openAnalytics() {
+    wx.navigateTo({ url: '/pages/analytics/analytics' })
   },
 
-  goToMyCards() {
-    wx.switchTab({ url: '/pages/mycards/mycards' })
-  },
-
-  goToVisitors() {
-    wx.navigateTo({ url: '/pages/visitor/visitor' })
-  },
-
-  goToContacts() {
+  openStarredContacts() {
+    wx.setStorageSync('contacts_initial_filter', 'starred')
     wx.switchTab({ url: '/pages/contacts/contacts' })
   },
 
-  goToAnalytics() {
-    wx.navigateTo({ url: '/pages/analytics/analytics' })
+  openContactDetail(e) {
+    const id = e.currentTarget.dataset.id || ''
+    const cardId = e.currentTarget.dataset.cardId || ''
+    if (cardId) {
+      wx.navigateTo({ url: `/pages/cardDetail/cardDetail?id=${cardId}&visitor=1` })
+      return
+    }
+    if (!id) return
+    wx.navigateTo({ url: `/pages/contactdetail/contactdetail?id=${id}` })
+  },
+
+  cycleAiTone() {
+    const current = this.data.settingsSummary.aiTone
+    const index = Math.max(0, AI_TONES.indexOf(current))
+    const next = normalizeSettings(updateSettings({ aiTone: AI_TONES[(index + 1) % AI_TONES.length] }))
+    this.setData({ settingsSummary: next })
+  },
+
+  togglePublicDynamics() {
+    const next = normalizeSettings(updateSettings({ publicDynamics: !this.data.settingsSummary.publicDynamics }))
+    this.setData({ settingsSummary: next })
+  },
+
+  openBlacklist() {
+    wx.navigateTo({ url: '/pages/blacklist/blacklist' })
+  },
+
+  openMember() {
+    wx.navigateTo({ url: '/pages/member/member' })
+  },
+
+  openSuggestionForm() {
+    this.setData({ showSuggestionForm: true })
+  },
+
+  closeSuggestionForm() {
+    this.setData({ showSuggestionForm: false, suggestionContent: '', suggestionContact: '' })
+  },
+
+  onSuggestionContentInput(e) {
+    this.setData({ suggestionContent: toText(e.detail.value) })
+  },
+
+  onSuggestionContactInput(e) {
+    this.setData({ suggestionContact: toText(e.detail.value) })
+  },
+
+  submitSuggestion() {
+    const content = toText(this.data.suggestionContent).trim()
+    if (!content) {
+      wx.showToast({ title: TEXT.noPrompt, icon: 'none' })
+      return
+    }
+    try {
+      addSuggestion({ content, contact: this.data.suggestionContact })
+      wx.showToast({ title: TEXT.saved, icon: 'success' })
+      this.closeSuggestionForm()
+    } catch (error) {
+      console.error('submit suggestion failed:', error)
+      wx.showToast({ title: TEXT.saveFailed, icon: 'none' })
+    }
   }
 })

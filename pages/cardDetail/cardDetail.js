@@ -1,6 +1,7 @@
 const app = getApp()
 const { getCardViewAsync, setDefaultCardAsync } = require('../../services/cardService')
 const { bootstrapSessionAsync } = require('../../services/userService')
+const { recordVisitorAsync } = require('../../services/visitorService')
 
 const DEFAULT_BANNER = 'https://images.unsplash.com/photo-1647247743538-0137d6a8a268?w=1200'
 const DEFAULT_AVATAR = 'https://images.unsplash.com/photo-1701463387028-3947648f1337?w=400'
@@ -18,7 +19,7 @@ const TEXT = {
   email: '\u90ae\u7bb1',
   wechat: '\u5fae\u4fe1',
   defaultName: '\u9648\u5c0f\u72ec\u7acb',
-  defaultRole: 'OPC \u521b\u59cb\u4eba / \u5168\u6808\u5de5\u7a0b\u5e08',
+  defaultRole: 'eSeat \u521b\u59cb\u4eba / \u5168\u6808\u5de5\u7a0b\u5e08',
   defaultBio: '\u4e00\u540d\u4e13\u6ce8\u4e8e\u6784\u5efa AI \u5de5\u5177\u4e0e\u6548\u7387\u4ea7\u54c1\u7684\u72ec\u7acb\u5f00\u53d1\u8005\uff0c\u6301\u7eed\u6253\u78e8\u4ea7\u54c1\u4f53\u9a8c\uff0c\u5e76\u628a\u590d\u6742\u903b\u8f91\u8f6c\u5316\u6210\u76f4\u89c2\u7684\u754c\u9762\u3002',
   defaultReady: '\u5f53\u524d\u5df2\u662f\u9ed8\u8ba4\u540d\u7247',
   defaultTodo: '\u9ed8\u8ba4\u540d\u7247\u529f\u80fd\u5f85\u63a5\u771f\u5b9e\u63a5\u53e3',
@@ -34,7 +35,7 @@ const TEXT = {
   contactDesc: '\u6b22\u8fce\u901a\u8fc7\u4ee5\u4e0b\u65b9\u5f0f\u5efa\u7acb\u8fde\u63a5\uff0c\u6211\u4f1a\u5c3d\u5feb\u56de\u590d\u3002',
   exchangeCard: '\u4ea4\u6362\u540d\u7247',
   editCard: '\u7f16\u8f91\u540d\u7247',
-  shareTitleFallback: '\u6211\u7684 OPC \u540d\u7247',
+  shareTitleFallback: '\u6211\u7684 eSeat \u540d\u7247',
   setDefaultDone: '\u5df2\u8bbe\u4e3a\u9ed8\u8ba4\u540d\u7247',
   setDefaultFailed: '\u8bbe\u7f6e\u9ed8\u8ba4\u5931\u8d25',
 }
@@ -81,10 +82,10 @@ function normalizeVideo(video = {}, index = 0) {
 
 function buildStats(card = {}) {
   return [
-    { key: 'years', value: toStringValue(card.years, '8+'), label: TEXT.years },
-    { key: 'products', value: toStringValue(card.products, '12'), label: TEXT.products },
-    { key: 'users', value: toStringValue(card.users, '25k'), label: TEXT.users }
-  ]
+    { key: 'years', value: toStringValue(card.years), label: TEXT.years },
+    { key: 'products', value: toStringValue(card.products), label: TEXT.products },
+    { key: 'users', value: toStringValue(card.users), label: TEXT.users }
+  ].filter((item) => item.value)
 }
 
 function buildContactItems(card = {}) {
@@ -104,7 +105,8 @@ function buildContactItems(card = {}) {
 }
 
 function buildSafeCard(card = {}) {
-  const tags = toTagList(card.tags || card.techStack, ['AI', 'React', 'SaaS'])
+  const isMockCard = !!card.__isMock
+  const tags = isMockCard ? toTagList(card.tags || card.techStack, ['AI', 'React', 'SaaS']) : toTagList(card.tags || card.techStack, [])
   const projects = Array.isArray(card.projects) ? card.projects.map(normalizeProject) : []
   const videos = Array.isArray(card.videos) ? card.videos.map(normalizeVideo) : []
   const customCards = Array.isArray(card.customCards)
@@ -118,27 +120,28 @@ function buildSafeCard(card = {}) {
 
   return {
     id: toStringValue(card.id || card._id),
-    name: toStringValue(card.name, TEXT.defaultName),
-    nameEn: toStringValue(card.nameEn, 'Independent Chen'),
-    role: toStringValue(card.role, TEXT.defaultRole),
-    company: toStringValue(card.company, 'OPC'),
+    name: toStringValue(card.name, isMockCard ? TEXT.defaultName : ''),
+    nameEn: toStringValue(card.nameEn, isMockCard ? 'Independent Chen' : ''),
+    role: toStringValue(card.role, isMockCard ? TEXT.defaultRole : ''),
+    company: toStringValue(card.company, isMockCard ? 'eSeat' : ''),
     bio: (() => {
       const rawBio = toStringValue(card.bio)
-      return rawBio && !/[.]{3}$|…$/.test(rawBio) ? rawBio : TEXT.defaultBio
+      if (rawBio && !/[.]{3}$|â€¦$/.test(rawBio)) return rawBio
+      return isMockCard ? TEXT.defaultBio : ''
     })(),
     bannerUrl: toStringValue(card.bannerUrl, DEFAULT_BANNER),
     avatarUrl: toStringValue(card.avatarUrl, DEFAULT_AVATAR),
     isDefault: !!card.isDefault,
     location,
-    phone: toStringValue(card.phone, '138 0013 8000'),
-    email: toStringValue(card.email, 'chen@example.com'),
-    wechat: toStringValue(card.wechat, 'indie-chen'),
-    footerTitle: toStringValue(card.footerTitle, TEXT.contactTitle),
-    footerDesc: toStringValue(card.footerDesc, TEXT.contactDesc),
+    phone: toStringValue(card.phone),
+    email: toStringValue(card.email),
+    wechat: toStringValue(card.wechat),
+    footerTitle: toStringValue(card.footerTitle, isMockCard ? TEXT.contactTitle : ''),
+    footerDesc: toStringValue(card.footerDesc, isMockCard ? TEXT.contactDesc : ''),
     stats: buildStats(card),
     tags,
     customCards,
-    projects: projects.length ? projects : [normalizeProject({
+    projects: projects.length ? projects : (isMockCard ? [normalizeProject({
       id: 'project-1',
       title: 'CodeFlow AI',
       description: '\u5e2e\u52a9\u72ec\u7acb\u5f00\u53d1\u8005\u7528\u81ea\u7136\u8bed\u8a00\u5feb\u901f\u751f\u6210\u754c\u9762\u4e0e\u7ec4\u4ef6\u7684 AI \u5de5\u4f5c\u6d41\u3002',
@@ -146,24 +149,25 @@ function buildSafeCard(card = {}) {
       link: '\u5728\u7ebf\u4f53\u9a8c',
       github: 'GitHub',
       tags: ['AI', 'React', 'SaaS']
-    })],
-    videos: videos.length ? videos : [normalizeVideo({
+    })] : []),
+    videos: videos.length ? videos : (isMockCard ? [normalizeVideo({
       id: 'video-1',
       title: '\u6f14\u793a\uff1a\u5982\u4f55\u5728 5 \u5206\u949f\u5185\u7528 CodeFlow AI \u751f\u6210 UI',
       thumbnail: DEFAULT_VIDEO_COVER,
       views: '12k',
       duration: '01:45'
-    })]
+    })] : [])
   }
 }
 
 function getMockCards() {
   return [{
+    __isMock: true,
     id: '1',
     name: TEXT.defaultName,
     nameEn: 'Independent Chen',
     role: TEXT.defaultRole,
-    company: 'OPC',
+    company: 'eSeat',
     bio: TEXT.defaultBio,
     avatarUrl: DEFAULT_AVATAR,
     bannerUrl: DEFAULT_BANNER,
@@ -207,13 +211,15 @@ Page({
     contactItems: [],
     labels: TEXT,
     isPublicView: false,
+    isVisitorMode: false,
   },
 
   onLoad(options) {
     const cardId = options && options.id ? options.id : ''
     const isPublicView = !!(options && options.view === 'public')
+    const isVisitorMode = !!(options && options.visitor === '1')
     this.cardId = cardId
-    this.setData({ isPublicView })
+    this.setData({ isPublicView, isVisitorMode })
     this.loadCard(cardId)
   },
 
@@ -227,6 +233,10 @@ Page({
           card,
           contactItems: buildContactItems(card)
         })
+        // 访客模式：记录访问
+        if (this.data.isVisitorMode && id) {
+          recordVisitorAsync(id, '名片分享').catch(() => {})
+        }
         return
       }
     } catch (error) {
@@ -262,7 +272,7 @@ Page({
     const cardId = card && card.id ? card.id : ''
     return {
       title: card && card.name ? `${card.name} - ${card.role || TEXT.shareTitleFallback}` : TEXT.shareTitleFallback,
-      path: cardId ? `/pages/cardDetail/cardDetail?id=${cardId}` : '/pages/mycards/mycards',
+      path: cardId ? `/pages/cardDetail/cardDetail?id=${cardId}&visitor=1` : '/pages/mycards/mycards',
     }
   },
 
@@ -307,6 +317,11 @@ Page({
   },
 
   exchangeCard() {
-    wx.navigateTo({ url: '/pages/exchange/exchange' })
+    const cardId = this.data.card && this.data.card.id ? this.data.card.id : ''
+    if (this.data.isVisitorMode && cardId) {
+      wx.navigateTo({ url: '/pages/exchangeconfirm/exchangeconfirm?id=' + cardId })
+      return
+    }
+    wx.navigateTo({ url: '/pages/exchange/exchange' + (cardId ? '?cardId=' + cardId : '') })
   }
 })

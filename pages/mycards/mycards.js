@@ -14,7 +14,8 @@ const TEXT = {
   edit: '\u7f16\u8f91',
   share: '\u4e8c\u7ef4\u7801',
   addIdentity: '\u521b\u5efa\u65b0\u8eab\u4efd',
-  shareTitleFallback: '\u6211\u7684 OPC \u540d\u7247',
+  exchangeBtn: '\u4ea4\u6362\u540d\u7247',
+  shareTitleFallback: '\u6211\u7684 eSeat \u540d\u7247',
   sharePathFallback: '/pages/mycards/mycards',
   defaultSaved: '\u5df2\u8bbe\u4e3a\u9ed8\u8ba4',
   keepOne: '\u81f3\u5c11\u4fdd\u7559\u4e00\u5f20',
@@ -157,5 +158,9 @@ Page({
 
   addCard() {
     wx.navigateTo({ url: '/pages/edit/edit' })
+  },
+
+  goToExchange() {
+    wx.navigateTo({ url: '/pages/exchange/exchange' })
   }
 })

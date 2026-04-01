@@ -8,7 +8,8 @@ function getDefaultSettings() {
     blacklist: [
       { id: 'blk_1', name: '营销测试用户' }
     ],
-    suggestions: []
+    suggestions: [],
+    allowAiContactsContext: false
   }
 }
 
