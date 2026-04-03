@@ -6,10 +6,10 @@ After=network.target
 
 [Service]
 Type=simple
-User=root
-WorkingDirectory=/opt/eseat
+User=admin
+WorkingDirectory=/opt/eseat/OPC_card
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/opt/eseat/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001 --app-dir backend
+ExecStart=/opt/eseat/OPC_card/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001 --app-dir backend
 Restart=always
 RestartSec=3
 

@@ -27,8 +27,8 @@ apt install -y python3 python3-venv python3-pip nginx git
 如果代码已在 Git 仓库：
 
 ```bash
-cd /opt
-git clone <YOUR_GIT_REPO_URL> eseat
+cd /opt/eseat
+git clone <YOUR_GIT_REPO_URL> OPC_card
 ```
 
 如果暂时没有 Git 远程仓库，可以先用 `scp` 或阿里云工作台把仓库传到服务器。
@@ -36,7 +36,7 @@ git clone <YOUR_GIT_REPO_URL> eseat
 ## 3. Python 虚拟环境
 
 ```bash
-cd /opt/eseat
+cd /opt/eseat/OPC_card
 python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
@@ -48,13 +48,13 @@ pip install -r backend/requirements.txt
 在服务器创建文件：
 
 ```bash
-/opt/eseat/backend/.env
+/opt/eseat/OPC_card/backend/.env
 ```
 
 参考：
 
 ```bash
-cp /opt/eseat/deploy/aliyun/backend.env.example /opt/eseat/backend/.env
+cp /opt/eseat/OPC_card/deploy/aliyun/backend.env.example /opt/eseat/OPC_card/backend/.env
 ```
 
 必填项：
@@ -72,7 +72,7 @@ cp /opt/eseat/deploy/aliyun/backend.env.example /opt/eseat/backend/.env
 ## 5. 本机先验证 FastAPI
 
 ```bash
-cd /opt/eseat
+cd /opt/eseat/OPC_card
 source .venv/bin/activate
 uvicorn app.main:app --host 127.0.0.1 --port 8001 --app-dir backend
 ```
@@ -90,7 +90,7 @@ curl http://127.0.0.1:8001/api/v1/health
 复制模板：
 
 ```bash
-cp /opt/eseat/deploy/aliyun/nginx/api.eseat.cn.conf /etc/nginx/sites-available/eseat-api
+cp /opt/eseat/OPC_card/deploy/aliyun/nginx/api.eseat.cn.conf /etc/nginx/sites-available/eseat-api
 ln -sf /etc/nginx/sites-available/eseat-api /etc/nginx/sites-enabled/eseat-api
 nginx -t
 systemctl reload nginx
@@ -107,7 +107,7 @@ curl http://api.eseat.cn/api/v1/health
 复制模板：
 
 ```bash
-cp /opt/eseat/deploy/aliyun/systemd/eseat-api.service /etc/systemd/system/eseat-api.service
+cp /opt/eseat/OPC_card/deploy/aliyun/systemd/eseat-api.service /etc/systemd/system/eseat-api.service
 systemctl daemon-reload
 systemctl enable eseat-api
 systemctl start eseat-api

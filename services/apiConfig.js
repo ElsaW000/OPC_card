@@ -1,10 +1,12 @@
 const KEY = 'opc_api_base_url'
 const REMOTE_KEY = 'opc_use_remote_api'
 const RUNTIME_ENV_KEY = 'opc_runtime_env'
-const DEFAULT_API_BASE_URL = 'https://writers-become-deserve-biological.trycloudflare.com/api/v1'
+const DEFAULT_API_BASE_URL = 'https://api.eseat.cn/api/v1'
 const LEGACY_LOCAL_API_URLS = [
   'http://127.0.0.1:8001/api/v1',
   'http://127.0.0.1:8004/api/v1',
+  'https://entity-interpreted-regular-notification.trycloudflare.com/api/v1',
+  'https://writers-become-deserve-biological.trycloudflare.com/api/v1',
 ]
 
 function getApiBaseUrl() {
