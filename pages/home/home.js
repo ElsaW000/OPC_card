@@ -1,7 +1,7 @@
 const { getWorkbenchAsync } = require('../../services/workbenchService')
-const { bootstrapSessionAsync } = require('../../services/userService')
+const { bootstrapSessionAsync, getSessionState } = require('../../services/userService')
 const { updateSettings, addSuggestion, readSettings } = require('../../services/settingsService')
-const { isRemoteApiEnabled, setRemoteApiEnabled } = require('../../services/apiConfig')
+const { isRemoteApiEnabled, setRemoteApiEnabled, allowsLocalMockFallback } = require('../../services/apiConfig')
 
 const TEXT = {
   aiTitle: 'AI 社交助理',
@@ -108,6 +108,21 @@ function isTimeoutError(error) {
   return /timeout/i.test(text)
 }
 
+function canFallbackToLocalMock() {
+  return typeof allowsLocalMockFallback === 'function' ? allowsLocalMockFallback() : true
+}
+
+function normalizeSessionView(sessionState = {}) {
+  const status = sessionState.status || 'local_ready'
+  if (status === 'remote_ready') {
+    return { code: status, tone: 'success', title: '远程已登录', text: sessionState.message || '远程业务接口已连接' }
+  }
+  if (status === 'remote_unavailable') {
+    return { code: status, tone: 'warning', title: '远程不可用', text: sessionState.message || '当前使用本地数据' }
+  }
+  return { code: 'local_ready', tone: 'neutral', title: '本地模式', text: sessionState.message || '当前使用本地数据' }
+}
+
 Page({
   data: {
     labels: TEXT,
@@ -121,6 +136,7 @@ Page({
     personaTags: normalizePersonaTags(),
     starredContacts: [],
     settingsSummary: normalizeSettings(readSettings()),
+    sessionView: normalizeSessionView(getSessionState()),
     showSuggestionForm: false,
     suggestionContent: '',
     suggestionContact: '',
@@ -137,13 +153,28 @@ Page({
 
   async loadWorkbench() {
     try {
-      await bootstrapSessionAsync()
+      const session = await bootstrapSessionAsync()
+      this.applySessionView(session && session.sessionState)
+      if (session && session.success === false && session.sessionState && session.sessionState.status === 'remote_unavailable') {
+        this.setData({
+          weeklyViews: 0,
+          personaTags: normalizePersonaTags(),
+          starredContacts: [],
+          settingsSummary: normalizeSettings(readSettings())
+        })
+        wx.showToast({
+          title: session.fallbackReason || session.sessionState.message || TEXT.loadFailed,
+          icon: 'none'
+        })
+        return
+      }
       const result = await getWorkbenchAsync()
       this.applyWorkbenchResult(result)
     } catch (error) {
-      if (isRemoteApiEnabled() && isTimeoutError(error)) {
+      if (isRemoteApiEnabled() && canFallbackToLocalMock() && isTimeoutError(error)) {
         setRemoteApiEnabled(false)
         try {
+          this.applySessionView({ status: 'remote_unavailable', message: '远程接口超时，当前使用本地数据' })
           const result = await getWorkbenchAsync()
           this.applyWorkbenchResult(result)
           wx.showToast({ title: '远程超时，已切换本地模式', icon: 'none' })
@@ -153,6 +184,7 @@ Page({
         }
       }
       console.warn('load workbench failed:', error)
+      this.applySessionView(getSessionState())
       this.setData({
         weeklyViews: 0,
         personaTags: normalizePersonaTags(),
@@ -173,6 +205,14 @@ Page({
       starredContacts: normalizeStarredContacts(result.starredContacts),
       settingsSummary: normalizeSettings(result.settingsSummary || readSettings())
     })
+  },
+
+  applySessionView(sessionState) {
+    const sessionView = normalizeSessionView(sessionState || getSessionState())
+    try {
+      console.info(`[session-ui] home status=${sessionView.code} text=${sessionView.text}`)
+    } catch (error) {}
+    this.setData({ sessionView })
   },
 
   onAiInputChange(e) {

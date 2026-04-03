@@ -4,6 +4,7 @@ const app = getApp()
 const { saveCardAsync, getCardViewAsync } = require('../../services/cardService')
 const { bootstrapSessionAsync } = require('../../services/userService')
 const { generateAI } = require('../../services/aiService')
+const { readSettings } = require('../../services/settingsService')
 
 function toStringValue(value, fallback = '') {
   return value === undefined || value === null ? fallback : String(value)
@@ -41,6 +42,27 @@ function normalizeEditCustomCard(item = {}, index = 0) {
     id: toStringValue(item.id || item._id, `custom-${index}`),
     title: toStringValue(item.title),
     content: toStringValue(item.content),
+  }
+}
+
+function buildAiContextPayload(data = {}) {
+  const settings = readSettings()
+  return {
+    allowContactsContext: !!(settings && settings.allowAiContactsContext),
+    selfProfileDraft: {
+      name: toStringValue(data.name),
+      role: toStringValue(data.role),
+      company: toStringValue(data.company),
+      bio: toStringValue(data.bio),
+      locationCountry: toStringValue(data.locationCountry),
+      locationCity: toStringValue(data.locationCity),
+      years: toStringValue(data.years),
+      techStack: toStringValue(data.techStack),
+      business: toStringValue(data.business),
+      cooperation: toStringValue(data.cooperation),
+      projects: Array.isArray(data.projects) ? data.projects : [],
+      customCards: Array.isArray(data.customCards) ? data.customCards : [],
+    },
   }
 }
 
@@ -453,7 +475,10 @@ Page({
     wx.showLoading({ title: 'AI 识别中...' })
 
     try {
-      const res = await generateAI('extract', { text: this.data.aiInput })
+      const res = await generateAI('extract', {
+        text: this.data.aiInput,
+        ...buildAiContextPayload(this.data),
+      })
       wx.hideLoading()
       if (res && res.success) {
         const extracted = res.result || {}
@@ -488,7 +513,8 @@ Page({
       const res = await generateAI('generateIntro', {
         role: this.data.role,
         locationCity: this.data.locationCity,
-        techStack: this.data.techStack
+        techStack: this.data.techStack,
+        ...buildAiContextPayload(this.data),
       })
       wx.hideLoading()
       if (res && res.success) {
@@ -516,7 +542,10 @@ Page({
     wx.showLoading({ title: 'AI 优化中...' })
 
     try {
-      const res = await generateAI('optimize', { bio: this.data.bio })
+      const res = await generateAI('optimize', {
+        bio: this.data.bio,
+        ...buildAiContextPayload(this.data),
+      })
       wx.hideLoading()
       if (res && res.success) {
         const optimizedText = (res.result && res.result.optimizedText) || ''
@@ -547,7 +576,10 @@ Page({
     wx.showLoading({ title: 'AI 推荐中...' })
 
     try {
-      const res = await generateAI('tags', { identity: this.data.role })
+      const res = await generateAI('tags', {
+        identity: this.data.role,
+        ...buildAiContextPayload(this.data),
+      })
       wx.hideLoading()
       if (res && res.success) {
         this.setData({

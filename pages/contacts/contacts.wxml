@@ -5,6 +5,11 @@
     <text class="header-subtitle">CONNECTIONS</text>
   </view>
 
+  <view class="session-banner session-banner-{{sessionView.tone}}">
+    <text class="session-banner-title">{{sessionView.title}}</text>
+    <text class="session-banner-text">{{sessionView.text}}</text>
+  </view>
+
   <view class="search-section">
     <view class="search-bar">
       <text class="search-icon">{{labels.searchIcon}}</text>

@@ -4,44 +4,44 @@
   "packOptions": {
     "ignore": [
       {
-        "type": "folder",
-        "value": "backend"
+        "value": "backend",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": ".venv"
+        "value": ".venv",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "figma_image"
+        "value": "figma_image",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "history"
+        "value": "history",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "logs"
+        "value": "logs",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "PPT"
+        "value": "PPT",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "PRD"
+        "value": "PRD",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "problem to be solved"
+        "value": "problem to be solved",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "images/bugs"
+        "value": "images/bugs",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "fonts"
+        "value": "fonts",
+        "type": "folder"
       }
     ],
     "include": []

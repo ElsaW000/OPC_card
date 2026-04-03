@@ -8,6 +8,47 @@ page {
   box-sizing: border-box;
 }
 
+.session-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+  padding: 18rpx 22rpx;
+  border-radius: 18rpx;
+}
+
+.session-banner-neutral {
+  background: rgba(236, 242, 249, 0.96);
+  box-shadow: inset 0 0 0 1rpx rgba(130, 149, 179, 0.18);
+}
+
+.session-banner-success {
+  background: rgba(225, 245, 234, 0.98);
+  box-shadow: inset 0 0 0 1rpx rgba(62, 150, 92, 0.18);
+}
+
+.session-banner-warning {
+  background: rgba(255, 243, 224, 0.98);
+  box-shadow: inset 0 0 0 1rpx rgba(214, 136, 43, 0.2);
+}
+
+.session-banner-title {
+  font-size: 24rpx;
+  line-height: 1.6;
+  font-weight: 700;
+  color: #234167;
+}
+
+.session-banner-text {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+  font-size: 22rpx;
+  line-height: 1.7;
+  color: #62748d;
+}
+
 .section-card {
   margin-bottom: 34rpx;
   padding: 34rpx 30rpx;

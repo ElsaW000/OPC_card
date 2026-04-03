@@ -2,8 +2,8 @@ const { getCards, getCardsAsync } = require('./cardService')
 const { getVisitors, getVisitorsAsync } = require('./visitorService')
 const { getContacts, getContactsAsync } = require('./contactService')
 const { readSettings } = require('./settingsService')
-const { isRemoteApiEnabled } = require('./apiConfig')
-const { getCurrentUser } = require('./userService')
+const { isRemoteApiEnabled, allowsLocalMockFallback } = require('./apiConfig')
+const { getAuthenticatedRemoteUser, hasAuthenticatedRemoteSession } = require('./userService')
 const { request } = require('./httpClient')
 
 const TEXT = {
@@ -17,6 +17,50 @@ const TEXT = {
   startup: '\u521b\u4e1a',
   wechatShare: '\u5fae\u4fe1\u5206\u4eab',
   qrVisit: '\u4e8c\u7ef4\u7801\u8bbf\u95ee'
+}
+
+function canUseProtectedRemoteApi() {
+  if (!isRemoteApiEnabled()) return false
+  if (typeof hasAuthenticatedRemoteSession === 'function') {
+    return !!hasAuthenticatedRemoteSession()
+  }
+  const user = typeof getAuthenticatedRemoteUser === 'function' ? getAuthenticatedRemoteUser() : null
+  return !!(user && user.userId)
+}
+
+function getProtectedRemoteUser() {
+  return typeof getAuthenticatedRemoteUser === 'function' ? getAuthenticatedRemoteUser() : null
+}
+
+function logProtectedRequestSkip(path) {
+  try {
+    console.info(`[session] skip protected request ${path}: authenticated-remote-session-required`)
+  } catch (error) {}
+}
+
+function canFallbackToLocalMock() {
+  return typeof allowsLocalMockFallback === 'function' ? allowsLocalMockFallback() : true
+}
+
+function buildRemoteUnavailableWorkbench() {
+  return {
+    success: false,
+    defaultCard: null,
+    weeklyViews: 0,
+    visitorCount: 0,
+    personaTags: [],
+    personaSummary: [],
+    starredContacts: [],
+    recentVisitors: [],
+    settingsSummary: {
+      aiTone: '专业且友好',
+      publicDynamics: true,
+      privacyMode: '交换后可见',
+      blacklistCount: 0
+    },
+    error: '远程登录未就绪',
+    mode: 'remote-unavailable'
+  }
 }
 
 function normalizeDefaultCard(card = null) {
@@ -181,11 +225,22 @@ function getWorkbench() {
 }
 
 async function getWorkbenchAsync() {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    logProtectedRequestSkip('/workbench')
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableWorkbench()
+    }
     return getWorkbench()
   }
 
-  const user = getCurrentUser()
+  const user = getProtectedRemoteUser()
+  if (!user || !user.userId) {
+    logProtectedRequestSkip('/workbench')
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableWorkbench()
+    }
+    return getWorkbench()
+  }
   const result = await request({ url: '/workbench', method: 'GET', userId: user.userId })
   return {
     success: true,

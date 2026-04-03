@@ -121,6 +121,7 @@ function buildLocalReply(message = '') {
 async function generateAI(type, data = {}) {
   const provider = getAIProvider()
   const shouldTryRemote = isRemoteApiEnabled()
+  const requestTimeout = type === 'chat' ? 25000 : 15000
 
   if (!shouldTryRemote) {
     if (type === 'chat') {
@@ -142,7 +143,8 @@ async function generateAI(type, data = {}) {
       url: '/ai/generate',
       method: 'POST',
       data: { type, data, provider },
-      userId: user && user.userId ? user.userId : ''
+      userId: user && user.userId ? user.userId : '',
+      timeout: requestTimeout,
     })
   } catch (error) {
     if (type === 'chat') {

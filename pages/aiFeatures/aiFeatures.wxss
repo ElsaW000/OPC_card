@@ -28,6 +28,17 @@
   margin-top: 8rpx;
 }
 
+.context-status {
+  display: inline-flex;
+  margin-top: 16rpx;
+  padding: 10rpx 18rpx;
+  border-radius: 999rpx;
+  background: #EEF6FF;
+  color: #1D4ED8;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
 .provider-row {
   display: flex;
   gap: 12rpx;

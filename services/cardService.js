@@ -1,6 +1,6 @@
 const { readDatabase, updateDatabase, uid, nowIso } = require('./mockDatabase')
-const { getCurrentUser } = require('./userService')
-const { isRemoteApiEnabled } = require('./apiConfig')
+const { getCurrentUser, getAuthenticatedRemoteUser, hasAuthenticatedRemoteSession } = require('./userService')
+const { isRemoteApiEnabled, allowsLocalMockFallback } = require('./apiConfig')
 const { request } = require('./httpClient')
 
 const TEXT = {
@@ -12,6 +12,60 @@ const TEXT = {
   keepOne: '\u81f3\u5c11\u4fdd\u7559\u4e00\u5f20\u540d\u7247',
   sourcePage: '\u9875\u9762\u8bbf\u95ee',
   justNow: '\u521a\u521a'
+}
+
+function canUseProtectedRemoteApi() {
+  if (!isRemoteApiEnabled()) return false
+  if (typeof hasAuthenticatedRemoteSession === 'function') {
+    return !!hasAuthenticatedRemoteSession()
+  }
+  const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null
+  return !!(user && user.userId)
+}
+
+function getProtectedRemoteUser() {
+  if (typeof getAuthenticatedRemoteUser === 'function') {
+    return getAuthenticatedRemoteUser()
+  }
+  return typeof getCurrentUser === 'function' ? getCurrentUser() : null
+}
+
+function logProtectedRequestSkip(path) {
+  try {
+    console.info(`[session] skip protected request ${path}: authenticated-remote-session-required`)
+  } catch (error) {}
+}
+
+function canFallbackToLocalMock() {
+  return typeof allowsLocalMockFallback === 'function' ? allowsLocalMockFallback() : true
+}
+
+function buildRemoteUnavailableCardsResult() {
+  return {
+    success: false,
+    data: [],
+    defaultCard: null,
+    error: '远程登录未就绪',
+    mode: 'remote-unavailable'
+  }
+}
+
+function buildRemoteUnavailableCardResult() {
+  return {
+    success: false,
+    data: null,
+    isOwner: false,
+    error: '远程登录未就绪',
+    mode: 'remote-unavailable'
+  }
+}
+
+function buildRemoteUnavailableMutationResult() {
+  return {
+    success: false,
+    error: '远程登录未就绪',
+    mode: 'remote-unavailable'
+  }
 }
 
 function buildCardMeta(cardData = {}) {
@@ -54,10 +108,21 @@ function getCards() {
 }
 
 async function getCardsAsync() {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    logProtectedRequestSkip('/cards')
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableCardsResult()
+    }
     return getCards()
   }
-  const user = getCurrentUser()
+  const user = getProtectedRemoteUser()
+  if (!user || !user.userId) {
+    logProtectedRequestSkip('/cards')
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableCardsResult()
+    }
+    return getCards()
+  }
   const result = await request({
     url: '/cards',
     method: 'GET',
@@ -202,10 +267,19 @@ function saveCard(cardData = {}, cardId = '') {
 }
 
 async function saveCardAsync(cardData = {}, cardId = '') {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableMutationResult()
+    }
     return saveCard(cardData, cardId)
   }
-  const user = getCurrentUser()
+  const user = getProtectedRemoteUser()
+  if (!user || !user.userId) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableMutationResult()
+    }
+    return saveCard(cardData, cardId)
+  }
   const payload = mapCardPayload(cardData)
   const result = cardId
     ? await request({ url: `/cards/${cardId}`, method: 'PUT', data: payload, userId: user.userId })
@@ -235,10 +309,19 @@ function setDefaultCard(cardId) {
 }
 
 async function setDefaultCardAsync(cardId) {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableMutationResult()
+    }
     return setDefaultCard(cardId)
   }
-  const user = getCurrentUser()
+  const user = getProtectedRemoteUser()
+  if (!user || !user.userId) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableMutationResult()
+    }
+    return setDefaultCard(cardId)
+  }
   await request({ url: `/cards/${cardId}/set-default`, method: 'POST', userId: user.userId })
   return { success: true, mode: 'remote-api' }
 }
@@ -268,29 +351,69 @@ function deleteCard(cardId) {
 }
 
 async function deleteCardAsync(cardId) {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    if (isRemoteApiEnabled() && !allowsLocalMockFallback()) {
+      return buildRemoteUnavailableMutationResult()
+    }
     return deleteCard(cardId)
   }
-  const user = getCurrentUser()
+  const user = getProtectedRemoteUser()
+  if (!user || !user.userId) {
+    if (isRemoteApiEnabled() && !allowsLocalMockFallback()) {
+      return buildRemoteUnavailableMutationResult()
+    }
+    return deleteCard(cardId)
+  }
   await request({ url: `/cards/${cardId}`, method: 'DELETE', userId: user.userId })
   return { success: true, mode: 'remote-api' }
 }
 
 function getCardView(cardId = '', source = TEXT.sourcePage, recordVisit = true, asVisitor = false) {
   const user = getCurrentUser()
-  const cardResult = getCard(cardId)
-  if (!cardResult.success || !cardResult.data) {
-    return cardResult
+  const db = readDatabase()
+  let card = null
+  if (!cardId) {
+    const ownCards = db.cards.filter((item) => item.userId === user.userId)
+    card = ownCards.find((item) => item.isDefault) || ownCards[0] || null
+  } else {
+    card = db.cards.find((item) => item._id === cardId || item.id === cardId) || null
+  }
+
+  if (!card) {
+    return {
+      success: false,
+      data: null,
+      isOwner: false,
+      error: TEXT.missingCard,
+      mode: 'local-storage'
+    }
   }
 
   if (recordVisit && cardId) {
     updateDatabase((db) => {
-      const existing = db.visitors.find((item) => item.cardId === cardId && item.ownerUserId === user.userId)
+      const ownerUserId = card.userId || user.userId
+      const existing = db.visitors.find((item) => item.cardId === cardId && item.ownerUserId === ownerUserId)
       if (existing) {
         existing.visitCount = (existing.visitCount || 1) + 1
         existing.visitTimeText = TEXT.justNow
         existing.source = source
         existing.updatedAt = nowIso()
+      } else {
+        db.visitors.unshift({
+          _id: uid('visitor'),
+          ownerUserId,
+          visitorUserId: user.userId,
+          cardId,
+          name: user.nickname || '',
+          role: '',
+          avatarUrl: '',
+          source,
+          visitDate: nowIso(),
+          visitTimeText: TEXT.justNow,
+          visitCount: 1,
+          createdAt: nowIso(),
+          updatedAt: nowIso()
+        })
       }
       return db
     })
@@ -298,14 +421,25 @@ function getCardView(cardId = '', source = TEXT.sourcePage, recordVisit = true, 
 
   return {
     success: true,
-    data: cardResult.data,
-    isOwner: !asVisitor,
+    data: card,
+    isOwner: !asVisitor && card.userId === user.userId,
     mode: 'local-storage'
   }
 }
 
 async function getCardViewAsync(cardId = '', source = TEXT.sourcePage, recordVisit = true, asVisitor = false) {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    if (!cardId && isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      logProtectedRequestSkip('/cards/default/view')
+      return buildRemoteUnavailableCardResult()
+    }
+    return getCardView(cardId, source, recordVisit, asVisitor)
+  }
+  if (!getProtectedRemoteUser()) {
+    if (!cardId && isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      logProtectedRequestSkip('/cards/default/view')
+      return buildRemoteUnavailableCardResult()
+    }
     return getCardView(cardId, source, recordVisit, asVisitor)
   }
   if (!cardId) {

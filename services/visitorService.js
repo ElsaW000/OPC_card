@@ -1,6 +1,6 @@
 const { readDatabase } = require('./mockDatabase')
-const { getCurrentUser } = require('./userService')
-const { isRemoteApiEnabled } = require('./apiConfig')
+const { getCurrentUser, getAuthenticatedRemoteUser, hasAuthenticatedRemoteSession } = require('./userService')
+const { isRemoteApiEnabled, allowsLocalMockFallback } = require('./apiConfig')
 const { request } = require('./httpClient')
 
 function getVisitors() {
@@ -15,11 +15,40 @@ function getVisitors() {
   }
 }
 
+function canFallbackToLocalMock() {
+  return typeof allowsLocalMockFallback === 'function' ? allowsLocalMockFallback() : true
+}
+
+function canUseProtectedRemoteApi() {
+  if (!isRemoteApiEnabled()) return false
+  if (typeof hasAuthenticatedRemoteSession === 'function') {
+    return !!hasAuthenticatedRemoteSession()
+  }
+  const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null
+  return !!(user && user.userId)
+}
+
+function getProtectedRemoteUser() {
+  if (typeof getAuthenticatedRemoteUser === 'function') {
+    return getAuthenticatedRemoteUser()
+  }
+  return typeof getCurrentUser === 'function' ? getCurrentUser() : null
+}
+
 async function getVisitorsAsync() {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return { success: false, visitors: [], error: '远程登录未就绪', mode: 'remote-unavailable' }
+    }
     return getVisitors()
   }
-  const user = getCurrentUser()
+  const user = getProtectedRemoteUser()
+  if (!user || !user.userId) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return { success: false, visitors: [], error: '远程登录未就绪', mode: 'remote-unavailable' }
+    }
+    return getVisitors()
+  }
   const result = await request({ url: '/visitors', method: 'GET', userId: user.userId })
   return {
     success: true,
@@ -29,10 +58,19 @@ async function getVisitorsAsync() {
 }
 
 async function recordVisitorAsync(cardId, source) {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return { success: false, error: '远程登录未就绪', mode: 'remote-unavailable' }
+    }
     return { success: true, mode: 'local-storage' }
   }
-  const user = getCurrentUser()
+  const user = getProtectedRemoteUser()
+  if (!user || !user.userId) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return { success: false, error: '远程登录未就绪', mode: 'remote-unavailable' }
+    }
+    return { success: true, mode: 'local-storage' }
+  }
   const result = await request({
     url: '/visitors/record',
     method: 'POST',

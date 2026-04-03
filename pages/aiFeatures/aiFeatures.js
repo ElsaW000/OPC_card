@@ -1,10 +1,12 @@
 const { generateAI, getAIProvider, setAIProvider } = require('../../services/aiService')
-const { bootstrapSessionAsync } = require('../../services/userService')
+const { bootstrapSessionAsync, getCurrentUser, hasAuthenticatedRemoteSession } = require('../../services/userService')
 const { isRemoteApiEnabled, setRemoteApiEnabled } = require('../../services/apiConfig')
 const { readSettings } = require('../../services/settingsService')
+const { request } = require('../../services/httpClient')
 
-const CONNECTING_HINT_DELAY = 2000
-const SLOW_HINT_DELAY = 8000
+const CONNECTING_HINT_DELAY = 3000
+const SLOW_HINT_DELAY = 12000
+const PATIENCE_HINT_DELAY = 20000
 const REPLY_STREAM_DELAY = 32
 const REPLY_STREAM_CHUNK_SIZE = 6
 
@@ -47,6 +49,12 @@ function durationBetween(endValue, startValue) {
   return endValue - startValue
 }
 
+function buildContactsContextStatusText(enabled, used = false) {
+  if (!enabled) return '联系人上下文未开启'
+  if (used) return '联系人上下文已接入'
+  return '联系人上下文待接入'
+}
+
 Page({
   data: {
     messages: [{ ...WELCOME_MSG, time: '' }],
@@ -55,6 +63,7 @@ Page({
     loadingStatusText: '',
     slowHintVisible: false,
     contactsContextEnabled: false,
+    contactsContextStatusText: buildContactsContextStatusText(false, false),
     replySourceText: '',
     scrollTarget: '',
     perfInfo: null,
@@ -72,13 +81,17 @@ Page({
     this.setData({
       aiProvider: getAIProvider(),
       contactsContextEnabled: !!settings.allowAiContactsContext,
+      contactsContextStatusText: buildContactsContextStatusText(!!settings.allowAiContactsContext, false),
     })
     this._ensureAiReady().catch(() => {})
   },
 
   onShow() {
     const settings = readSettings()
-    this._safeSetData({ contactsContextEnabled: !!settings.allowAiContactsContext })
+    this._safeSetData({
+      contactsContextEnabled: !!settings.allowAiContactsContext,
+      contactsContextStatusText: buildContactsContextStatusText(!!settings.allowAiContactsContext, false),
+    })
   },
 
   onProviderSelect(e) {
@@ -140,9 +153,19 @@ Page({
       const responseTrace = (res && res.meta && res.meta.trace) || { traceId, frontendClickedAtMs }
       const frontendResponseReceivedAtMs = Date.now()
       const isLocalFallback = !!(res && res.meta && res.meta.localFallback)
-      const replySourceText = isLocalFallback ? '当前回复来自本地兜底建议（模型暂不可用）' : '当前回复来自在线模型'
+      const replySource = res && res.meta && res.meta.replySource
+      const modelAnswered = !!(res && res.meta && res.meta.modelAnswered)
+      const contactsContextUsed = !!(res && res.meta && res.meta.contactsContextUsed)
+      let replySourceText = '当前回复来源未知'
       if (isLocalFallback) {
-        wx.showToast({ title: '模型暂不可用，已降级本地建议', icon: 'none' })
+        replySourceText = '当前先给你一个快速建议，完整模型回复这次没有及时返回'
+      } else if (replySource === 'model' && modelAnswered) {
+        replySourceText = '当前回复来自在线模型'
+      } else if (replySource === 'fallback_rule') {
+        replySourceText = '当前回复来自后端规则补充（模型这次没有返回内容）'
+      }
+      if (isLocalFallback) {
+        wx.showToast({ title: '这次回复有点慢，先给你一个简短建议', icon: 'none' })
       }
 
       const aiMsg = {
@@ -166,7 +189,11 @@ Page({
           await this._streamAssistantReply(aiMsg.id, reply)
           const perfInfo = this._buildPerfInfo(responseTrace, frontendResponseReceivedAtMs, Date.now(), isLocalFallback)
           console.info('AI trace', perfInfo)
-          this._safeSetData({ perfInfo, replySourceText }, resolve)
+          this._safeSetData({
+            perfInfo,
+            replySourceText,
+            contactsContextStatusText: buildContactsContextStatusText(!!this.data.contactsContextEnabled, contactsContextUsed),
+          }, resolve)
         })
       })
     } catch (error) {
@@ -194,7 +221,11 @@ Page({
           await this._streamAssistantReply(aiMsg.id, fallbackReply)
           const perfInfo = this._buildPerfInfo({ traceId, frontendClickedAtMs }, frontendResponseReceivedAtMs, Date.now(), true)
           console.info('AI trace', perfInfo)
-          this._safeSetData({ perfInfo, replySourceText: '当前回复来自本地兜底建议（模型暂不可用）' }, resolve)
+          this._safeSetData({
+            perfInfo,
+            replySourceText: '当前先给你一个快速建议，完整模型回复这次没有及时返回',
+            contactsContextStatusText: buildContactsContextStatusText(!!this.data.contactsContextEnabled, false),
+          }, resolve)
         })
       })
     } finally {
@@ -233,6 +264,7 @@ Page({
         setRemoteApiEnabled(true)
       }
       await bootstrapSessionAsync()
+      await this._syncContactsContextAuthorization()
       this._aiReady = true
       return true
     })().finally(() => {
@@ -242,19 +274,50 @@ Page({
     return this._aiReadyPromise
   },
 
+  async _syncContactsContextAuthorization() {
+    const settings = readSettings()
+    const enabled = !!(settings && settings.allowAiContactsContext)
+    this._safeSetData({
+      contactsContextEnabled: enabled,
+      contactsContextStatusText: buildContactsContextStatusText(enabled, false),
+    })
+    if (!enabled || typeof hasAuthenticatedRemoteSession !== 'function' || !hasAuthenticatedRemoteSession()) return false
+    const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null
+    if (!user || !user.userId) return false
+    try {
+      await request({
+        url: '/auth/settings',
+        method: 'PATCH',
+        data: { allow_ai_contacts_context: true },
+        userId: user.userId,
+      })
+      return true
+    } catch (error) {
+      console.error('sync ai contacts context failed:', error)
+      return false
+    }
+  },
+
   _startLoadingFeedback() {
     this._stopLoadingFeedback()
     this._connectingTimer = setTimeout(() => {
       if (this._destroyed || !this.data.loading) return
-      this._safeSetData({ loadingStatusText: '正在连接模型' })
+      this._safeSetData({ loadingStatusText: '正在整理你的问题' })
     }, CONNECTING_HINT_DELAY)
     this._slowTimer = setTimeout(() => {
       if (this._destroyed || !this.data.loading) return
       this._safeSetData({
-        loadingStatusText: '响应较慢，可重试或先看本地建议',
+        loadingStatusText: '正在整理更合适的建议，可能还需要几秒',
         slowHintVisible: true,
       })
     }, SLOW_HINT_DELAY)
+    this._patienceTimer = setTimeout(() => {
+      if (this._destroyed || !this.data.loading) return
+      this._safeSetData({
+        loadingStatusText: '还在继续思考，如果你赶时间，我也可以先给你一个简短建议',
+        slowHintVisible: true,
+      })
+    }, PATIENCE_HINT_DELAY)
   },
 
   _stopLoadingFeedback() {
@@ -265,6 +328,10 @@ Page({
     if (this._slowTimer) {
       clearTimeout(this._slowTimer)
       this._slowTimer = null
+    }
+    if (this._patienceTimer) {
+      clearTimeout(this._patienceTimer)
+      this._patienceTimer = null
     }
   },
 

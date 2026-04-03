@@ -4,6 +4,11 @@
     <text class="header-subtitle">{{labels.subtitle}}</text>
   </view>
 
+  <view class="session-banner session-banner-{{sessionView.tone}}">
+    <text class="session-banner-title">{{sessionView.title}}</text>
+    <text class="session-banner-text">{{sessionView.text}}</text>
+  </view>
+
   <view class="card-list">
     <block wx:for="{{cards}}" wx:key="id">
       <view class="card-item" bindtap="goToDetail" data-id="{{item.id}}">

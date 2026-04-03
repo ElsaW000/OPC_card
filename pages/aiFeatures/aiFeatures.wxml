@@ -1,5 +1,6 @@
 <view class="chat-page">
   <view class="chat-header">
+    <text class="context-status">{{contactsContextStatusText}}</text>
     <text class="chat-title">AI 助手</text>
     <text class="chat-subtitle">eSeat 智能名片顾问</text>
     <view class="trace-panel" wx:if="{{perfInfo}}">

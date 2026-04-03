@@ -3,7 +3,7 @@ const {
   setDefaultCardAsync,
   deleteCardAsync,
 } = require('../../services/cardService')
-const { bootstrapSessionAsync } = require('../../services/userService')
+const { bootstrapSessionAsync, getSessionState } = require('../../services/userService')
 
 const TEXT = {
   title: '\u6211\u7684\u540d\u7247',
@@ -42,10 +42,22 @@ function normalizeCard(item = {}) {
   }
 }
 
+function normalizeSessionView(sessionState = {}) {
+  const status = sessionState.status || 'local_ready'
+  if (status === 'remote_ready') {
+    return { code: status, tone: 'success', title: '远程已登录', text: sessionState.message || '名片来自远程接口' }
+  }
+  if (status === 'remote_unavailable') {
+    return { code: status, tone: 'warning', title: '远程不可用', text: sessionState.message || '当前展示本地名片' }
+  }
+  return { code: 'local_ready', tone: 'neutral', title: '本地模式', text: sessionState.message || '当前展示本地名片' }
+}
+
 Page({
   data: {
     cards: [],
     labels: TEXT,
+    sessionView: normalizeSessionView(getSessionState()),
   },
 
   onLoad() {
@@ -58,7 +70,8 @@ Page({
 
   async loadCards() {
     try {
-      await bootstrapSessionAsync()
+      const session = await bootstrapSessionAsync()
+      this.applySessionView(session && session.sessionState)
       const result = await getCardsAsync()
       const cards = Array.isArray(result.data)
         ? result.data.map(normalizeCard)
@@ -66,11 +79,20 @@ Page({
       this.setData({ cards })
     } catch (error) {
       console.error('load cards failed:', error)
+      this.applySessionView(getSessionState())
       wx.showToast({
         title: error && error.message ? error.message : TEXT.loadFailed,
         icon: 'none',
       })
     }
+  },
+
+  applySessionView(sessionState) {
+    const sessionView = normalizeSessionView(sessionState || getSessionState())
+    try {
+      console.info(`[session-ui] mycards status=${sessionView.code} text=${sessionView.text}`)
+    } catch (error) {}
+    this.setData({ sessionView })
   },
 
   goToDetail(e) {

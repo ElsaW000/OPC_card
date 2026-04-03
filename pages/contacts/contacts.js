@@ -1,5 +1,5 @@
 const { getContactsAsync, updateContactAsync, approveContactAsync, rejectContactAsync } = require('../../services/contactService')
-const { bootstrapSessionAsync } = require('../../services/userService')
+const { bootstrapSessionAsync, getSessionState } = require('../../services/userService')
 
 const TEXT = {
   all: '\u5168\u90e8',
@@ -39,6 +39,17 @@ function normalizeContact(item = {}) {
   }
 }
 
+function normalizeSessionView(sessionState = {}) {
+  const status = sessionState.status || 'local_ready'
+  if (status === 'remote_ready') {
+    return { code: status, tone: 'success', title: '远程已登录', text: sessionState.message || '联系人来自远程接口' }
+  }
+  if (status === 'remote_unavailable') {
+    return { code: status, tone: 'warning', title: '远程不可用', text: sessionState.message || '当前展示本地联系人' }
+  }
+  return { code: 'local_ready', tone: 'neutral', title: '本地模式', text: sessionState.message || '当前展示本地联系人' }
+}
+
 Page({
   data: {
     labels: {
@@ -58,7 +69,8 @@ Page({
     filterTags: [TEXT.all],
     activeTag: TEXT.all,
     searchKeyword: '',
-    totalCount: 0
+    totalCount: 0,
+    sessionView: normalizeSessionView(getSessionState())
   },
 
   onLoad(options) {
@@ -75,7 +87,8 @@ Page({
 
   async loadContacts() {
     try {
-      await bootstrapSessionAsync()
+      const session = await bootstrapSessionAsync()
+      this.applySessionView(session && session.sessionState)
       const result = await getContactsAsync()
       const contacts = (result.contacts || []).map(normalizeContact)
       const pendingRequests = (result.pendingRequests || []).map(normalizeContact)
@@ -94,6 +107,7 @@ Page({
       this.applyFilters()
     } catch (error) {
       console.error('load contacts failed:', error)
+      this.applySessionView(getSessionState())
       wx.showToast({
         title: error && error.message ? error.message : TEXT.loadFailed,
         icon: 'none'
@@ -127,6 +141,14 @@ Page({
       recentContacts: filtered.slice(0, 1),
       totalCount: filtered.length
     })
+  },
+
+  applySessionView(sessionState) {
+    const sessionView = normalizeSessionView(sessionState || getSessionState())
+    try {
+      console.info(`[session-ui] contacts status=${sessionView.code} text=${sessionView.text}`)
+    } catch (error) {}
+    this.setData({ sessionView })
   },
 
   async toggleStar(e) {

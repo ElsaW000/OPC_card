@@ -4,6 +4,12 @@ page { background-color: #f8fafc; }
 .header { padding: 32rpx; background: #fff; }
 .header-title { font-size: 44rpx; font-weight: 900; color: #111; }
 .header-subtitle { font-size: 20rpx; color: #94a3b8; letter-spacing: 2rpx; margin-top: 8rpx; display: block; }
+.session-banner { display: flex; align-items: center; justify-content: space-between; gap: 18rpx; margin: 20rpx 32rpx 0; padding: 18rpx 22rpx; border-radius: 20rpx; }
+.session-banner-neutral { background: #eef3f8; }
+.session-banner-success { background: #e6f7ec; }
+.session-banner-warning { background: #fff1de; }
+.session-banner-title { font-size: 24rpx; font-weight: 700; color: #111827; }
+.session-banner-text { flex: 1; min-width: 0; text-align: right; font-size: 22rpx; color: #64748b; }
 .card-list { padding: 24rpx 32rpx; display: flex; flex-direction: column; gap: 24rpx; }
 .card-item { position: relative; border-radius: 32rpx; overflow: hidden; box-shadow: 0 16rpx 48rpx rgba(47,101,238,0.25); }
 .card-banner { position: absolute; width: 100%; height: 100%; top: 0; left: 0; }

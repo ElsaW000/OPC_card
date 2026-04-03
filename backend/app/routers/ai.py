@@ -270,8 +270,19 @@ def extract_with_rules(text: str) -> dict[str, Any]:
     return result
 
 
-def extract_with_ai(text: str, provider: str | None = None, trace: dict[str, Any] | None = None) -> dict[str, Any]:
-    prompt = f'''请从以下文本中提取名片信息，并以 JSON 格式返回：
+def extract_with_ai(
+    text: str,
+    provider: str | None = None,
+    trace: dict[str, Any] | None = None,
+    self_context: str = '',
+    contacts_context: str = '',
+) -> dict[str, Any]:
+    context_block = ''
+    if self_context:
+        context_block += f'{self_context}\n\n如果用户当前输入缺少部分字段，可以参考上面的本人资料补全，但用户这次明确输入的内容优先。\n\n'
+    if contacts_context:
+        context_block += f'{contacts_context}\n\n联系人摘要只可用于推断标签、合作方向，不要把联系人身份误写成用户自己的资料。\n\n'
+    prompt = f'''{context_block}请从以下文本中提取名片信息，并以 JSON 格式返回：
 
 文本：{text}
 
@@ -300,8 +311,14 @@ def extract_with_ai(text: str, provider: str | None = None, trace: dict[str, Any
     return extract_with_rules(text)
 
 
-def optimize_with_ai(text: str, provider: str | None = None, trace: dict[str, Any] | None = None) -> str:
-    prompt = f'''请优化以下自我介绍，使其更简洁、更有吸引力：
+def optimize_with_ai(
+    text: str,
+    provider: str | None = None,
+    trace: dict[str, Any] | None = None,
+    self_context: str = '',
+) -> str:
+    context_block = f'{self_context}\n\n' if self_context else ''
+    prompt = f'''{context_block}请优化以下自我介绍，使其更简洁、更有吸引力：
 
 原始内容：{text}
 
@@ -314,10 +331,11 @@ def optimize_with_ai(text: str, provider: str | None = None, trace: dict[str, An
     return '优化后的自我介绍：' + text
 
 
-def generate_intro(data: dict[str, Any]) -> dict[str, str]:
-    role = data.get('role') or '创作者'
-    location_city = data.get('locationCity') or data.get('location') or ''
-    tech_stack = data.get('techStack') or data.get('keywords') or ''
+def generate_intro(data: dict[str, Any], self_profile: dict[str, Any] | None = None) -> dict[str, str]:
+    profile = self_profile if isinstance(self_profile, dict) else {}
+    role = data.get('role') or profile.get('role') or '创作者'
+    location_city = data.get('locationCity') or data.get('location') or profile.get('locationCity') or ''
+    tech_stack = data.get('techStack') or data.get('keywords') or profile.get('techStack') or ''
     intro = ''.join([
         role,
         f'，位于{location_city}' if location_city else '',
@@ -366,13 +384,264 @@ def build_contacts_context(x_user_id: str | None, db: Session | None) -> str:
     return '联系人资料摘要（用户已明确授权，仅限当前对话用于推荐，不得捏造缺失信息，不输出手机号/邮箱/微信等隐私字段）：\n' + '\n'.join(lines)
 
 
+def _to_text(value: Any) -> str:
+    if value is None:
+        return ''
+    return str(value).strip()
+
+
+def get_self_profile_snapshot(
+    x_user_id: str | None,
+    db: Session | None,
+    draft: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    profile: dict[str, Any] = {}
+    if x_user_id and db is not None and hasattr(db, 'scalar'):
+        default_card = db.scalar(select(Card).where(Card.user_id == x_user_id, Card.is_default.is_(True)))
+        if not default_card:
+            default_card = db.scalar(select(Card).where(Card.user_id == x_user_id).order_by(Card.updated_at.desc()))
+        if default_card:
+            profile = {
+                'name': _to_text(default_card.name),
+                'role': _to_text(default_card.role),
+                'company': _to_text(default_card.company),
+                'bio': _to_text(default_card.bio),
+                'locationCountry': _to_text(default_card.location_country),
+                'locationCity': _to_text(default_card.location_city),
+                'years': _to_text(default_card.years),
+                'techStack': _to_text(default_card.tech_stack),
+                'business': _to_text(default_card.business),
+                'cooperation': _to_text(default_card.cooperation),
+                'projects': [
+                    {
+                        'title': _to_text(project.title),
+                        'description': _to_text(project.description),
+                        'tags': [_to_text(tag.tag_name) for tag in project.tags if _to_text(tag.tag_name)],
+                    }
+                    for project in (default_card.projects or [])[:3]
+                ],
+                'customCards': [
+                    {
+                        'title': _to_text(block.title),
+                        'content': _to_text(block.content),
+                    }
+                    for block in (default_card.custom_blocks or [])[:3]
+                ],
+            }
+
+    draft_data = draft if isinstance(draft, dict) else {}
+    for field in ['name', 'role', 'company', 'bio', 'locationCountry', 'locationCity', 'years', 'techStack', 'business', 'cooperation']:
+        draft_value = _to_text(draft_data.get(field))
+        if draft_value:
+            profile[field] = draft_value
+
+    if isinstance(draft_data.get('projects'), list) and draft_data.get('projects'):
+        profile['projects'] = [
+            {
+                'title': _to_text(item.get('title')),
+                'description': _to_text(item.get('description')),
+                'tags': item.get('tags') if isinstance(item.get('tags'), list) else [tag.strip() for tag in _to_text(item.get('tags')).replace('，', ',').split(',') if tag.strip()],
+            }
+            for item in draft_data.get('projects', [])[:3]
+            if isinstance(item, dict)
+        ]
+
+    if isinstance(draft_data.get('customCards'), list) and draft_data.get('customCards'):
+        profile['customCards'] = [
+            {
+                'title': _to_text(item.get('title')),
+                'content': _to_text(item.get('content')),
+            }
+            for item in draft_data.get('customCards', [])[:3]
+            if isinstance(item, dict)
+        ]
+
+    return profile
+
+
+def build_self_profile_context(self_profile: dict[str, Any] | None) -> str:
+    profile = self_profile if isinstance(self_profile, dict) else {}
+    if not profile:
+        return ''
+
+    lines: list[str] = []
+    for label, key in [
+        ('姓名', 'name'),
+        ('角色', 'role'),
+        ('公司', 'company'),
+        ('所在地', 'locationCity'),
+        ('经验', 'years'),
+        ('技术栈', 'techStack'),
+        ('业务方向', 'business'),
+        ('合作诉求', 'cooperation'),
+        ('简介', 'bio'),
+    ]:
+        value = _to_text(profile.get(key))
+        if not value:
+            continue
+        suffix = ' 年' if key == 'years' and value.isdigit() else ''
+        lines.append(f'{label}: {value}{suffix}')
+
+    projects = profile.get('projects') if isinstance(profile.get('projects'), list) else []
+    for index, project in enumerate(projects[:3], start=1):
+        if not isinstance(project, dict):
+            continue
+        title = _to_text(project.get('title'))
+        description = _to_text(project.get('description'))
+        tags = project.get('tags') if isinstance(project.get('tags'), list) else []
+        parts = [f'项目{index}: {title or "未命名项目"}']
+        if description:
+            parts.append(description[:60])
+        if tags:
+            parts.append('标签: ' + '、'.join([_to_text(tag) for tag in tags if _to_text(tag)][:4]))
+        lines.append(' | '.join(parts))
+
+    custom_cards = profile.get('customCards') if isinstance(profile.get('customCards'), list) else []
+    for index, item in enumerate(custom_cards[:3], start=1):
+        if not isinstance(item, dict):
+            continue
+        title = _to_text(item.get('title'))
+        content = _to_text(item.get('content'))
+        if title or content:
+            lines.append(f'补充资料{index}: {title or "补充信息"} | {content[:60]}')
+
+    if not lines:
+        return ''
+
+    return '用户自己的名片资料（默认可供 AI 助手使用，仅用于当前对话或名片润色，不得凭空补造隐私字段）：\n' + '\n'.join(lines)
+
+
+def is_contacts_context_authorized(x_user_id: str | None, db: Session | None) -> bool:
+    if not x_user_id or db is None:
+        return False
+    from ..models import Setting
+
+    setting = db.scalar(select(Setting).where(Setting.user_id == x_user_id))
+    if not setting:
+        return False
+    raw = setting.blacklist_json or '[]'
+    try:
+        parsed = json.loads(raw)
+    except Exception:
+        return False
+    if isinstance(parsed, dict):
+        return bool(parsed.get('allow_ai_contacts_context', False))
+    if isinstance(parsed, list):
+        return False
+    return False
+
+
+def is_contact_recommendation_query(message: str) -> bool:
+    lower = (message or '').lower()
+    keywords = [
+        '推荐',
+        '合作人',
+        '联系人',
+        '适合联系',
+        '找人',
+        'ai方向',
+        'ai ',
+        '谁合适',
+    ]
+    return any(keyword in message or keyword in lower for keyword in keywords)
+
+
+def extract_contacts_from_context(contacts_context: str) -> list[dict[str, str]]:
+    contacts: list[dict[str, str]] = []
+    if not contacts_context:
+        return contacts
+
+    for raw_line in contacts_context.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith('联系人资料摘要'):
+            continue
+        parts = [part.strip() for part in line.split('|') if part.strip()]
+        if not parts:
+            continue
+        name_part = parts[0]
+        name = re.sub(r'^\d+\.\s*', '', name_part).strip()
+        if not name:
+            continue
+        detail_parts = [part for part in parts[1:] if part]
+        contacts.append(
+            {
+                'name': name,
+                'reason': '，'.join(detail_parts[:2]) if detail_parts else '当前联系人摘要里可见',
+            }
+        )
+    return contacts
+
+
+def build_contact_recommendation_fallback(contacts_context: str) -> str | None:
+    contacts = extract_contacts_from_context(contacts_context)
+    if not contacts:
+        return None
+
+    selected = contacts[:3]
+    suggestions = [f"{contact['name']}：{contact['reason']}" for contact in selected]
+    return '基于当前已授权联系人资料，优先可联系 ' + '；'.join(suggestions) + '。'
+
+
+def is_self_profile_query(message: str) -> bool:
+    lower = (message or '').lower()
+    keywords = [
+        '我的名片',
+        '我的资料',
+        '我的介绍',
+        '我的简介',
+        '对我的名片',
+        '优化我的',
+        '建议',
+    ]
+    return any(keyword in message or keyword in lower for keyword in keywords)
+
+
+def build_self_profile_advice_fallback(self_profile: dict[str, Any] | None) -> str | None:
+    profile = self_profile if isinstance(self_profile, dict) else {}
+    if not profile:
+        return None
+
+    suggestions: list[str] = []
+    role = _to_text(profile.get('role'))
+    bio = _to_text(profile.get('bio'))
+    tech_stack = _to_text(profile.get('techStack'))
+    projects = profile.get('projects') if isinstance(profile.get('projects'), list) else []
+
+    if role and tech_stack:
+        suggestions.append(f'把“{role} + {tech_stack.split(",")[0].strip()}”放到开头，定位会更清晰')
+    elif role:
+        suggestions.append(f'先把“{role}”放在名片最前面，让别人一眼知道你做什么')
+    if bio:
+        suggestions.append('简介里再补一个结果或代表项目，会比单纯描述方向更有说服力')
+    else:
+        suggestions.append('建议补一段 30 到 60 字简介，包含定位、擅长方向和代表成果')
+    if not projects:
+        suggestions.append('再补一个代表项目或案例，名片说服力会明显提升')
+
+    if not suggestions:
+        return None
+    return '结合你当前的名片资料，建议先做这几处优化：' + '；'.join(suggestions[:3]) + '。'
+
+
 def chat_with_ai(
     message: str,
     provider: str | None = None,
     trace: dict[str, Any] | None = None,
+    self_context: str = '',
+    self_profile: dict[str, Any] | None = None,
     contacts_context: str = '',
-) -> str:
-    context_block = f'\n\n{contacts_context}\n\n如果用户在询问推荐合作人、按标签找人、适合联系谁，优先基于上面的联系人摘要回答；如果信息不足，要明确说明。' if contacts_context else ''
+) -> dict[str, Any]:
+    context_block = ''
+    if self_context:
+        context_block += f'\n\n{self_context}\n\n如果用户在询问“我的名片怎么样、该怎么优化、该怎么写简介/标签/展示”，优先基于上面的本人资料回答。'
+    if contacts_context:
+        context_block += (
+            f'\n\n{contacts_context}\n\n'
+            '如果用户在询问推荐合作人、按标签找人、适合联系谁，必须优先基于上面的联系人摘要回答。'
+            '回答时优先给出 1 到 3 个具体联系人姓名，并分别说明匹配理由。'
+            '不要捏造联系人，不要推荐摘要里不存在的人。'
+            '如果摘要信息不足，要明确说明你是基于当前可见联系人资料做出的有限推荐。'
+        )
     prompt = f'''你是 eSeat 名片应用的 AI 助手，帮助用户优化个人名片内容、提升个人品牌展示。
 请用简洁、友好的中文回答以下问题（100字以内）：
 {context_block}
@@ -382,20 +651,57 @@ def chat_with_ai(
     if response and response.get('choices'):
         content = response['choices'][0].get('message', {}).get('content', '').strip()
         if content:
-            return content
+            return {
+                'reply': content,
+                'reply_source': 'model',
+                'model_answered': True,
+            }
+    if self_profile and is_self_profile_query(message):
+        self_advice = build_self_profile_advice_fallback(self_profile)
+        if self_advice:
+            return {
+                'reply': self_advice,
+                'reply_source': 'fallback_rule',
+                'model_answered': False,
+            }
+    if contacts_context and is_contact_recommendation_query(message):
+        recommendation = build_contact_recommendation_fallback(contacts_context)
+        if recommendation:
+            return {
+                'reply': recommendation,
+                'reply_source': 'fallback_rule',
+                'model_answered': False,
+            }
     # keyword fallback
     lower = message.lower()
     if '简介' in message or 'bio' in lower or '介绍' in message:
-        return '建议你的简介突出三个要素：职业定位、核心能力、代表成果。例如："5 年全栈开发经验，专注 AI + SaaS 产品，本眼上线 3 款多人使用的工具。"'
+        return {
+            'reply': '建议你的简介突出三个要素：职业定位、核心能力、代表成果。例如："5 年全栈开发经验，专注 AI + SaaS 产品，本眼上线 3 款多人使用的工具。"',
+            'reply_source': 'fallback_rule',
+            'model_answered': False,
+        }
     if '标签' in message or 'tag' in lower:
-        return '根据您的职业方向，推荐标签：AI、全栈、SaaS、独立开发、小程序。可以在编辑页直接填入。'
+        return {
+            'reply': '根据您的职业方向，推荐标签：AI、全栈、SaaS、独立开发、小程序。可以在编辑页直接填入。',
+            'reply_source': 'fallback_rule',
+            'model_answered': False,
+        }
     if '吸引' in message or '让' in message or '更好' in message:
-        return '名片吸引力来自三点：\n1. 清晰的定位（你是谁、做什么）\n2. 真实的展示（项目、数据、成果）\n3. 明确的行动入口（联系方式、交换按钮）'
-    return '我明白你的需求！建议可以在"编辑名片"页面使用 AI 一键填充，把你的个人介绍粘贴进去，我会自动提取关键字段。'
+        return {
+            'reply': '名片吸引力来自三点：\n1. 清晰的定位（你是谁、做什么）\n2. 真实的展示（项目、数据、成果）\n3. 明确的行动入口（联系方式、交换按钮）',
+            'reply_source': 'fallback_rule',
+            'model_answered': False,
+        }
+    return {
+        'reply': '我明白你的需求！建议可以在"编辑名片"页面使用 AI 一键填充，把你的个人介绍粘贴进去，我会自动提取关键字段。',
+        'reply_source': 'fallback_rule',
+        'model_answered': False,
+    }
 
 
-def generate_tags(identity: str) -> list[str]:
-    text = identity or ''
+def generate_tags(identity: str, self_profile: dict[str, Any] | None = None) -> list[str]:
+    profile = self_profile if isinstance(self_profile, dict) else {}
+    text = identity or _to_text(profile.get('role')) or _to_text(profile.get('techStack'))
     tags: list[str] = []
     mapping = [
         ('开发', ['技术', 'AI', '全栈']),
@@ -461,32 +767,61 @@ def generate(
     data = payload.get('data') or {}
     provider = payload.get('provider') or data.get('provider') or None
     trace = ensure_trace(data.get('trace'))
+    chat_meta: dict[str, Any] = {}
+    self_profile = get_self_profile_snapshot(x_user_id, db, data.get('selfProfileDraft'))
+    self_context = build_self_profile_context(self_profile)
+    contacts_context = ''
+    if data.get('allowContactsContext') and is_contacts_context_authorized(x_user_id, db):
+        contacts_context = build_contacts_context(x_user_id, db)
     try:
         if task_type == 'extract':
-            result: Any = extract_with_ai(data.get('text', ''), provider, trace=trace)
+            result: Any = extract_with_ai(
+                data.get('text', ''),
+                provider,
+                trace=trace,
+                self_context=self_context,
+                contacts_context=contacts_context,
+            )
         elif task_type == 'optimize':
-            result = {'optimizedText': optimize_with_ai(data.get('bio') or data.get('text') or '', provider, trace=trace)}
+            result = {
+                'optimizedText': optimize_with_ai(
+                    data.get('bio') or data.get('text') or '',
+                    provider,
+                    trace=trace,
+                    self_context=self_context,
+                )
+            }
         elif task_type in {'generateIntro', 'intro'}:
-            result = generate_intro(data)
+            result = generate_intro(data, self_profile=self_profile)
         elif task_type == 'tags':
-            result = generate_tags(data.get('identity', ''))
+            result = generate_tags(data.get('identity', ''), self_profile=self_profile)
         elif task_type == 'fetchGitHub':
             result = {'projects': fetch_github_projects(data.get('username', ''))}
         elif task_type == 'fetchProjectReadme':
             result = fetch_project_readme(data.get('owner', ''), data.get('repo', ''))
         elif task_type == 'chat':
-            contacts_context = ''
-            if data.get('allowContactsContext'):
-                contacts_context = build_contacts_context(x_user_id, db)
-            reply = chat_with_ai(data.get('message', ''), provider, trace=trace, contacts_context=contacts_context)
-            result = {'reply': reply}
+            chat_result = chat_with_ai(
+                data.get('message', ''),
+                provider,
+                trace=trace,
+                self_context=self_context,
+                self_profile=self_profile,
+                contacts_context=contacts_context,
+            )
+            result = {'reply': chat_result['reply']}
+            chat_meta = {
+                'replySource': chat_result.get('reply_source', 'unknown'),
+                'modelAnswered': bool(chat_result.get('model_answered', False)),
+                'selfProfileUsed': bool(self_context),
+                'contactsContextUsed': bool(contacts_context),
+            }
         else:
             mark_trace_time(trace, 'backendReturnedAtMs')
             return {'success': False, 'error': '未知类型', 'meta': {'trace': finalize_trace(trace)}}
         mark_trace_time(trace, 'backendReturnedAtMs')
         finalized_trace = finalize_trace(trace)
         logger.info('ai trace %s', json.dumps(finalized_trace, ensure_ascii=False))
-        return {'success': True, 'result': result, 'meta': {'trace': finalized_trace}}
+        return {'success': True, 'result': result, 'meta': {'trace': finalized_trace, **chat_meta}}
     except urllib_error.HTTPError as error:
         mark_trace_time(trace, 'backendReturnedAtMs')
         return {'success': False, 'error': f'HTTP {error.code}', 'meta': {'trace': finalize_trace(trace)}}

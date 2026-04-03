@@ -81,8 +81,96 @@ function buildDefaultCard(userId) {
   }
 }
 
+function buildContactCard(userId, overrides = {}) {
+  const cardId = uid('card')
+  return {
+    _id: cardId,
+    userId,
+    template: overrides.template || 'universal',
+    type: overrides.type || 'tech',
+    typeIcon: overrides.typeIcon || 'card',
+    title: overrides.title || '联系人名片',
+    bannerUrl: overrides.bannerUrl || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1080',
+    avatarUrl: overrides.avatarUrl || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400',
+    name: overrides.name || '联系人',
+    nameEn: overrides.nameEn || '',
+    locationCountry: overrides.locationCountry || '中国',
+    locationCity: overrides.locationCity || '上海',
+    role: overrides.role || '合作伙伴',
+    bio: overrides.bio || '这是一张联系人示例名片。',
+    years: overrides.years || '',
+    techStack: overrides.techStack || '',
+    portfolio: '',
+    styles: '',
+    experience: '',
+    company: overrides.company || '',
+    business: overrides.business || '',
+    cooperation: overrides.cooperation || '',
+    wechat: overrides.wechat || '',
+    githubUrl: overrides.githubUrl || '',
+    twitterUrl: overrides.twitterUrl || '',
+    products: overrides.products || '',
+    users: overrides.users || '',
+    phone: overrides.phone || '',
+    email: overrides.email || '',
+    projects: Array.isArray(overrides.projects) ? overrides.projects : [],
+    videos: Array.isArray(overrides.videos) ? overrides.videos : [],
+    customCards: Array.isArray(overrides.customCards) ? overrides.customCards : [],
+    footerTitle: overrides.footerTitle || '联系我',
+    footerDesc: overrides.footerDesc || '欢迎沟通合作。',
+    isDefault: !!overrides.isDefault,
+    createdAt: nowIso(),
+    updatedAt: nowIso()
+  }
+}
+
 function buildSeed(userId) {
   const ownCard = buildDefaultCard(userId)
+  const activeContactCard = buildContactCard('contact_remote_1', {
+    template: 'developer',
+    title: 'AI 产品名片',
+    name: '林知远',
+    nameEn: 'Lynn Lin',
+    locationCity: '杭州',
+    role: '产品经理 / AI 应用设计',
+    bio: '专注 AI 产品设计与团队协作效率，擅长从 0 到 1 打磨用户体验。',
+    company: 'Morning Labs',
+    phone: '13900001111',
+    email: 'lin@example.com',
+    wechat: 'lin-vision',
+    techStack: 'AI, 产品, 用户研究',
+    projects: [{
+      id: uid('project'),
+      title: 'Prompt Copilot',
+      description: '面向产品团队的 AI 协作工具，帮助快速整理需求和用户访谈。',
+      thumbnail: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800',
+      link: 'https://prompt-copilot.example.com',
+      github: '',
+      tags: ['AI', '产品']
+    }]
+  })
+  const pendingRequestCard = buildContactCard('contact_remote_2', {
+    template: 'boss',
+    type: 'biz',
+    typeIcon: 'briefcase',
+    title: '出海增长名片',
+    name: '宋亦安',
+    nameEn: 'Song Yian',
+    locationCountry: '新加坡',
+    locationCity: 'Singapore',
+    role: '增长负责人',
+    bio: '聚焦 SaaS 出海、增长实验与渠道合作，最近在做 AI 工具国际化。',
+    company: 'Wave Studio',
+    phone: '13700002222',
+    email: 'song@example.com',
+    wechat: 'song-dev',
+    techStack: 'SaaS, 增长, 出海',
+    customCards: [{
+      id: uid('custom'),
+      title: '正在寻找',
+      content: 'AI SaaS 合作伙伴、海外渠道增长、联合营销机会'
+    }]
+  })
   return {
     currentUser: {
       userId,
@@ -93,13 +181,13 @@ function buildSeed(userId) {
       updatedAt: nowIso()
     },
     users: [],
-    cards: [ownCard],
+    cards: [ownCard, activeContactCard, pendingRequestCard],
     contacts: [
       {
         _id: uid('contact'),
         ownerUserId: userId,
         contactUserId: 'contact_remote_1',
-        cardId: ownCard._id,
+        cardId: activeContactCard._id,
         name: '\u6797\u77e5\u8fdc',
         role: '\u4ea7\u54c1\u7ecf\u7406 / AI \u5e94\u7528\u8bbe\u8ba1',
         company: 'Morning Labs',
@@ -123,7 +211,7 @@ function buildSeed(userId) {
         _id: uid('contact'),
         ownerUserId: userId,
         contactUserId: 'contact_remote_2',
-        cardId: ownCard._id,
+        cardId: pendingRequestCard._id,
         name: '\u5b8b\u4ea6\u5b89',
         role: '\u72ec\u7acb\u5f00\u53d1\u8005',
         company: 'Indie Forge',

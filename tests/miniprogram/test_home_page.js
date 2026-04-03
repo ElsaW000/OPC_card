@@ -25,7 +25,7 @@ function loadPageDefinition(filePath) {
   return { definition, absolutePath }
 }
 
-async function testLoadWorkbenchFallsBackToLocalWhenRemoteTimeout() {
+async function testLoadWorkbenchMarksRemoteUnavailableWhenTimeoutInStaging() {
   let remoteEnabled = true
   let disableRemoteCalled = false
   let toastTitle = ''
@@ -42,6 +42,7 @@ async function testLoadWorkbenchFallsBackToLocalWhenRemoteTimeout() {
     bootstrapSessionAsync: async () => {
       throw { message: 'request:fail timeout' }
     },
+    getSessionState: () => ({ status: 'remote_unavailable', message: '远程接口暂时不可用' }),
   })
   const settingsServicePath = mockModule('services/settingsService.js', {
     updateSettings: (s) => s,
@@ -50,6 +51,7 @@ async function testLoadWorkbenchFallsBackToLocalWhenRemoteTimeout() {
   })
   const apiConfigPath = mockModule('services/apiConfig.js', {
     isRemoteApiEnabled: () => remoteEnabled,
+    allowsLocalMockFallback: () => false,
     setRemoteApiEnabled: (enabled) => {
       remoteEnabled = enabled
       if (!enabled) disableRemoteCalled = true
@@ -76,9 +78,10 @@ async function testLoadWorkbenchFallsBackToLocalWhenRemoteTimeout() {
 
   await definition.loadWorkbench.call(ctx)
 
-  assert.strictEqual(disableRemoteCalled, true, '远程超时时应自动切回本地模式')
-  assert.strictEqual(ctx.data.weeklyViews, 12, '切回本地后应继续展示工作台数据')
-  assert.strictEqual(toastTitle, '远程超时，已切换本地模式', '应给出明确降级提示')
+  assert.strictEqual(disableRemoteCalled, false, 'staging timeout should not auto-switch to local mode')
+  assert.strictEqual(ctx.data.weeklyViews, 0, 'staging timeout should not display local workbench data')
+  assert.strictEqual(ctx.data.sessionView.code, 'remote_unavailable', 'session banner should stay at remote_unavailable')
+  assert.strictEqual(toastTitle, 'request:fail timeout', 'timeout should surface real remote error')
 
   ;[absolutePath, workbenchServicePath, userServicePath, settingsServicePath, apiConfigPath].forEach((moduleId) => {
     delete require.cache[moduleId]
@@ -86,7 +89,7 @@ async function testLoadWorkbenchFallsBackToLocalWhenRemoteTimeout() {
 }
 
 async function main() {
-  await testLoadWorkbenchFallsBackToLocalWhenRemoteTimeout()
+  await testLoadWorkbenchMarksRemoteUnavailableWhenTimeoutInStaging()
   console.log('home page tests passed')
 }
 

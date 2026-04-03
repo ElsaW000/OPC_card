@@ -1,13 +1,13 @@
 const { getApiBaseUrl } = require('./apiConfig')
 const { normalizeError } = require('./errorUtils')
 
-function request({ url, method = 'GET', data = null, userId = '' }) {
+function request({ url, method = 'GET', data = null, userId = '', timeout = 10000 }) {
   return new Promise((resolve, reject) => {
     wx.request({
       url: `${getApiBaseUrl()}${url}`,
       method,
       data,
-      timeout: 10000,
+      timeout,
       header: {
         'Content-Type': 'application/json',
         ...(userId ? { 'X-User-Id': userId } : {}),

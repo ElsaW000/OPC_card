@@ -1,5 +1,5 @@
 const app = getApp()
-const { bootstrapSessionAsync, getCurrentUser, clearRemoteSession } = require('../../services/userService')
+const { bootstrapSessionAsync, getCurrentUser, hasAuthenticatedRemoteSession, clearRemoteSession } = require('../../services/userService')
 const { getCards } = require('../../services/cardService')
 const { getApiBaseUrl, setApiBaseUrl, isRemoteApiEnabled, setRemoteApiEnabled } = require('../../services/apiConfig')
 const { request } = require('../../services/httpClient')
@@ -27,10 +27,18 @@ function maskOpenId(openid) {
 }
 
 function loadLocalSettings() {
+  const sharedSettings = readSettings()
   try {
-    return wx.getStorageSync(SETTINGS_KEY) || { ...DEFAULT_SETTINGS }
+    return {
+      ...DEFAULT_SETTINGS,
+      ...(wx.getStorageSync(SETTINGS_KEY) || {}),
+      allowAiContactsContext: !!(sharedSettings && sharedSettings.allowAiContactsContext),
+    }
   } catch (e) {
-    return { ...DEFAULT_SETTINGS }
+    return {
+      ...DEFAULT_SETTINGS,
+      allowAiContactsContext: !!(sharedSettings && sharedSettings.allowAiContactsContext),
+    }
   }
 }
 
@@ -38,6 +46,13 @@ function saveLocalSettings(settings) {
   try {
     wx.setStorageSync(SETTINGS_KEY, settings)
   } catch (e) {}
+}
+
+function readAllowAiContactsContext(settings) {
+  if (!settings || typeof settings !== 'object') return false
+  if (settings.allow_ai_contacts_context != null) return !!settings.allow_ai_contacts_context
+  if (settings.allowAiContactsContext != null) return !!settings.allowAiContactsContext
+  return false
 }
 
 Page({
@@ -84,6 +99,7 @@ Page({
     const apiUrl = getApiBaseUrl()
     const useRemoteApi = isRemoteApiEnabled()
     const settings = readSettings()
+    await bootstrapSessionAsync()
     this.setData({
       apiUrl,
       useRemoteApi,
@@ -143,7 +159,12 @@ Page({
     const local = loadLocalSettings()
     this.applySettings(local)
 
-    if (!isRemoteApiEnabled()) return
+    if (!isRemoteApiEnabled() || !hasAuthenticatedRemoteSession()) {
+      try {
+        console.info('[session] skip protected request /auth/me: authenticated-remote-session-required')
+      } catch (error) {}
+      return
+    }
     try {
       const session = getCurrentUser()
       if (!session || !session.userId) return
@@ -184,6 +205,8 @@ Page({
   applySettings(s) {
     const options = this.data.privacyOptions
     const privacyIndex = Math.max(0, options.indexOf(s.privacy_mode))
+    const allowAiContactsContext = readAllowAiContactsContext(s)
+    updateSettings({ allowAiContactsContext })
     this.setData({
       settings: {
         privacy_mode: s.privacy_mode || DEFAULT_SETTINGS.privacy_mode,
@@ -191,6 +214,7 @@ Page({
         ai_tone: s.ai_tone || DEFAULT_SETTINGS.ai_tone,
       },
       privacyIndex,
+      aiContactsContextEnabled: allowAiContactsContext,
     })
   },
 
@@ -205,6 +229,17 @@ Page({
     const enabled = !!(e && e.detail && e.detail.value)
     this.setData({ aiContactsContextEnabled: enabled })
     updateSettings({ allowAiContactsContext: enabled })
+    if (isRemoteApiEnabled() && hasAuthenticatedRemoteSession()) {
+      const session = getCurrentUser()
+      if (session && session.userId) {
+        request({
+          url: '/auth/settings',
+          method: 'PATCH',
+          data: { allow_ai_contacts_context: enabled },
+          userId: session.userId,
+        }).catch((err) => console.error('save ai contacts context failed:', err))
+      }
+    }
     wx.showToast({
       title: enabled ? 'AI 联系人推荐已开启' : 'AI 联系人推荐已关闭',
       icon: 'none'
@@ -221,7 +256,7 @@ Page({
 
   persistSettings(settings) {
     saveLocalSettings(settings)
-    if (!isRemoteApiEnabled()) return
+    if (!isRemoteApiEnabled() || !hasAuthenticatedRemoteSession()) return
     const session = getCurrentUser()
     if (!session || !session.userId) return
     request({

@@ -1,0 +1,17 @@
+# deploy/aliyun/systemd/eseat-api.service
+
+[Unit]
+Description=eSeat FastAPI API
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/eseat
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/eseat/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001 --app-dir backend
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

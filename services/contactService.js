@@ -1,6 +1,6 @@
 const { readDatabase, updateDatabase, nowIso, uid } = require('./mockDatabase')
-const { getCurrentUser } = require('./userService')
-const { isRemoteApiEnabled } = require('./apiConfig')
+const { getCurrentUser, getAuthenticatedRemoteUser, hasAuthenticatedRemoteSession } = require('./userService')
+const { isRemoteApiEnabled, allowsLocalMockFallback } = require('./apiConfig')
 const { request } = require('./httpClient')
 
 const TEXT = {
@@ -12,6 +12,52 @@ const TEXT = {
 }
 
 const UPDATE_TYPES = ['projects', 'videos']
+
+function canUseProtectedRemoteApi() {
+  if (!isRemoteApiEnabled()) return false
+  if (typeof hasAuthenticatedRemoteSession === 'function') {
+    return !!hasAuthenticatedRemoteSession()
+  }
+  const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null
+  return !!(user && user.userId)
+}
+
+function getProtectedRemoteUser() {
+  if (typeof getAuthenticatedRemoteUser === 'function') {
+    return getAuthenticatedRemoteUser()
+  }
+  return typeof getCurrentUser === 'function' ? getCurrentUser() : null
+}
+
+function logProtectedRequestSkip(path) {
+  try {
+    console.info(`[session] skip protected request ${path}: authenticated-remote-session-required`)
+  } catch (error) {}
+}
+
+function canFallbackToLocalMock() {
+  return typeof allowsLocalMockFallback === 'function' ? allowsLocalMockFallback() : true
+}
+
+function buildRemoteUnavailableContactsResult() {
+  return {
+    success: false,
+    contacts: [],
+    pendingRequests: [],
+    updatedTips: [],
+    tags: [TEXT.all],
+    error: '远程登录未就绪',
+    mode: 'remote-unavailable'
+  }
+}
+
+function buildRemoteUnavailableMutationResult() {
+  return {
+    success: false,
+    error: '远程登录未就绪',
+    mode: 'remote-unavailable'
+  }
+}
 
 function normalizeTagList(contacts) {
   const set = new Set([TEXT.all])
@@ -63,10 +109,21 @@ function getContacts() {
 }
 
 async function getContactsAsync() {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    logProtectedRequestSkip('/contacts')
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableContactsResult()
+    }
     return getContacts()
   }
-  const user = getCurrentUser()
+  const user = getProtectedRemoteUser()
+  if (!user || !user.userId) {
+    logProtectedRequestSkip('/contacts')
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableContactsResult()
+    }
+    return getContacts()
+  }
   const result = await request({ url: '/contacts', method: 'GET', userId: user.userId })
   const contacts = (result.contacts || []).map(normalizeRemoteContact)
   const pendingRequests = (result.pendingRequests || []).map(normalizeRemoteContact)
@@ -145,10 +202,19 @@ function updateContact(contactId, action, note = '') {
 }
 
 async function updateContactAsync(contactId, action, note = '') {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableMutationResult()
+    }
     return updateContact(contactId, action, note)
   }
-  const user = getCurrentUser()
+  const user = getProtectedRemoteUser()
+  if (!user || !user.userId) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableMutationResult()
+    }
+    return updateContact(contactId, action, note)
+  }
   if (action === 'toggleStar') {
     await request({ url: `/contacts/${contactId}/star`, method: 'POST', userId: user.userId })
     return { success: true, mode: 'remote-api' }
@@ -189,10 +255,19 @@ function createExchangeRequest(targetCardId) {
 }
 
 async function createExchangeRequestAsync(targetCardId) {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableMutationResult()
+    }
     return createExchangeRequest(targetCardId)
   }
-  const user = getCurrentUser()
+  const user = getProtectedRemoteUser()
+  if (!user || !user.userId) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableMutationResult()
+    }
+    return createExchangeRequest(targetCardId)
+  }
   const result = await request({
     url: '/contacts/exchange-request',
     method: 'POST',
@@ -203,19 +278,37 @@ async function createExchangeRequestAsync(targetCardId) {
 }
 
 async function approveContactAsync(contactId) {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableMutationResult()
+    }
     return updateContact(contactId, 'approveRequest')
   }
-  const user = getCurrentUser()
+  const user = getProtectedRemoteUser()
+  if (!user || !user.userId) {
+    if (isRemoteApiEnabled() && !canFallbackToLocalMock()) {
+      return buildRemoteUnavailableMutationResult()
+    }
+    return updateContact(contactId, 'approveRequest')
+  }
   await request({ url: `/contacts/${contactId}/approve`, method: 'POST', userId: user.userId })
   return { success: true, mode: 'remote-api' }
 }
 
 async function rejectContactAsync(contactId) {
-  if (!isRemoteApiEnabled()) {
+  if (!canUseProtectedRemoteApi()) {
+    if (isRemoteApiEnabled() && !allowsLocalMockFallback()) {
+      return buildRemoteUnavailableMutationResult()
+    }
     return updateContact(contactId, 'rejectRequest')
   }
-  const user = getCurrentUser()
+  const user = getProtectedRemoteUser()
+  if (!user || !user.userId) {
+    if (isRemoteApiEnabled() && !allowsLocalMockFallback()) {
+      return buildRemoteUnavailableMutationResult()
+    }
+    return updateContact(contactId, 'rejectRequest')
+  }
   await request({ url: `/contacts/${contactId}/reject`, method: 'POST', userId: user.userId })
   return { success: true, mode: 'remote-api' }
 }
